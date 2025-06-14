@@ -1,99 +1,74 @@
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #ffffff;
-  color: #1b5e20;
+  font-family: Arial, sans-serif;
+  background: white;
+  color: #1B5E20;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: #A8E6A1;
+  padding: 1rem;
+  text-align: center;
 }
 
 .sidebar {
-  width: 220px;
-  background-color: #43a047;
+  background-color: #1B5E20;
   padding: 1rem;
-  color: white;
-  height: 100vh;
-  position: fixed;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
 }
 
-.sidebar h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  padding: 0.5rem;
+.sidebar button {
+  background-color: #A8E6A1;
+  color: #1B5E20;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 5px;
 }
 
-.sidebar li:hover {
-  background-color: #66bb6a;
-}
-
-.main {
-  margin-left: 230px;
-  padding: 1rem;
+main {
   flex: 1;
+  padding: 1rem;
 }
 
 .seccion {
-  margin-bottom: 2rem;
-}
-
-.empresa-lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
   margin-top: 1rem;
 }
 
-.empresa-card {
-  border: 1px solid #a8e6a1;
-  border-radius: 10px;
+.company-card {
+  border: 1px solid #A8E6A1;
+  border-radius: 8px;
   padding: 1rem;
-  background-color: #f9fff9;
+  margin-bottom: 1rem;
+  background: #f4fff4;
 }
+
+.risk-bajo { color: green; }
+.risk-medio { color: orange; }
+.risk-alto { color: red; }
 
 canvas {
   max-width: 100%;
-  margin-top: 1rem;
+  height: auto;
 }
 
-input[type="text"], select {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  width: 100%;
-  max-width: 300px;
-  margin-bottom: 1rem;
-}
-
-.footer {
-  width: 100%;
+.app-footer {
   text-align: center;
   padding: 1rem;
-  background-color: #a8e6a1;
-  position: fixed;
-  bottom: 0;
+  background-color: #A8E6A1;
+  margin-top: auto;
 }
 
-/* Adaptación a móviles */
-@media screen and (max-width: 768px) {
+/* Móvil */
+@media (max-width: 600px) {
   .sidebar {
-    display: none;
-  }
-
-  .main {
-    margin-left: 0;
-    padding: 1rem;
-  }
-
-  .footer {
-    position: relative;
+    flex-direction: column;
+    align-items: center;
   }
 }
