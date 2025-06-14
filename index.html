@@ -1,48 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="sidebar">
-    <button onclick="showSection('empresas')">📈 Empresas</button>
-    <button onclick="showSection('monedas')">💱 Monedas</button>
-    <button onclick="showSection('recomendaciones')">🤖 IA Recomendación</button>
+  <div class="app-container">
+    <aside class="sidebar">
+      <h2>Menú</h2>
+      <button onclick="mostrarSeccion('empresas')">Empresas</button>
+      <button onclick="mostrarSeccion('monedas')">Monedas Nacionales</button>
+      <button onclick="mostrarSeccion('criptomonedas')">Criptomonedas</button>
+      <button onclick="mostrarSeccion('recomendaciones')">Recomendaciones IA</button>
+    </aside>
+
+    <main class="main-content">
+      <header class="app-header">
+        <h1>FinancialStatus</h1>
+      </header>
+
+      <section id="empresas" class="section active">
+        <h2>Empresas destacadas</h2>
+        <div id="empresas-container"></div>
+      </section>
+
+      <section id="monedas" class="section">
+        <h2>Monedas Nacionales</h2>
+        <label for="monedaSelect">Selecciona una moneda:</label>
+        <select id="monedaSelect" onchange="actualizarMoneda('moneda')">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="PEN">PEN</option>
+        </select>
+        <canvas id="monedaChart"></canvas>
+      </section>
+
+      <section id="criptomonedas" class="section">
+        <h2>Criptomonedas</h2>
+        <label for="criptoSelect">Selecciona una cripto:</label>
+        <select id="criptoSelect" onchange="actualizarMoneda('cripto')">
+          <option value="bitcoin">Bitcoin</option>
+          <option value="ethereum">Ethereum</option>
+          <option value="dogecoin">Dogecoin</option>
+        </select>
+        <canvas id="criptoChart"></canvas>
+      </section>
+
+      <section id="recomendaciones" class="section">
+        <h2>Recomendaciones de inversión (IA Gemini)</h2>
+        <div id="recomendacionIA">Cargando recomendación...</div>
+      </section>
+
+      <footer class="app-footer">© 2025 FinancialStatus</footer>
+    </main>
   </div>
 
-  <div class="main">
-    <header class="app-header">
-      <h1>FinancialStatus</h1>
-      <input type="text" id="searchInput" placeholder="Buscar empresa..." onkeyup="buscarEmpresa()">
-    </header>
-
-    <section id="empresas" class="content-section active">
-      <h2>Empresas destacadas</h2>
-      <div id="empresas-container"></div>
-    </section>
-
-    <section id="monedas" class="content-section">
-      <h2>Valores de monedas (simulado)</h2>
-      <label for="dias">Ver últimos:</label>
-      <select id="dias" onchange="mostrarGrafico()">
-        <option value="7">7 días</option>
-        <option value="15">15 días</option>
-        <option value="30" selected>30 días</option>
-      </select>
-      <canvas id="graficoMoneda" width="300" height="100"></canvas>
-    </section>
-
-    <section id="recomendaciones" class="content-section">
-      <h2>Recomendaciones de inversión (IA Gemini)</h2>
-      <div id="iaOutput">Cargando recomendación...</div>
-    </section>
-
-    <footer class="app-footer">© 2025 FinancialStatus</footer>
-  </div>
+  <script src="script.js"></script>
 </body>
 </html>
