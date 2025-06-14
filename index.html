@@ -8,80 +8,56 @@
 </head>
 <body>
   <div class="sidebar">
-    <h2>FinancialStatus</h2>
-    <nav>
-      <ul>
-        <li onclick="showSection('empresas')">🏢 Empresas</li>
-        <li onclick="showSection('monedas')">💱 Monedas</li>
-        <li onclick="showSection('cripto')">🪙 Criptomonedas</li>
-        <li onclick="showSection('ia')">🤖 IA Gemini</li>
-      </ul>
-    </nav>
+    <h2>Menú</h2>
+    <button onclick="mostrarEmpresas()">Empresas</button>
+    <button onclick="mostrarMonedas()">Monedas Nacionales</button>
+    <button onclick="mostrarCripto()">Criptomonedas</button>
+    <button onclick="mostrarIA()">Recomendaciones IA</button>
   </div>
 
-  <div class="main">
-    <section id="empresas">
-      <h2>Empresas Destacadas</h2>
-      <div class="company-card" onclick="toggleDetails(this)">
-        <h3>Apple Inc.</h3>
-        <p>Diseña y fabrica productos como iPhone y Mac.</p>
-        <p class="risk risk-bajo">Riesgo: Bajo</p>
-        <div class="details">Apple lidera el mercado de tecnología con fuerte inversión en IA.</div>
-      </div>
-      <div class="company-card" onclick="toggleDetails(this)">
-        <h3>Microsoft Corp.</h3>
-        <p>Desarrolla software y servicios en la nube.</p>
-        <p class="risk risk-medio">Riesgo: Medio</p>
-        <div class="details">Microsoft domina en inteligencia artificial, con Azure y Copilot.</div>
-      </div>
-      <div class="company-card" onclick="toggleDetails(this)">
-        <h3>Tesla Inc.</h3>
-        <p>Fabricante de autos eléctricos.</p>
-        <p class="risk risk-alto">Riesgo: Alto</p>
-        <div class="details">Alta volatilidad pero gran potencial de crecimiento.</div>
-      </div>
-    </section>
+  <div class="main-content">
+    <header class="app-header">
+      <h1>FinancialStatus</h1>
+    </header>
 
-    <section id="monedas" style="display: none;">
-      <h2>Monedas Nacionales</h2>
-      <label for="monedaSelect">Selecciona una moneda:</label>
-      <select id="monedaSelect" onchange="updateMonedaChart()">
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="JPY">JPY</option>
-      </select>
-      <label for="periodoMoneda">Periodo:</label>
-      <select id="periodoMoneda" onchange="updateMonedaChart()">
-        <option value="1h">1 hora</option>
-        <option value="1d">1 día</option>
-        <option value="1w">1 semana</option>
-        <option value="1m">1 mes</option>
-      </select>
-      <canvas id="monedaChart"></canvas>
-    </section>
+    <main>
+      <section id="empresas-section">
+        <h2>Empresas destacadas</h2>
+        <div id="empresas-container"></div>
+        <div id="empresa-detalle" class="detalle-box"></div>
+      </section>
 
-    <section id="cripto" style="display: none;">
-      <h2>Criptomonedas</h2>
-      <label for="criptoSelect">Selecciona una cripto:</label>
-      <select id="criptoSelect" onchange="updateCriptoChart()">
-        <option value="bitcoin">Bitcoin</option>
-        <option value="ethereum">Ethereum</option>
-        <option value="litecoin">Litecoin</option>
-      </select>
-      <label for="periodoCripto">Periodo:</label>
-      <select id="periodoCripto" onchange="updateCriptoChart()">
-        <option value="1h">1 hora</option>
-        <option value="1d">1 día</option>
-        <option value="1w">1 semana</option>
-        <option value="1m">1 mes</option>
-      </select>
-      <canvas id="criptoChart"></canvas>
-    </section>
+      <section id="monedas-section" style="display:none;">
+        <h2>Monedas Nacionales</h2>
+        <select id="select-moneda" onchange="actualizarGrafico()">
+          <option value="USD">Dólar (USD)</option>
+          <option value="EUR">Euro (EUR)</option>
+          <option value="JPY">Yen Japonés (JPY)</option>
+        </select>
+        <select id="rango-tiempo" onchange="actualizarGrafico()">
+          <option value="1">1 Día</option>
+          <option value="7">1 Semana</option>
+          <option value="30">1 Mes</option>
+          <option value="real">Tiempo Real</option>
+        </select>
+        <canvas id="monedaChart"></canvas>
+      </section>
 
-    <section id="ia" style="display: none;">
-      <h2>Recomendaciones de inversión (IA Gemini)</h2>
-      <div id="recomendacionIA">Cargando recomendaciones...</div>
-    </section>
+      <section id="cripto-section" style="display:none;">
+        <h2>Criptomonedas</h2>
+        <p>Aquí pronto se conectará a datos reales.</p>
+        <canvas id="criptoChart"></canvas>
+      </section>
+
+      <section id="ia-section" style="display:none;">
+        <h2>Recomendaciones de inversión (IA Gemini)</h2>
+        <div id="recomendaciones">
+          Cargando recomendaciones...
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">© 2025 FinancialStatus</footer>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
