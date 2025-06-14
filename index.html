@@ -8,57 +8,55 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <header class="app-header">
+    <h1>FinancialStatus</h1>
+  </header>
+
   <div class="sidebar">
-    <h2>FinancialStatus</h2>
-    <nav>
-      <ul>
-        <li onclick="mostrarSeccion('empresas')">Empresas</li>
-        <li onclick="mostrarSeccion('monedas')">Monedas</li>
-        <li onclick="mostrarSeccion('criptomonedas')">Criptomonedas</li>
-        <li onclick="mostrarSeccion('recomendaciones')">Recomendaciones IA</li>
-      </ul>
-    </nav>
+    <button onclick="mostrarSeccion('empresas')">Empresas</button>
+    <button onclick="mostrarSeccion('monedas')">Monedas Nacionales</button>
+    <button onclick="mostrarSeccion('criptomonedas')">Criptomonedas</button>
+    <button onclick="mostrarSeccion('recomendacion')">IA Recomendación</button>
   </div>
 
-  <div class="main">
+  <main>
+    <!-- EMPRESAS -->
     <section id="empresas" class="seccion">
-      <h2>Empresas más importantes</h2>
-      <input type="text" placeholder="Buscar empresa..." oninput="buscarEmpresa(this.value)" />
-      <div id="empresa-lista" class="empresa-lista"></div>
+      <h2>Empresas destacadas</h2>
+      <div id="empresas-container"></div>
     </section>
 
-    <section id="monedas" class="seccion" style="display:none">
+    <!-- MONEDAS NACIONALES -->
+    <section id="monedas" class="seccion" style="display:none;">
       <h2>Monedas Nacionales</h2>
-      <select id="moneda-select" onchange="cargarGraficoMoneda()"></select>
-      <select id="moneda-periodo" onchange="cargarGraficoMoneda()">
+      <select id="moneda-select" onchange="actualizarGrafico()">
+        <option value="USD">Dólar (USD)</option>
+        <option value="EUR">Euro (EUR)</option>
+        <option value="PEN">Sol Peruano (PEN)</option>
+      </select>
+      <select id="periodo-select" onchange="actualizarGrafico()">
         <option value="7">7 días</option>
         <option value="30">30 días</option>
         <option value="real">Tiempo real</option>
       </select>
-      <canvas id="monedaChart"></canvas>
+      <canvas id="grafico-monedas"></canvas>
     </section>
 
-    <section id="criptomonedas" class="seccion" style="display:none">
+    <!-- CRIPTOMONEDAS -->
+    <section id="criptomonedas" class="seccion" style="display:none;">
       <h2>Criptomonedas</h2>
-      <select id="cripto-select" onchange="cargarGraficoCripto()"></select>
-      <select id="cripto-periodo" onchange="cargarGraficoCripto()">
-        <option value="7">7 días</option>
-        <option value="30">30 días</option>
-        <option value="real">Tiempo real</option>
-      </select>
-      <canvas id="criptoChart"></canvas>
+      <canvas id="grafico-cripto"></canvas>
     </section>
 
-    <section id="recomendaciones" class="seccion" style="display:none">
-      <h2>Recomendaciones de inversión (IA Gemini)</h2>
-      <p id="recomendacion-texto">Cargando...</p>
+    <!-- RECOMENDACIÓN IA -->
+    <section id="recomendacion" class="seccion" style="display:none;">
+      <h2>Recomendaciones de Inversión (IA Gemini)</h2>
+      <button onclick="obtenerRecomendacion()">Obtener recomendación</button>
+      <div id="respuesta-gemini">Esperando consulta...</div>
     </section>
-  </div>
+  </main>
 
-  <footer class="footer">
-    <p>© 2025 FinancialStatus</p>
-  </footer>
-
+  <footer class="app-footer">© 2025 FinancialStatus</footer>
   <script src="script.js"></script>
 </body>
 </html>
