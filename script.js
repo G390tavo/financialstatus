@@ -1,90 +1,70 @@
-const empresas = [
-  { nombre: "Apple Inc.", descripcion: "Fabricante de productos como el iPhone.", riesgo: "bajo" },
-  { nombre: "Tesla Inc.", descripcion: "Autos eléctricos y energías limpias.", riesgo: "alto" },
-  { nombre: "Microsoft Corp.", descripcion: "Desarrollador de software y servicios cloud.", riesgo: "medio" },
-  { nombre: "Amazon.com", descripcion: "Gigante del comercio electrónico y AWS.", riesgo: "medio" },
-  { nombre: "Google (Alphabet)", descripcion: "Buscador, YouTube, Android y más.", riesgo: "bajo" },
-  { nombre: "Nvidia", descripcion: "Fabricante líder de chips gráficos (GPU).", riesgo: "medio" }
+const companies = [
+  { nombre: "Apple Inc.", descripcion: "Productos electrónicos", riesgo: "bajo" },
+  { nombre: "Tesla Inc.", descripcion: "Autos eléctricos", riesgo: "alto" },
+  { nombre: "Microsoft Corp.", descripcion: "Software y nube", riesgo: "medio" },
+  { nombre: "Amazon.com", descripcion: "E‑commerce y AWS", riesgo: "medio" }
 ];
 
-function mostrarEmpresas(lista = empresas) {
-  const contenedor = document.getElementById("empresas-container");
-  contenedor.innerHTML = "";
-  lista.forEach(emp => {
-    const card = document.createElement("div");
-    card.className = "company-card";
-    card.innerHTML = `
-      <h3>${emp.nombre}</h3>
-      <p>${emp.descripcion}</p>
-      <p class="risk risk-${emp.riesgo}">Riesgo: ${emp.riesgo.charAt(0).toUpperCase() + emp.riesgo.slice(1)}</p>
-    `;
-    contenedor.appendChild(card);
+function mostrarEmpresas() {
+  const cont = document.getElementById("listaEmpresas");
+  cont.innerHTML = "";
+  companies.forEach(emp => {
+    const div = document.createElement("div");
+    div.className = "company-card";
+    div.onclick = () => alert(`${emp.nombre}\n${emp.descripcion}\nRiesgo: ${emp.riesgo}`);
+    div.innerHTML = `<h3>${emp.nombre}</h3><p>${emp.descripcion}</p><p class="risk risk-${emp.riesgo}">Riesgo: ${emp.riesgo}</p>`;
+    cont.appendChild(div);
   });
 }
 
-function buscarEmpresa() {
-  const valor = document.getElementById("searchInput").value.toLowerCase();
-  const filtradas = empresas.filter(emp => emp.nombre.toLowerCase().includes(valor));
-  mostrarEmpresas(filtradas);
-}
-
-function showSection(id) {
-  document.querySelectorAll(".content-section").forEach(sec => sec.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-// Simulación de datos de monedas
-function mostrarGrafico() {
-  const dias = parseInt(document.getElementById("dias").value);
-  const datos = Array.from({ length: dias }, () => Math.random() * 100 + 1);
-  const canvas = document.getElementById("graficoMoneda").getContext("2d");
-
-  if (window.myChart) window.myChart.destroy();
-
-  window.myChart = new Chart(canvas, {
+let cryptoChart;
+async function actualizarGrafico() {
+  const moneda = document.getElementById("monedaSeleccionada").value.toLowerCase();
+  const dias = document.getElementById("diasSeleccionados").value;
+  const daysParam = dias === "real" ? 1 : dias;
+  const resp = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${moneda}/market_chart?vs_currency=usd&days=${daysParam}`
+  );
+  const data = await resp.json();
+  const labels = data.prices.map(p => new Date(p[0]).toLocaleLocaleTimeString());
+  const precios = data.prices.map(p => p[1]);
+  const ctx = document.getElementById("graficoMoneda").getContext("2d");
+  if (cryptoChart) cryptoChart.destroy();
+  cryptoChart = new Chart(ctx, {
     type: "line",
-    data: {
-      labels: Array.from({ length: dias }, (_, i) => `Día ${i + 1}`),
-      datasets: [{
-        label: "Precio estimado",
-        data: datos,
-        borderColor: "#1B5E20",
-        fill: false,
-        tension: 0.3
-      }]
-    }
+    data: { labels, datasets: [{ label: `${moneda.toUpperCase()} (USD)`, data: precios, borderColor: "green", fill: false }] },
+    options: { responsive: true }
   });
+}
+
+function mostrarSeccion(id) {
+  document.querySelectorAll(".seccion").forEach(s => s.style.display = "none");
+  document.getElementById(id).style.display = "block";
 }
 
 async function cargarIA() {
   const apiKey = "AIzaSyAju9sc_vfVAdVdRqVmKqPBfMEz8yOq0BI";
-  const prompt = `
-Eres un asesor de inversiones. Revisa estas empresas:
-Apple, Tesla, Microsoft, Amazon, Google, Nvidia.
-Clasifica una recomendación de inversión para:
-
-1. Bajo riesgo
-2. Medio riesgo
-3. Alto riesgo
-
-Explica por qué elegiste cada una y cuál es su potencial.
-`;
-
-  try {
-    const respuesta = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey, {
+  const prompt = "Dame 3 inversiones: bajo, medio y alto riesgo con explicación.";
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+    {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-    });
-    const datos = await respuesta.json();
-    const output = datos.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo obtener respuesta.";
-    document.getElementById("iaOutput").innerText = output;
-  } catch (error) {
-    document.getElementById("iaOutput").innerText = "No se pudo cargar la recomendación.";
-    console.error(error);
+    }
+  );
+  if (res.ok) {
+    const json = await res.json();
+    document.getElementById("recomendacionTexto").innerText = json.candidates[0].content.parts[0].text;
+  } else {
+    document.getElementById("recomendacionTexto").innerText = "Error IA: " + res.statusText;
   }
 }
 
-mostrarEmpresas();
-mostrarGrafico();
-cargarIA();
+document.addEventListener("DOMContentLoaded", () => {
+  mostrarEmpresas();
+  actualizarGrafico();
+  cargarIA();
+  document.getElementById("monedaSeleccionada").onchange = actualizarGrafico;
+  document.getElementById("diasSeleccionados").onchange = actualizarGrafico;
+});
