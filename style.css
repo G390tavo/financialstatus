@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #1B5E20;
+  color: white;
+  padding: 1rem;
+  height: 100vh;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+main {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: white;
+}
+
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+.company-card {
+  border: 1px solid #A8E6A1;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  background: #f9fff9;
+}
+
+.risk-bajo { color: green; }
+.risk-medio { color: orange; }
+.risk-alto { color: red; }
+
+#coinChart {
+  margin-top: 1rem;
+}

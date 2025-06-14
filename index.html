@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FinancialStatus</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>FinancialStatus</h2>
+    <nav>
+      <ul>
+        <li onclick="showTab('empresas')">Empresas</li>
+        <li onclick="showTab('monedas')">Monedas</li>
+        <li onclick="showTab('recomendaciones')">IA Gemini</li>
+      </ul>
+    </nav>
+  </div>
+
+  <main>
+    <section id="empresas" class="tab active">
+      <h2>Empresas destacadas</h2>
+      <input type="text" id="searchCompany" placeholder="Buscar empresa..." oninput="filterCompanies()"/>
+      <div id="companies">
+        <!-- Las empresas se generan con JS -->
+      </div>
+    </section>
+
+    <section id="monedas" class="tab">
+      <h2>Valores de monedas</h2>
+      <label for="currencySelect">Selecciona moneda:</label>
+      <select id="currencySelect" onchange="updateChart()">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="PEN">PEN</option>
+      </select>
+      <label for="daysRange">Días a mostrar:</label>
+      <input type="number" id="daysRange" value="30" min="1" max="90" onchange="updateChart()"/>
+      <canvas id="coinChart" width="400" height="200"></canvas>
+    </section>
+
+    <section id="recomendaciones" class="tab">
+      <h2>Recomendaciones de inversión (IA Gemini)</h2>
+      <div id="gemini-response">Cargando sugerencias de Gemini...</div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+  <script src="gemini.js"></script>
+</body>
+</html>
