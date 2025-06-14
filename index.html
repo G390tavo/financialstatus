@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinancialStatus</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Logo" class="logo" />
+        <h1>FinancialStatus</h1>
+    </header>
+    <nav id="sidebar">
+        <button onclick="showSection('national')">Monedas Nacionales</button>
+        <button onclick="showSection('crypto')">Criptomonedas</button>
+        <button onclick="showSection('companies')">Empresas</button>
+        <button onclick="toggleConfig()">Configuración</button>
+    </nav>
+    <main id="content">
+        <section id="national" class="section hidden"></section>
+        <section id="crypto" class="section hidden"></section>
+        <section id="companies" class="section hidden"></section>
+        <section id="config" class="section hidden">
+            <label><input type="checkbox" id="darkModeToggle" /> Modo Oscuro</label>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 FinancialStatus</p>
+    </footer>
+    <div id="loader" class="hidden">Cargando...</div>
+    <script src="script.js"></script>
+</body>
+</html>
