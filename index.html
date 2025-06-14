@@ -2,52 +2,46 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
 </head>
 <body>
   <div class="sidebar">
-    <h2>FinancialStatus</h2>
-    <nav>
-      <ul>
-        <li onclick="showTab('empresas')">Empresas</li>
-        <li onclick="showTab('monedas')">Monedas</li>
-        <li onclick="showTab('recomendaciones')">IA Gemini</li>
-      </ul>
-    </nav>
+    <button onclick="showSection('empresas')">📈 Empresas</button>
+    <button onclick="showSection('monedas')">💱 Monedas</button>
+    <button onclick="showSection('recomendaciones')">🤖 IA Recomendación</button>
   </div>
 
-  <main>
-    <section id="empresas" class="tab active">
+  <div class="main">
+    <header class="app-header">
+      <h1>FinancialStatus</h1>
+      <input type="text" id="searchInput" placeholder="Buscar empresa..." onkeyup="buscarEmpresa()">
+    </header>
+
+    <section id="empresas" class="content-section active">
       <h2>Empresas destacadas</h2>
-      <input type="text" id="searchCompany" placeholder="Buscar empresa..." oninput="filterCompanies()"/>
-      <div id="companies">
-        <!-- Las empresas se generan con JS -->
-      </div>
+      <div id="empresas-container"></div>
     </section>
 
-    <section id="monedas" class="tab">
-      <h2>Valores de monedas</h2>
-      <label for="currencySelect">Selecciona moneda:</label>
-      <select id="currencySelect" onchange="updateChart()">
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="PEN">PEN</option>
+    <section id="monedas" class="content-section">
+      <h2>Valores de monedas (simulado)</h2>
+      <label for="dias">Ver últimos:</label>
+      <select id="dias" onchange="mostrarGrafico()">
+        <option value="7">7 días</option>
+        <option value="15">15 días</option>
+        <option value="30" selected>30 días</option>
       </select>
-      <label for="daysRange">Días a mostrar:</label>
-      <input type="number" id="daysRange" value="30" min="1" max="90" onchange="updateChart()"/>
-      <canvas id="coinChart" width="400" height="200"></canvas>
+      <canvas id="graficoMoneda" width="300" height="100"></canvas>
     </section>
 
-    <section id="recomendaciones" class="tab">
+    <section id="recomendaciones" class="content-section">
       <h2>Recomendaciones de inversión (IA Gemini)</h2>
-      <div id="gemini-response">Cargando sugerencias de Gemini...</div>
+      <div id="iaOutput">Cargando recomendación...</div>
     </section>
-  </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js"></script>
-  <script src="gemini.js"></script>
+    <footer class="app-footer">© 2025 FinancialStatus</footer>
+  </div>
 </body>
 </html>
