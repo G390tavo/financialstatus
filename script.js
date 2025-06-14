@@ -1,141 +1,94 @@
-const companies = [
-  {
-    nombre: "Apple Inc.",
-    descripcion: "Diseña y fabrica productos electrónicos como el iPhone, iPad, Mac y servicios como iCloud.",
-    riesgo: "bajo"
-  },
-  {
-    nombre: "Tesla Inc.",
-    descripcion: "Líder en autos eléctricos, energías renovables y conducción autónoma.",
-    riesgo: "alto"
-  },
-  {
-    nombre: "Microsoft Corp.",
-    descripcion: "Gigante del software y servicios en la nube con productos como Windows, Azure y Office.",
-    riesgo: "medio"
-  },
-  {
-    nombre: "Amazon.com",
-    descripcion: "E‑commerce global con gran inversión en nube (AWS), IA y logística.",
-    riesgo: "medio"
-  },
-  {
-    nombre: "Nvidia Corp.",
-    descripcion: "Diseña GPUs y chips especializados para juegos, IA y centros de datos.",
-    riesgo: "medio"
-  }
-];
-
-function mostrarEmpresas() {
-  const cont = document.getElementById("listaEmpresas");
-  cont.innerHTML = "";
-  companies.forEach(emp => {
-    const div = document.createElement("div");
-    div.className = "company-card";
-    div.onclick = () =>
-      alert(`${emp.nombre}\n\nDescripción: ${emp.descripcion}\nRiesgo de inversión: ${emp.riesgo.toUpperCase()}`);
-    div.innerHTML = `
-      <h3>${emp.nombre}</h3>
-      <p>${emp.descripcion}</p>
-      <p class="risk risk-${emp.riesgo}">Riesgo: ${emp.riesgo}</p>
-    `;
-    cont.appendChild(div);
-  });
-}
-
-let cryptoChart;
-
-async function actualizarGrafico() {
-  const moneda = document.getElementById("monedaSeleccionada").value.toLowerCase();
-  const dias = document.getElementById("diasSeleccionados").value;
-  const daysParam = dias === "real" ? 1 : dias;
-
-  try {
-    const resp = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${moneda}/market_chart?vs_currency=usd&days=${daysParam}`
-    );
-    const data = await resp.json();
-
-    const labels = data.prices.map(p => new Date(p[0]).toLocaleTimeString());
-    const precios = data.prices.map(p => p[1]);
-
-    const ctx = document.getElementById("graficoMoneda").getContext("2d");
-    if (cryptoChart) cryptoChart.destroy();
-    cryptoChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels,
-        datasets: [
-          {
-            label: `${moneda.toUpperCase()} (USD)`,
-            data: precios,
-            borderColor: "#388E3C",
-            fill: false
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        animation: false,
-        scales: {
-          x: { ticks: { maxTicksLimit: 10 } }
-        }
-      }
-    });
-  } catch (err) {
-    console.error("Error cargando gráfico:", err);
-    alert("No se pudo cargar el gráfico de moneda.");
-  }
-}
-
-async function cargarIA() {
-  const apiKey = "AIzaSyAju9sc_vfVAdVdRqVmKqPBfMEz8yOq0BI";
-  const prompt = `Analiza el mercado actual y sugiere 3 empresas para invertir clasificadas por riesgo (bajo, medio, alto). Da una explicación breve de cada una y por qué es buena inversión ahora.`;
-
-  try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: prompt }]
-            }
-          ]
-        })
-      }
-    );
-
-    if (res.ok) {
-      const json = await res.json();
-      const texto = json.candidates[0].content.parts[0].text;
-      document.getElementById("recomendacionTexto").innerText = texto;
-    } else {
-      document.getElementById("recomendacionTexto").innerText = "Error: " + res.statusText;
-    }
-  } catch (e) {
-    document.getElementById("recomendacionTexto").innerText = "Error al conectar con Gemini.";
-  }
-}
-
-function mostrarSeccion(id) {
-  document.querySelectorAll(".seccion").forEach(s => (s.style.display = "none"));
-  document.getElementById(id).style.display = "block";
-}
+// Cambia esto con tu propia clave
+const GEMINI_API_KEY = "AIzaSyAju9sc_vfVAdVdRqVmKqPBfMEz8yOq0BI";
 
 document.addEventListener("DOMContentLoaded", () => {
   mostrarEmpresas();
-  actualizarGrafico();
-  cargarIA();
-  document.getElementById("monedaSeleccionada").onchange = actualizarGrafico;
-  document.getElementById("diasSeleccionados").onchange = actualizarGrafico;
-
-  // Actualización automática cada minuto para vista "real"
-  setInterval(() => {
-    if (document.getElementById("diasSeleccionados").value === "real") {
-      actualizarGrafico();
-    }
-  }, 60000);
+  obtenerRecomendacionIA();
+  actualizarMoneda("moneda");
+  actualizarMoneda("cripto");
 });
+
+function mostrarSeccion(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function mostrarEmpresas() {
+  const empresas = [
+    { nombre: "Apple Inc.", descripcion: "Diseña iPhones, Macs, servicios en la nube.", riesgo: "bajo" },
+    { nombre: "Tesla Inc.", descripcion: "Autos eléctricos, energía solar.", riesgo: "alto" },
+    { nombre: "Microsoft Corp.", descripcion: "Desarrolla Windows, Azure, IA.", riesgo: "medio" },
+    { nombre: "Amazon", descripcion: "E-commerce global y servicios web (AWS).", riesgo: "medio" },
+    { nombre: "NVIDIA", descripcion: "Líder en chips para IA y videojuegos.", riesgo: "bajo" },
+  ];
+
+  const contenedor = document.getElementById("empresas-container");
+  contenedor.innerHTML = "";
+
+  empresas.forEach(emp => {
+    const div = document.createElement("div");
+    div.className = "company-card";
+    div.innerHTML = `<h3>${emp.nombre}</h3>
+      <p>${emp.descripcion}</p>
+      <p class="risk risk-${emp.riesgo}">Riesgo: ${emp.riesgo.charAt(0).toUpperCase() + emp.riesgo.slice(1)}</p>`;
+    contenedor.appendChild(div);
+  });
+}
+
+async function obtenerRecomendacionIA() {
+  const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + GEMINI_API_KEY;
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: "Dime la mejor inversión de bajo, medio y alto riesgo actualmente. Muestra explicación breve para cada una." }] }]
+    })
+  });
+
+  const data = await response.json();
+  const recomendacion = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo cargar la recomendación.";
+  document.getElementById("recomendacionIA").textContent = recomendacion;
+}
+
+async function actualizarMoneda(tipo) {
+  const id = tipo === "cripto" ? document.getElementById("criptoSelect").value : document.getElementById("monedaSelect").value.toLowerCase();
+  const url = tipo === "cripto"
+    ? `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=30`
+    : `https://api.exchangerate.host/timeseries?start_date=${obtenerFecha(30)}&end_date=${obtenerFecha(0)}&base=${id.toUpperCase()}&symbols=USD`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+  const precios = tipo === "cripto"
+    ? data.prices.map(p => p[1])
+    : Object.values(data.rates).map(v => Object.values(v)[0]);
+
+  const labels = tipo === "cripto"
+    ? data.prices.map(p => new Date(p[0]).toLocaleDateString())
+    : Object.keys(data.rates);
+
+  const ctx = document.getElementById(tipo === "cripto" ? "criptoChart" : "monedaChart").getContext("2d");
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: `Precio de ${id.toUpperCase()}`,
+        data: precios,
+        borderColor: "#1B5E20",
+        backgroundColor: "#A8E6A1",
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+}
+
+function obtenerFecha(diasAtras) {
+  const fecha = new Date();
+  fecha.setDate(fecha.getDate() - diasAtras);
+  return fecha.toISOString().split("T")[0];
+}
