@@ -1,2 +1,6 @@
-const API_COIN = "https://api.coingecko.com/api/v3/";
-const API_RATE = "https://api.exchangerate.host/latest";
+const CONFIG = {
+  version: "3.1",
+  monedaBase: "PEN",
+  maxEmpresas: 10,
+  modoDemostracion: true,
+};
