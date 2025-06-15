@@ -1,37 +1,32 @@
-async function obtenerEmpresas() {
-  return [
-    { nombre: 'Google', descripcion: 'Tecnología y publicidad', valor_actual: 174.32 },
-    { nombre: 'Apple', descripcion: 'Tecnología y hardware', valor_actual: 185.62 },
-    { nombre: 'Tesla', descripcion: 'Autos eléctricos', valor_actual: 225.14 }
-  ];
-}
-
 async function obtenerMonedas() {
-  const res = await fetch("https://api.exchangerate.host/latest?base=PEN");
-  const data = await res.json();
-  return {
-    USD: data.rates.USD,
-    EUR: data.rates.EUR,
-    CLP: data.rates.CLP,
-    MXN: data.rates.MXN,
-    ARS: data.rates.ARS
-  };
+  try {
+    const res = await fetch("https://api.exchangerate.host/latest?base=PEN");
+    const data = await res.json();
+    return data.rates;
+  } catch (e) {
+    console.error("Error obteniendo monedas:", e);
+    return {};
+  }
 }
 
 async function obtenerCriptos() {
-  const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd");
-  const data = await res.json();
-  return [
-    { id: "bitcoin", nombre: "Bitcoin", valor: data.bitcoin.usd },
-    { id: "ethereum", nombre: "Ethereum", valor: data.ethereum.usd },
-    { id: "solana", nombre: "Solana", valor: data.solana.usd }
-  ];
+  try {
+    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=10&page=1");
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.error("Error obteniendo criptos:", e);
+    return [];
+  }
 }
 
-async function generarGraficoMoneda(moneda) {
-  return `<iframe src="https://www.tradingview.com/chart/?symbol=FX_IDC:${moneda}PEN" width="100%" height="300" frameborder="0"></iframe>`;
-}
-
-async function generarGraficoCripto(id) {
-  return `<iframe src="https://www.coingecko.com/en/coins/${id}" width="100%" height="300" frameborder="0"></iframe>`;
+async function obtenerEmpresaInfo(nombre) {
+  // Simulación básica
+  return {
+    nombre,
+    descripcion: "Empresa destacada del mercado global.",
+    sector: "Tecnología",
+    pais: "EE.UU.",
+    valorActual: "$1,234.56",
+  };
 }
