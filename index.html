@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinancialStatus App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="loader" class="loader">Cargando...</div>
+  <header>
+    <h1>FinancialStatus</h1>
+    <button id="toggleDarkMode">🌙</button>
+  </header>
+  <aside id="sidebar">
+    <button class="tab" onclick="showTab('monedas')">💱 Monedas</button>
+    <button class="tab" onclick="showTab('criptos')">💰 Criptomonedas</button>
+    <button class="tab" onclick="showTab('empresas')">🏢 Empresas</button>
+    <button class="tab" onclick="showTab('config')">⚙️ Configuración</button>
+  </aside>
+  <main>
+    <section id="monedas" class="tab-content"></section>
+    <section id="criptos" class="tab-content"></section>
+    <section id="empresas" class="tab-content"></section>
+    <section id="config" class="tab-content">
+      <label>
+        Modo Oscuro
+        <input type="checkbox" id="darkModeToggle" />
+      </label>
+    </section>
+  </main>
+  <script src="utils.js"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
