@@ -1,32 +1,30 @@
 async function obtenerMonedas() {
   try {
-    const res = await fetch("https://api.exchangerate.host/latest?base=PEN");
+    const res = await fetch("https://api.exchangerate.host/latest?base=USD");
     const data = await res.json();
     return data.rates;
   } catch (e) {
-    console.error("Error obteniendo monedas:", e);
+    console.error("Error cargando monedas:", e);
     return {};
   }
 }
 
 async function obtenerCriptos() {
   try {
-    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=10&page=1");
-    const data = await res.json();
-    return data;
+    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd");
+    return await res.json();
   } catch (e) {
-    console.error("Error obteniendo criptos:", e);
+    console.error("Error cargando criptomonedas:", e);
     return [];
   }
 }
 
 async function obtenerEmpresaInfo(nombre) {
-  // Simulación básica
   return {
     nombre,
-    descripcion: "Empresa destacada del mercado global.",
+    descripcion: `Descripción de ${nombre}`,
     sector: "Tecnología",
-    pais: "EE.UU.",
-    valorActual: "$1,234.56",
+    pais: "EE.UU",
+    valorActual: "$" + (Math.random() * 1000).toFixed(2),
   };
 }
