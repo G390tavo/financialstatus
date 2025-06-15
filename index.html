@@ -5,35 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="loader" id="loader">Cargando datos...</div>
   <header>
-    <img src="logo.png" alt="Logo" class="logo" />
-    <h1>FinancialStatus</h1>
+    <img src="logo.png" alt="Logo" id="logo"/>
+    <h1>FinancialStatus APP</h1>
   </header>
 
+  <nav class="menu">
+    <button onclick="mostrarSeccion('empresas')">Empresas</button>
+    <button onclick="mostrarSeccion('monedas')">Monedas</button>
+    <button onclick="mostrarSeccion('criptomonedas')">Criptomonedas</button>
+    <button onclick="mostrarSeccion('configuracion')">Configuración</button>
+  </nav>
+
   <main>
-    <section class="tabs">
-      <button onclick="mostrarTab('empresas')">Empresas</button>
-      <button onclick="mostrarTab('monedas')">Monedas</button>
-      <button onclick="mostrarTab('criptomonedas')">Criptomonedas</button>
-    </section>
-
-    <section id="empresas" class="tab">
+    <section id="empresas" class="seccion">
       <h2>Empresas</h2>
-      <div id="empresa-list"></div>
+      <div id="empresas-lista"></div>
     </section>
 
-    <section id="monedas" class="tab hidden">
+    <section id="monedas" class="seccion">
       <h2>Monedas Nacionales</h2>
-      <canvas id="monedaChart"></canvas>
+      <div id="monedas-lista"></div>
+      <div id="grafico-container"></div>
     </section>
 
-    <section id="criptomonedas" class="tab hidden">
+    <section id="criptomonedas" class="seccion">
       <h2>Criptomonedas</h2>
-      <canvas id="criptoChart"></canvas>
+      <div id="criptos-lista"></div>
+      <div id="grafico-cripto"></div>
+    </section>
+
+    <section id="configuracion" class="seccion">
+      <h2>Configuración</h2>
+      <button onclick="toggleModoOscuro()">Modo oscuro</button>
+      <p>Versión actual: v3.0</p>
     </section>
   </main>
 
