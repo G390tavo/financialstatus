@@ -1,33 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinancialStatus</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinancialStatus</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="utils.js" defer></script>
 </head>
 <body>
+  <div id="loader" class="loader-container">
+    <div class="loader"></div>
+    <p>Cargando datos financieros...</p>
+  </div>
+
+  <div id="main-content" style="display: none;">
     <header>
-        <h1>FinancialStatus App</h1>
-        <nav>
-            <button onclick="showTab('monedas')">Monedas</button>
-            <button onclick="showTab('criptos')">Criptomonedas</button>
-            <button onclick="showTab('empresas')">Empresas</button>
-            <button onclick="showTab('config')">Configuración</button>
-        </nav>
+      <img src="logo.png" alt="Logo" class="logo" />
+      <h1>FinancialStatus APP</h1>
     </header>
 
-    <main>
-        <section id="seccion-monedas" class="tab-section">Cargando monedas...</section>
-        <section id="seccion-criptos" class="tab-section">Cargando criptomonedas...</section>
-        <section id="seccion-empresas" class="tab-section">
-            <div id="empresas-list" class="empresa-container"></div>
-        </section>
-        <section id="seccion-config" class="tab-section">
-            <label><input type="checkbox" id="darkModeToggle"> Modo oscuro</label>
-        </section>
-    </main>
+    <nav class="sidebar">
+      <button onclick="showTab('monedas')">💵 Monedas</button>
+      <button onclick="showTab('criptos')">💰 Criptomonedas</button>
+      <button onclick="showTab('empresas')">🏢 Empresas</button>
+      <button onclick="showTab('config')">⚙️ Configuración</button>
+    </nav>
 
-    <script src="script.js"></script>
+    <main>
+      <section id="monedas" class="tab-content">Cargando monedas...</section>
+      <section id="criptos" class="tab-content" style="display: none;">Cargando criptomonedas...</section>
+      <section id="empresas" class="tab-content" style="display: none;">
+        <div id="empresas-container"></div>
+      </section>
+      <section id="config" class="tab-content" style="display: none;">
+        <label for="modoOscuro">🌙 Modo oscuro:</label>
+        <input type="checkbox" id="modoOscuro" onchange="toggleModoOscuro()" />
+      </section>
+    </main>
+  </div>
 </body>
 </html>
