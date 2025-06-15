@@ -154,3 +154,26 @@ async function actualizarGraficoCripto() {
     });
   }
 }
+document.addEventListener("DOMContentLoaded", async () => {
+  setTimeout(() => document.getElementById("loader").style.display = "none", 1000);
+  mostrarVista("empresas");
+  await cargarEmpresas();
+  await cargarMonedas();
+  await cargarCriptos();
+});
+
+function mostrarVista(id) {
+  document.querySelectorAll(".seccion").forEach(s => s.style.display = "none");
+  const seccion = document.getElementById(id);
+  if (seccion) seccion.style.display = "block";
+}
+
+document.getElementById("modoOscuro").addEventListener("change", (e) => {
+  const oscuro = e.target.checked;
+  document.body.style.backgroundColor = oscuro ? "#111" : "#f1f1f1";
+  document.body.style.color = oscuro ? "#eee" : "#222";
+  document.querySelectorAll(".empresa, .configuracion, .moneda, .cripto").forEach(el => {
+    el.style.backgroundColor = oscuro ? "#1c1c1c" : "#ffffff";
+    el.style.color = oscuro ? "#eee" : "#222";
+  });
+});
