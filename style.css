@@ -1,73 +1,172 @@
+:root {
+  --verde: #4caf50;
+  --verde-oscuro: #388e3c;
+  --fondo-claro: #f1f1f1;
+  --fondo-oscuro: #111;
+  --texto-claro: #eee;
+  --texto-oscuro: #222;
+  --card: #ffffff;
+  --card-oscuro: #1c1c1c;
+  --sombra: rgba(0, 0, 0, 0.1);
+}
+
 body {
   margin: 0;
-  font-family: sans-serif;
-  background-color: #f1f1f1;
-  color: #222;
+  font-family: "Segoe UI", sans-serif;
+  background-color: var(--fondo-claro);
+  color: var(--texto-oscuro);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 header {
-  background-color: #2e7d32;
-  color: white;
-  padding: 1em;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  background-color: var(--verde);
+  padding: 1rem;
+  color: white;
+  box-shadow: 0 2px 4px var(--sombra);
 }
 
 .logo {
   height: 40px;
+  margin-right: 10px;
 }
 
-.version {
-  font-size: 0.8em;
-}
-
-.menu {
+nav {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 1em;
-  background: #e0e0e0;
-  padding: 0.5em;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem;
 }
 
-button {
-  background: #4caf50;
-  color: white;
+nav button {
+  margin: 0.5rem;
+  padding: 0.6rem 1rem;
   border: none;
-  padding: 0.6em;
+  background-color: var(--verde);
+  color: white;
   border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.2s ease;
 }
-button:hover {
-  background: #388e3c;
+
+nav button:hover {
+  background-color: var(--verde-oscuro);
+}
+
+main {
+  padding: 1rem;
 }
 
 .seccion {
   display: none;
-  padding: 1em;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.scroll {
-  max-height: 400px;
-  overflow-y: auto;
+h2 {
+  margin-top: 0;
+  color: var(--verde-oscuro);
+}
+
+.empresa {
+  background-color: var(--card);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 6px var(--sombra);
+  transition: transform 0.2s;
+}
+
+.empresa:hover {
+  transform: scale(1.02);
 }
 
 canvas {
-  width: 100% !important;
-  max-width: 600px;
-  height: 300px !important;
+  max-width: 100%;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px var(--sombra);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+select {
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
 }
 
 .loader {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: white;
-  color: black;
-  font-size: 2em;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--fondo-claro);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--verde-oscuro);
+  z-index: 1000;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modo oscuro dinámico */
+body.modo-oscuro {
+  background-color: var(--fondo-oscuro);
+  color: var(--texto-claro);
+}
+
+body.modo-oscuro nav {
+  background-color: #222;
+}
+
+body.modo-oscuro nav button {
+  background-color: #333;
+}
+
+body.modo-oscuro nav button:hover {
+  background-color: #555;
+}
+
+body.modo-oscuro .empresa,
+body.modo-oscuro .configuracion,
+body.modo-oscuro .moneda,
+body.modo-oscuro .cripto {
+  background-color: var(--card-oscuro);
+  color: var(--texto-claro);
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  nav {
+    flex-direction: column;
+  }
+
+  nav button {
+    width: 100%;
+    max-width: 300px;
+  }
 }
