@@ -23,6 +23,13 @@ async function cargarEmpresas() {
 
 async function cargarMonedas() {
   monedas = await obtenerMonedas();
+  if (!monedas || Object.keys(monedas).length === 0) {
+    console.error("No se pudieron cargar las monedas.");
+    const info = document.getElementById("infoMoneda");
+    if (info) info.innerText = "⚠️ No se pudo cargar información de monedas.";
+    return;
+  }
+
   const selector = document.getElementById("selectorMoneda");
   selector.innerHTML = "";
   Object.keys(monedas).forEach(moneda => {
@@ -50,18 +57,19 @@ async function cargarCriptos() {
 async function actualizarGraficoMoneda() {
   const moneda = document.getElementById("selectorMoneda").value;
   const periodo = document.getElementById("selectorTiempoMoneda").value;
+  if (!monedas[moneda]) return;
+
+  if (chartMoneda) chartMoneda.destroy();
+  const ctx = document.getElementById("graficoMoneda").getContext("2d");
+
   if (periodo === "real") {
-    // Simulación de tiempo real (por ahora)
     const valor = monedas[moneda];
-    if (!valor) return;
-    if (chartMoneda) chartMoneda.destroy();
-    const ctx = document.getElementById("graficoMoneda").getContext("2d");
     chartMoneda = new Chart(ctx, {
       type: "line",
       data: {
         labels: ["Ahora"],
         datasets: [{
-          label: `1 ${CONFIG.monedaBase} en ${moneda}`,
+          label: `1 USD en ${moneda}`,
           data: [valor],
           borderColor: "green",
           fill: false
@@ -77,20 +85,16 @@ async function actualizarGraficoMoneda() {
             }
           }
         },
-        scales: {
-          y: { beginAtZero: false }
-        }
+        scales: { y: { beginAtZero: false } }
       }
     });
   } else {
-    if (chartMoneda) chartMoneda.destroy();
-    const ctx = document.getElementById("graficoMoneda").getContext("2d");
     chartMoneda = new Chart(ctx, {
       type: "line",
       data: {
         labels: ["Inicio", "Mitad", "Final"],
         datasets: [{
-          label: `1 ${CONFIG.monedaBase} en ${moneda}`,
+          label: `1 USD en ${moneda}`,
           data: [monedas[moneda] * 0.95, monedas[moneda], monedas[moneda] * 1.05],
           borderColor: "green",
           fill: false
@@ -154,6 +158,7 @@ async function actualizarGraficoCripto() {
     });
   }
 }
+
 document.addEventListener("DOMContentLoaded", async () => {
   setTimeout(() => document.getElementById("loader").style.display = "none", 1000);
   mostrarVista("empresas");
