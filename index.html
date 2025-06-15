@@ -2,43 +2,43 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
-  <script src="config.js" defer></script>
-  <script src="utils.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div id="loader" class="loader-container">
-    <div class="loader"></div>
-    <p>Cargando datos financieros...</p>
-  </div>
+  <div class="loader" id="loader">Cargando datos...</div>
+  <header>
+    <img src="logo.png" alt="Logo" class="logo" />
+    <h1>FinancialStatus</h1>
+  </header>
 
-  <div id="main-content" style="display: none;">
-    <header>
-      <img src="logo.png" alt="Logo" class="logo" />
-      <h1>FinancialStatus APP</h1>
-    </header>
+  <main>
+    <section class="tabs">
+      <button onclick="mostrarTab('empresas')">Empresas</button>
+      <button onclick="mostrarTab('monedas')">Monedas</button>
+      <button onclick="mostrarTab('criptomonedas')">Criptomonedas</button>
+    </section>
 
-    <nav class="sidebar">
-      <button onclick="showTab('monedas')">💵 Monedas</button>
-      <button onclick="showTab('criptos')">💰 Criptomonedas</button>
-      <button onclick="showTab('empresas')">🏢 Empresas</button>
-      <button onclick="showTab('config')">⚙️ Configuración</button>
-    </nav>
+    <section id="empresas" class="tab">
+      <h2>Empresas</h2>
+      <div id="empresa-list"></div>
+    </section>
 
-    <main>
-      <section id="monedas" class="tab-content">Cargando monedas...</section>
-      <section id="criptos" class="tab-content" style="display: none;">Cargando criptomonedas...</section>
-      <section id="empresas" class="tab-content" style="display: none;">
-        <div id="empresas-container"></div>
-      </section>
-      <section id="config" class="tab-content" style="display: none;">
-        <label for="modoOscuro">🌙 Modo oscuro:</label>
-        <input type="checkbox" id="modoOscuro" onchange="toggleModoOscuro()" />
-      </section>
-    </main>
-  </div>
+    <section id="monedas" class="tab hidden">
+      <h2>Monedas Nacionales</h2>
+      <canvas id="monedaChart"></canvas>
+    </section>
+
+    <section id="criptomonedas" class="tab hidden">
+      <h2>Criptomonedas</h2>
+      <canvas id="criptoChart"></canvas>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
