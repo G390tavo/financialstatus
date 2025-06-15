@@ -1,34 +1,40 @@
-document.addEventListener("DOMContentLoaded", function () {
-    showTab('monedas'); // mostrar sección por defecto
-    renderEmpresas();
-    document.getElementById('darkModeToggle').addEventListener('change', toggleDarkMode);
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+  }, 1000);
 });
 
-function showTab(tabName) {
-    const sections = ['monedas', 'criptos', 'empresas', 'config'];
-    sections.forEach(sec => {
-        const el = document.getElementById(`seccion-${sec}`);
-        if (el) el.style.display = (sec === tabName) ? 'block' : 'none';
-    });
+function showTab(tabId) {
+  const tabs = document.querySelectorAll(".tab-content");
+  tabs.forEach(tab => {
+    tab.style.display = "none";
+  });
+  document.getElementById(tabId).style.display = "block";
 }
 
-function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
+function toggleModoOscuro() {
+  document.body.classList.toggle("dark-mode");
 }
 
-function renderEmpresas() {
-    const empresas = [
-        { nombre: "Apple", sector: "Tecnología", precio: 190.25 },
-        { nombre: "Microsoft", sector: "Tecnología", precio: 315.50 },
-        { nombre: "Amazon", sector: "E-commerce", precio: 128.34 }
-    ];
-    const container = document.getElementById("empresas-list");
+// Cargar empresas de ejemplo real (luego usarás la API real)
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const container = document.getElementById("empresas-container");
     if (!container) return;
-    container.innerHTML = empresas.map(e => `
-        <div class="empresa-card">
-            <h3>${e.nombre}</h3>
-            <p>Sector: ${e.sector}</p>
-            <p>Precio actual: $${e.precio}</p>
-        </div>
-    `).join("");
-}
+    const data = [
+      { nombre: "Apple Inc.", ticker: "AAPL", sector: "Tecnología", descripcion: "Empresa líder en tecnología y productos electrónicos." },
+      { nombre: "Amazon", ticker: "AMZN", sector: "E-commerce", descripcion: "Plataforma de comercio electrónico más grande del mundo." },
+      { nombre: "Tesla", ticker: "TSLA", sector: "Automóviles eléctricos", descripcion: "Empresa de autos eléctricos e innovación energética." }
+    ];
+    container.innerHTML = data.map(e =>
+      `<div style="border:1px solid #ccc; margin:10px; padding:10px; border-radius:8px;">
+         <h3>${e.nombre} (${e.ticker})</h3>
+         <p><strong>Sector:</strong> ${e.sector}</p>
+         <p>${e.descripcion}</p>
+       </div>`
+    ).join('');
+  } catch (err) {
+    console.error("Error cargando empresas", err);
+  }
+});
