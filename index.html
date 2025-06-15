@@ -2,59 +2,57 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FinancialStatus APP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="loader" id="loader">Cargando...</div>
+  <div id="loader" class="loader">Cargando...</div>
+
   <header>
-    <img src="logo.png" alt="Logo" class="logo"/>
-    <h1>FinancialStatus APP</h1>
-    <span class="version">v3.1</span>
+    <img src="logo.png" alt="Logo" class="logo" />
+    <h1>FinancialStatus</h1>
   </header>
 
-  <main>
-    <div class="menu">
-      <button onclick="mostrarVista('empresas')">Empresas</button>
-      <button onclick="mostrarVista('monedas')">Monedas</button>
-      <button onclick="mostrarVista('criptos')">Criptomonedas</button>
-      <button onclick="mostrarVista('config')">Configuración</button>
-    </div>
+  <nav>
+    <button onclick="mostrarVista('empresas')">Empresas</button>
+    <button onclick="mostrarVista('monedas')">Monedas</button>
+    <button onclick="mostrarVista('criptos')">Criptomonedas</button>
+    <button onclick="mostrarVista('configuracion')">Configuración</button>
+  </nav>
 
+  <main>
     <section id="empresas" class="seccion">
-      <h2>Empresas</h2>
-      <div id="listaEmpresas" class="bloque scroll"></div>
+      <h2>Empresas Destacadas</h2>
+      <div id="listaEmpresas"></div>
     </section>
 
-    <section id="monedas" class="seccion">
+    <section id="monedas" class="seccion" style="display:none">
       <h2>Monedas Internacionales</h2>
-      <select id="selectorMoneda" onchange="actualizarGraficoMoneda()"></select>
-      <select id="selectorTiempoMoneda" onchange="actualizarGraficoMoneda()">
-        <option value="1">1 Día</option>
-        <option value="7">1 Semana</option>
-        <option value="30">1 Mes</option>
+      <select id="selectorMoneda"></select>
+      <select id="selectorTiempoMoneda">
+        <option value="1d">1 Día</option>
+        <option value="1m">1 Mes</option>
         <option value="real">Tiempo Real</option>
       </select>
       <canvas id="graficoMoneda"></canvas>
     </section>
 
-    <section id="criptos" class="seccion">
+    <section id="criptos" class="seccion" style="display:none">
       <h2>Criptomonedas</h2>
-      <select id="selectorCripto" onchange="actualizarGraficoCripto()"></select>
-      <select id="selectorTiempoCripto" onchange="actualizarGraficoCripto()">
-        <option value="1">1 Día</option>
-        <option value="7">1 Semana</option>
-        <option value="30">1 Mes</option>
+      <select id="selectorCripto"></select>
+      <select id="selectorTiempoCripto">
+        <option value="1d">1 Día</option>
+        <option value="1m">1 Mes</option>
         <option value="real">Tiempo Real</option>
       </select>
       <canvas id="graficoCripto"></canvas>
     </section>
 
-    <section id="config" class="seccion">
+    <section id="configuracion" class="seccion" style="display:none">
       <h2>Configuración</h2>
-      <label><input type="checkbox" id="modoOscuro"> Modo oscuro</label>
+      <label><input type="checkbox" id="modoOscuro" /> Modo Oscuro</label>
     </section>
   </main>
 
