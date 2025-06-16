@@ -1,4 +1,4 @@
-// Base de datos local de monedas (respaldo si no se puede cargar en línea)
+// Base local para monedas nacionales y criptos (respaldo si APIs fallan)
 const monedasLocales = {
     USD: { nombre: "Dólar Estadounidense", simbolo: "$" },
     EUR: { nombre: "Euro", simbolo: "€" },
@@ -15,10 +15,10 @@ const criptosLocales = {
 
 document.addEventListener("DOMContentLoaded", async () => {
     mostrarSeccion('inicio');
+    cargarEmpresas();
+    cargarPreguntasIA();
     await cargarMonedas();
     await cargarCriptos();
-    cargarEmpresas();
-    prepararIA();
 });
 
 // Navegación
@@ -32,21 +32,23 @@ function mostrarSeccion(id) {
 // Cargar monedas
 async function cargarMonedas() {
     const select = document.getElementById("monedaSelect");
+    if (!select) return;
+
     try {
         const response = await fetch("https://api.exchangerate.host/latest");
         const data = await response.json();
 
-        const monedas = data.rates ? Object.keys(data.rates) : Object.keys(monedasLocales);
+        if (!data || !data.rates) throw new Error("API vacía");
 
+        const monedas = Object.keys(data.rates);
         monedas.forEach(codigo => {
             const option = document.createElement("option");
             option.value = codigo;
-            option.textContent = `${codigo} - ${monedasLocales[codigo]?.nombre || "Moneda Desconocida"}`;
+            option.textContent = `${codigo} - ${monedasLocales[codigo]?.nombre || "Moneda desconocida"}`;
             select.appendChild(option);
         });
-
     } catch (error) {
-        console.warn("Error al cargar monedas, usando respaldo local.");
+        console.warn("Usando datos locales de monedas.");
         Object.keys(monedasLocales).forEach(codigo => {
             const option = document.createElement("option");
             option.value = codigo;
@@ -59,6 +61,8 @@ async function cargarMonedas() {
 // Cargar criptomonedas
 async function cargarCriptos() {
     const select = document.getElementById("criptoSelect");
+    if (!select) return;
+
     try {
         const response = await fetch("https://api.coingecko.com/api/v3/coins/list");
         const data = await response.json();
@@ -72,7 +76,7 @@ async function cargarCriptos() {
         });
 
     } catch (error) {
-        console.warn("Error al cargar criptos, usando respaldo local.");
+        console.warn("Usando datos locales de criptos.");
         Object.keys(criptosLocales).forEach(id => {
             const option = document.createElement("option");
             option.value = id;
@@ -82,47 +86,51 @@ async function cargarCriptos() {
     }
 }
 
-// IA secundaria
-function prepararIA() {
+// IA simulada (modo gratuito, sin conexión externa)
+function cargarPreguntasIA() {
     const respuesta = document.getElementById("respuestaIA");
+    const botones = document.querySelectorAll(".botonesIA button");
 
-    document.querySelectorAll(".botonesIA button").forEach(boton => {
+    if (!respuesta || !botones) return;
+
+    botones.forEach(boton => {
         boton.addEventListener("click", () => {
-            const texto = boton.dataset.respuesta || "Lo siento, no entiendo esa pregunta.";
+            const texto = boton.dataset.respuesta || "Lo siento, no tengo una respuesta para eso.";
             respuesta.textContent = texto;
         });
     });
 }
 
-// Cargar empresas
+// Empresas reales
 function cargarEmpresas() {
     const lista = document.getElementById("listaEmpresas");
-    lista.innerHTML = "";
+    if (!lista) return;
 
     const empresas = [
         {
             nombre: "Apple",
-            descripcion: "Apple Inc. diseña, fabrica y comercializa productos electrónicos de consumo, software y servicios en línea.",
+            descripcion: "Apple Inc. es una compañía estadounidense que diseña y produce equipos electrónicos, software y servicios en línea.",
             sector: "Tecnología",
             pais: "EE.UU.",
             valor: "$607.15"
         },
         {
             nombre: "Microsoft",
-            descripcion: "Microsoft desarrolla, licencia y da soporte a software, servicios, dispositivos y soluciones en la nube.",
+            descripcion: "Microsoft es una empresa líder en software, creadora de Windows, Office, Azure y muchos servicios tecnológicos.",
             sector: "Tecnología",
             pais: "EE.UU.",
             valor: "$417.53"
         },
         {
             nombre: "Tesla",
-            descripcion: "Tesla diseña, fabrica y vende vehículos eléctricos y sistemas de energía renovable.",
+            descripcion: "Tesla fabrica autos eléctricos, baterías, y sistemas de energía solar. Líder en innovación energética.",
             sector: "Automoción",
             pais: "EE.UU.",
             valor: "$256.43"
         }
     ];
 
+    lista.innerHTML = "";
     empresas.forEach(e => {
         const div = document.createElement("div");
         div.className = "empresa";
