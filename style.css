@@ -1,65 +1,156 @@
+/* ==== GENERAL ==== */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
-  background: white;
-  color: black;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0fdf4;
+  color: #1a3d1a;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 header {
-  background-color: #2e7d32;
+  background-color: #2e8b57;
   color: white;
   padding: 15px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 50px;
+}
+
+nav {
+  background-color: #c4f0c5;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  justify-content: center;
+  gap: 10px;
+}
+
+nav button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+nav button:hover {
+  background-color: #3e8e41;
 }
 
 main {
   padding: 20px;
 }
 
-section {
-  margin-bottom: 30px;
+.seccion {
+  display: none;
 }
 
-select, button {
-  padding: 8px;
-  margin: 5px;
-  background-color: #4caf50;
+.seccion.activa {
+  display: block;
+}
+
+/* ==== FOOTER ==== */
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #d0f0d0;
+  color: #2e8b57;
+  font-size: 14px;
+}
+
+/* ==== MODO OSCURO ==== */
+body.dark-mode {
+  background-color: #1c1c1c;
+  color: #e0ffe0;
+}
+
+body.dark-mode header {
+  background-color: #14532d;
+}
+
+body.dark-mode nav {
+  background-color: #2f4f2f;
+}
+
+body.dark-mode nav button {
+  background-color: #1e7f3b;
+  color: #ffffff;
+}
+
+body.dark-mode footer {
+  background-color: #2f4f2f;
+  color: #aaffaa;
+}
+
+/* ==== BOTÓN MODO OSCURO ==== */
+.modo-btn {
+  background-color: transparent;
   color: white;
-  border: none;
+  border: 2px solid white;
+  padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #388e3c;
+/* ==== GRÁFICOS Y SELECTORES ==== */
+canvas {
+  max-width: 100%;
+  background-color: white;
+  border: 1px solid #c3e6c3;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 15px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+select {
   margin-top: 10px;
-}
-
-td {
-  border-bottom: 1px solid #ddd;
   padding: 8px;
+  font-size: 1em;
 }
 
-/* Modo oscuro */
-body.dark-mode {
-  background-color: #121212;
+/* ==== EMPRESAS ==== */
+#listaEmpresas {
+  margin-top: 15px;
+}
+
+.empresa {
+  border: 1px solid #4caf50;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+/* ==== ASISTENTE IA ==== */
+.botonesIA {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.botonesIA button {
+  background-color: #228b22;
   color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-body.dark-mode header {
-  background-color: #1b5e20;
+.botonesIA button:hover {
+  background-color: #196d19;
 }
 
-body.dark-mode button,
-body.dark-mode select {
-  background-color: #388e3c;
-  color: white;
+#respuestaIA {
+  padding: 10px;
+  background-color: #eaffea;
+  border-left: 4px solid #4caf50;
+  border-radius: 4px;
+  max-width: 600px;
 }
