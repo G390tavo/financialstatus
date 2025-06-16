@@ -19,32 +19,17 @@ aside.open + main{margin-left:220px}
 .seccion{display:none}
 .seccion.activa{display:block}
 .controles{display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
-select{padding:.5rem}
+select,button{padding:.5rem}
 #grafMoneda,#grafCripto{height:250px;background:#fff;border:1px solid #ccc;position:relative}
 .punto{position:absolute;width:8px;height:8px;border-radius:50%;
        background:green;transform:translate(-50%,50%)}
+.linea{position:absolute;height:2px;background:#007a33;z-index:0}
 .lbl{position:absolute;padding:2px 4px;background:#fff;
      border:1px solid #007a33;border-radius:4px;font-size:0.8rem;
      transform:translate(-50%, calc(-100% - 8px))}
-#listaEmpresas .empresa{background:#fff;border:1px solid #ccc;
-                        padding:.8rem;margin-bottom:.5rem}
+.empresa{background:#fff;border:1px solid #ccc;padding:.8rem;margin-bottom:.5rem}
 .dark{background:#121212;color:#ddd}
 .dark header{background:#004d1a}
 .dark aside{background:#222;color:#ddd}
 .dark aside nav button:hover{background:#004d1a;color:#ddd}
-.dark #grafMoneda,#dark #grafCripto,
-.dark .empresa{background:#222;border-color:#444}
-/* IA y Terminal */
-#ia input, #ia button, #cmdInput {
-  padding: .5rem; margin: .5rem .2rem; font-size: 1rem; border-radius: 6px;
-}
-#cmdInput { width: 95%; }
-#respIA {
-  background: #f2f2f2; padding: .8rem; border-radius:6px;border:1px solid #ccc;
-  white-space: pre-line;
-}
-.dark #respIA { background:#222;color:#ddd;border-color:#444; }
-#terminal {
-  background:#000;color:#0f0;padding:1rem;height:200px;overflow:auto;
-  font-family:monospace;font-size:.9rem;border-radius:6px;margin-bottom:.5rem;
-}
+.dark #grafMoneda,.dark #grafCripto,.dark .empresa{background:#222;border-color:#444}
