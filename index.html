@@ -1,69 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FinancialStatus APP</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinancialStatus 4.1.4 Beta</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>
+    <h1>FinancialStatus</h1>
+    <button onclick="alternarModoOscuro()">🌙</button>
+  </header>
 
-<header>
-  <img src="logo.png" alt="Logo" class="logo"/>
-  <h1>FinancialStatus APP</h1>
-  <button onclick="alternarModoOscuro()" class="modo-btn">🌙</button>
-</header>
+  <nav>
+    <button onclick="mostrarSeccion('monedas')">Monedas</button>
+    <button onclick="mostrarSeccion('criptomonedas')">Criptomonedas</button>
+    <button onclick="mostrarSeccion('empresas')">Empresas</button>
+    <button onclick="mostrarSeccion('asistente')">Asistente IA</button>
+  </nav>
 
-<nav>
-  <button onclick="mostrarSeccion('inicio')">Inicio</button>
-  <button onclick="mostrarSeccion('monedas')">Monedas</button>
-  <button onclick="mostrarSeccion('criptomonedas')">Criptomonedas</button>
-  <button onclick="mostrarSeccion('empresas')">Empresas</button>
-  <button onclick="mostrarSeccion('asistente')">Asistente IA</button>
-</nav>
+  <main>
+    <section id="monedas" class="seccion">
+      <h2>Monedas Nacionales</h2>
+      <select id="monedaSelect"></select>
+      <canvas id="graficoMonedas"></canvas>
+    </section>
 
-<main>
-  <section id="inicio" class="seccion">
-    <h2>Bienvenido a FinancialStatus</h2>
-    <p>Consulta monedas, criptomonedas, empresas y más en tiempo real.</p>
-  </section>
+    <section id="criptomonedas" class="seccion">
+      <h2>Criptomonedas</h2>
+      <select id="criptoSelect"></select>
+      <canvas id="graficoCriptos"></canvas>
+    </section>
 
-  <section id="monedas" class="seccion">
-    <h2>Monedas Nacionales</h2>
-    <label for="monedaSelect">Selecciona una moneda:</label>
-    <select id="monedaSelect"></select>
-    <canvas id="graficoMonedas" width="400" height="200"></canvas>
-  </section>
+    <section id="empresas" class="seccion">
+      <h2>Empresas Destacadas</h2>
+      <div id="listaEmpresas"></div>
+    </section>
 
-  <section id="criptomonedas" class="seccion">
-    <h2>Criptomonedas</h2>
-    <label for="criptoSelect">Selecciona una cripto:</label>
-    <select id="criptoSelect"></select>
-    <canvas id="graficoCriptos" width="400" height="200"></canvas>
-  </section>
+    <section id="asistente" class="seccion">
+      <h2>Asistente Inteligente</h2>
+      <select id="preguntaIA"></select>
+      <button onclick="responderIA()">Responder</button>
+      <div id="respuestaIA"></div>
+    </section>
+  </main>
 
-  <section id="empresas" class="seccion">
-    <h2>Empresas Destacadas</h2>
-    <div id="listaEmpresas"></div>
-  </section>
-
-  <section id="asistente" class="seccion">
-    <h2>Asistente Inteligente</h2>
-    <div class="botonesIA">
-      <button data-respuesta="Este es el tutorial de uso básico.">¿Cómo usar la app?</button>
-      <button data-respuesta="Cambia de sección con los botones del menú lateral.">¿Cómo navegar?</button>
-      <button data-respuesta="Puedes consultar criptomonedas, monedas, empresas y gráficos en tiempo real.">¿Qué puedo hacer aquí?</button>
-      <button data-respuesta="Usamos datos reales de CoinGecko y ExchangeRate.host.">¿De dónde vienen los datos?</button>
-    </div>
-    <div id="respuestaIA"></div>
-  </section>
-</main>
-
-<footer>
-  <p>Versión 4.1 Beta - FinancialStatus © 2025</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
