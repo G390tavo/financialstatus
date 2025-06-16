@@ -3,77 +3,78 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FinancialStatus APP</title>
+  <title>FinancialStatus App</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
-  <div id="loader" class="loader">Cargando FinancialStatus APP...</div>
+  <div id="loader" class="loader">Cargando...</div>
 
   <header>
-    <img src="logo.png" alt="Logo" class="logo"/>
-    <h1>FinancialStatus APP</h1>
-    <label class="modoOscuro">
-      <input type="checkbox" id="modoOscuro"/> 🌙
+    <img src="logo.png" alt="Logo" class="logo" />
+    <h1>FinancialStatus</h1>
+    <label class="switch">
+      <input type="checkbox" id="modoOscuro" />
+      <span class="slider"></span>
     </label>
   </header>
 
-  <nav>
+  <nav class="menu">
     <button onclick="mostrarVista('empresas')">Empresas</button>
     <button onclick="mostrarVista('monedas')">Monedas</button>
     <button onclick="mostrarVista('criptos')">Criptomonedas</button>
-    <button onclick="mostrarVista('config')">Configuración</button>
+    <button onclick="mostrarVista('ayuda')">Ayuda</button>
   </nav>
 
   <main>
-    <!-- Sección Empresas -->
     <section id="empresas" class="seccion">
-      <h2>Empresas</h2>
-      <div id="listaEmpresas" class="contenedor"></div>
+      <h2>Empresas destacadas</h2>
+      <div id="listaEmpresas" class="lista"></div>
     </section>
 
-    <!-- Sección Monedas Nacionales -->
     <section id="monedas" class="seccion">
-      <h2>Monedas Nacionales</h2>
-      <label>Moneda base: 
-        <select id="selectorMoneda" onchange="actualizarGraficoMoneda()"></select>
-      </label>
-      <label>Periodo:
-        <select id="selectorTiempoMoneda" onchange="actualizarGraficoMoneda()">
-          <option value="real">Tiempo real</option>
-          <option value="30d">30 días</option>
-        </select>
-      </label>
-      <canvas id="graficoMoneda" height="120"></canvas>
+      <h2>Monedas internacionales</h2>
+      <select id="selectorMoneda"></select>
+      <select id="selectorTiempoMoneda">
+        <option value="1d">1 Día</option>
+        <option value="7d">7 Días</option>
+        <option value="30d">30 Días</option>
+        <option value="real">Tiempo Real</option>
+      </select>
+      <canvas id="graficoMoneda"></canvas>
     </section>
 
-    <!-- Sección Criptomonedas -->
     <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <label>Criptomoneda:
-        <select id="selectorCripto" onchange="actualizarGraficoCripto()"></select>
-      </label>
-      <label>Periodo:
-        <select id="selectorTiempoCripto" onchange="actualizarGraficoCripto()">
-          <option value="real">Tiempo real</option>
-          <option value="30d">30 días</option>
-        </select>
-      </label>
-      <canvas id="graficoCripto" height="120"></canvas>
+      <select id="selectorCripto"></select>
+      <select id="selectorTiempoCripto">
+        <option value="1d">1 Día</option>
+        <option value="7d">7 Días</option>
+        <option value="30d">30 Días</option>
+        <option value="real">Tiempo Real</option>
+      </select>
+      <canvas id="graficoCripto"></canvas>
     </section>
 
-    <!-- Sección Configuración -->
-    <section id="config" class="seccion">
-      <h2>Configuración</h2>
-      <p>Modo oscuro, animaciones, IA secundaria con respaldo GPT, etc.</p>
+    <section id="ayuda" class="seccion">
+      <h2>Asistente Financiero (IA)</h2>
+      <div id="chat">
+        <button onclick="consultarIA('¿Cómo funciona la app?')">¿Cómo funciona la app?</button>
+        <button onclick="consultarIA('¿Cómo ver empresas?')">¿Cómo ver empresas?</button>
+        <button onclick="consultarIA('¿Qué es tiempo real?')">¿Qué es tiempo real?</button>
+        <button onclick="consultarIA('¿Qué hago si no carga el gráfico?')">¿Qué hago si no carga el gráfico?</button>
+        <div id="respuestaIA" class="respuesta-ia"></div>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>Versión 1.7 • FinancialStatus APP</p>
+    <p>FinancialStatus App v3.8 - Desarrollado por tu equipo de IA</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="utils.js"></script>
+  <script src="ai-helper.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
