@@ -1,6 +1,6 @@
 const CONFIG = {
-  version: "1.5",
+  version: "1.7",
+  modoOffline: true, // si no hay conexión, usa GPT simulado
   monedaBase: "USD",
-  maxEmpresas: 10,
-  modoOffline: false // Si falla API, ChatGPT proveerá info
+  maxEmpresas: 10
 };
