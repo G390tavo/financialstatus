@@ -3,49 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FinancialStatus 4.1.4 Beta</title>
+  <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
-    <h1>FinancialStatus</h1>
-    <button onclick="alternarModoOscuro()">🌙</button>
+    <h1>🌍 FinancialStatus</h1>
+    <button onclick="alternarModoOscuro()">🌓 Modo Oscuro</button>
   </header>
 
   <nav>
     <button onclick="mostrarSeccion('monedas')">Monedas</button>
-    <button onclick="mostrarSeccion('criptomonedas')">Criptomonedas</button>
+    <button onclick="mostrarSeccion('criptos')">Criptomonedas</button>
     <button onclick="mostrarSeccion('empresas')">Empresas</button>
-    <button onclick="mostrarSeccion('asistente')">Asistente IA</button>
+    <button onclick="mostrarSeccion('ia')">Asistente IA</button>
   </nav>
 
   <main>
     <section id="monedas" class="seccion">
       <h2>Monedas Nacionales</h2>
-      <select id="monedaSelect"></select>
-      <canvas id="graficoMonedas"></canvas>
+      <div id="listaMonedas"></div>
     </section>
 
-    <section id="criptomonedas" class="seccion">
+    <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <select id="criptoSelect"></select>
-      <canvas id="graficoCriptos"></canvas>
+      <div id="listaCriptos"></div>
     </section>
 
     <section id="empresas" class="seccion">
-      <h2>Empresas Destacadas</h2>
+      <h2>Empresas Globales</h2>
       <div id="listaEmpresas"></div>
     </section>
 
-    <section id="asistente" class="seccion">
-      <h2>Asistente Inteligente</h2>
-      <select id="preguntaIA"></select>
-      <button onclick="responderIA()">Responder</button>
-      <div id="respuestaIA"></div>
+    <section id="ia" class="seccion">
+      <h2>Asistente Financiero IA</h2>
+      <select id="preguntaIA">
+        <option value="tutorial">¿Cómo uso la app?</option>
+        <option value="fuente">¿De dónde provienen los datos?</option>
+        <option value="monedas">¿Qué monedas hay disponibles?</option>
+        <option value="empresas">¿Qué tipo de empresas muestra?</option>
+      </select>
+      <button onclick="responderIA()">Preguntar</button>
+      <p id="respuestaIA"></p>
+    </section>
+
+    <section id="graficos">
+      <canvas id="grafico" width="400" height="200"></canvas>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
