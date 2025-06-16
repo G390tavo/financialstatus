@@ -3,46 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FinancialStatus App</title>
+  <title>FinancialStatus 4.1.3 Beta</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo" class="logo" />
     <h1>FinancialStatus</h1>
-    <button onclick="alternarModoOscuro()">🌙</button>
+    <button onclick="alternarModoOscuro()">Modo Oscuro</button>
   </header>
 
   <main>
-    <section class="opciones">
-      <select id="tipoDato" onchange="cambiarTipoDato()">
+    <section id="seccionSelector">
+      <label for="tipoDato">Selecciona tipo de dato:</label>
+      <select id="tipoDato">
         <option value="monedas">Monedas</option>
         <option value="criptomonedas">Criptomonedas</option>
         <option value="empresas">Empresas</option>
       </select>
-      <div id="periodos" class="periodos"></div>
     </section>
 
-    <canvas id="grafico"></canvas>
+    <section id="periodos">
+      <!-- Botones de período se agregan con JS -->
+    </section>
 
-    <section id="contenidoDinamico"></section>
+    <section id="contenidoDinamico">
+      <!-- Tabla de datos aquí -->
+    </section>
+
+    <section id="graficoContainer">
+      <canvas id="grafico" width="400" height="200"></canvas>
+    </section>
+
+    <section id="asistenteIA">
+      <h2>Asistente IA</h2>
+      <label for="preguntaIA">Pregunta:</label>
+      <select id="preguntaIA">
+        <option value="tutorial">¿Cómo uso la app?</option>
+        <option value="monedas">¿Qué monedas se muestran?</option>
+        <option value="empresas">¿Qué datos de empresas hay?</option>
+        <option value="fuente">¿De dónde vienen los datos?</option>
+      </select>
+      <button onclick="responderIA()">Responder</button>
+      <div id="respuestaIA"></div>
+    </section>
   </main>
 
-  <section class="ia">
-    <h2>Asistente IA</h2>
-    <select id="preguntaIA">
-      <option disabled selected>Selecciona una pregunta</option>
-      <option value="tutorial">¿Cómo usar la aplicación?</option>
-      <option value="monedas">¿Qué monedas se pueden consultar?</option>
-      <option value="empresas">¿Qué información muestra sobre empresas?</option>
-      <option value="fuente">¿Qué fuente de datos se utiliza?</option>
-    </select>
-    <button onclick="responderIA()">Responder</button>
-    <div id="respuestaIA"></div>
-  </section>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
