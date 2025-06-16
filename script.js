@@ -1,209 +1,187 @@
-let monedas = {};
-let criptos = [];
-let chartMoneda;
-let chartCripto;
-
 document.addEventListener("DOMContentLoaded", async () => {
-  setTimeout(() => document.getElementById("loader").style.display = "none", 1000);
   mostrarVista("empresas");
+  document.getElementById("modoOscuro").addEventListener("change", toggleModoOscuro);
+
   await cargarEmpresas();
-  await cargarMonedas();
-  await cargarCriptos();
+  await cargarYMostrarMonedas();
+  await cargarYMostrarCriptos();
+
+  setTimeout(() => document.getElementById("loader").style.display = "none", 1000);
 });
 
-function mostrarVista(id) {
-  document.querySelectorAll(".seccion").forEach(s => s.style.display = "none");
-  const seccion = document.getElementById(id);
-  if (seccion) seccion.style.display = "block";
+function mostrarVista(vistaId) {
+  document.querySelectorAll(".seccion").forEach(seccion => {
+    seccion.style.display = "none";
+  });
+  document.getElementById(vistaId).style.display = "block";
 }
 
-document.getElementById("modoOscuro").addEventListener("change", (e) => {
-  const oscuro = e.target.checked;
-  document.body.classList.toggle("dark", oscuro);
-});
+function toggleModoOscuro() {
+  document.body.classList.toggle("oscuro");
+}
 
-document.getElementById("preguntarIA").addEventListener("click", async () => {
-  const pregunta = document.getElementById("inputIA").value;
-  if (!pregunta) return;
-  const respuesta = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer TU_CLAVE_OPENAI", // Reemplaza si tienes clave
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: pregunta }]
-    })
-  }).then(r => r.json());
-  document.getElementById("respuestaIA").textContent = respuesta.choices?.[0]?.message?.content || "Sin respuesta.";
-});
-
+// EMPRESAS
 async function cargarEmpresas() {
   const empresas = ["Apple", "Google", "Amazon", "Tesla", "Microsoft", "Meta", "Samsung", "Intel", "IBM", "Nvidia"];
   const contenedor = document.getElementById("listaEmpresas");
   contenedor.innerHTML = "";
-  for (let nombre of empresas.slice(0, CONFIG.maxEmpresas)) {
+
+  for (let nombre of empresas) {
     const info = await obtenerEmpresaInfo(nombre);
     const div = document.createElement("div");
     div.className = "empresa";
     div.innerHTML = `
       <h3>${info.nombre}</h3>
       <p>${info.descripcion}</p>
-      <small>Sector: ${info.sector} | País: ${info.pais}</small><br>
+      <small>Sector: ${info.sector} | País: ${info.pais}</small><br/>
       <strong>Valor actual: ${info.valorActual}</strong>
     `;
     contenedor.appendChild(div);
   }
 }
 
-async function cargarMonedas() {
-  monedas = await obtenerMonedas();
+// MONEDAS
+let chartMoneda;
+
+async function cargarYMostrarMonedas() {
+  const datos = await obtenerMonedas();
   const selector = document.getElementById("selectorMoneda");
   selector.innerHTML = "";
-  Object.keys(monedas).forEach(moneda => {
+  Object.keys(datos).forEach(moneda => {
     const option = document.createElement("option");
     option.value = moneda;
     option.textContent = moneda;
     selector.appendChild(option);
   });
-  actualizarGraficoMoneda();
-}
 
-async function cargarCriptos() {
-  criptos = await obtenerCriptos();
-  const selector = document.getElementById("selectorCripto");
-  selector.innerHTML = "";
-  criptos.forEach(c => {
-    const option = document.createElement("option");
-    option.value = c.id;
-    option.textContent = c.name;
-    selector.appendChild(option);
-  });
-  actualizarGraficoCripto();
+  selector.addEventListener("change", actualizarGraficoMoneda);
+  document.getElementById("selectorTiempoMoneda").addEventListener("change", actualizarGraficoMoneda);
+
+  actualizarGraficoMoneda();
 }
 
 async function actualizarGraficoMoneda() {
   const moneda = document.getElementById("selectorMoneda").value;
   const periodo = document.getElementById("selectorTiempoMoneda").value;
-  if (!moneda || !monedas[moneda]) return;
-
-  if (chartMoneda) chartMoneda.destroy();
   const ctx = document.getElementById("graficoMoneda").getContext("2d");
 
+  if (chartMoneda) chartMoneda.destroy();
+
+  let etiquetas = [];
+  let datos = [];
+
   if (periodo === "real") {
-    chartMoneda = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: [new Date().toLocaleTimeString()],
-        datasets: [{
-          label: `1 ${CONFIG.monedaBase} en ${moneda}`,
-          data: [monedas[moneda]],
-          borderColor: "green",
-          fill: false
-        }]
-      },
-      options: {
-        responsive: true,
-        animation: false,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: ctx => `${ctx.dataset.label}: ${ctx.raw}`
-            }
-          }
-        },
-        scales: {
-          y: { beginAtZero: false }
-        }
-      }
-    });
+    const valor = (await obtenerMonedas())[moneda];
+    etiquetas = [new Date().toLocaleTimeString()];
+    datos = [valor];
   } else {
-    const dias = Array.from({ length: periodo === "7d" ? 7 : 30 }, (_, i) => `Día ${i + 1}`);
-    const base = monedas[moneda];
-    const datos = dias.map((_, i) => +(base * (0.98 + Math.random() * 0.04)).toFixed(3));
-    chartMoneda = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: dias,
-        datasets: [{
-          label: `1 ${CONFIG.monedaBase} en ${moneda}`,
-          data: datos,
-          borderColor: "green",
-          fill: false
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: ctx => `${ctx.dataset.label}: ${ctx.raw}`
-            }
+    const dias = { "1d": 1, "7d": 7, "30d": 30 }[periodo];
+    for (let i = dias - 1; i >= 0; i--) {
+      const fecha = new Date();
+      fecha.setDate(fecha.getDate() - i);
+      etiquetas.push(fecha.toLocaleDateString());
+      datos.push((Math.random() * (5 - 3) + 3).toFixed(2));
+    }
+  }
+
+  chartMoneda = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: etiquetas,
+      datasets: [{
+        label: `Valor de ${moneda}`,
+        data: datos,
+        borderColor: "green",
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `Precio: ${ctx.raw}`
           }
         }
+      },
+      scales: {
+        y: { beginAtZero: false }
       }
-    });
-  }
+    }
+  });
+}
+
+// CRIPTOS
+let chartCripto;
+
+async function cargarYMostrarCriptos() {
+  const criptos = await obtenerCriptos();
+  const selector = document.getElementById("selectorCripto");
+  selector.innerHTML = "";
+
+  criptos.forEach(cripto => {
+    const option = document.createElement("option");
+    option.value = cripto.id;
+    option.textContent = cripto.name;
+    selector.appendChild(option);
+  });
+
+  selector.addEventListener("change", actualizarGraficoCripto);
+  document.getElementById("selectorTiempoCripto").addEventListener("change", actualizarGraficoCripto);
+
+  actualizarGraficoCripto();
 }
 
 async function actualizarGraficoCripto() {
-  const criptoId = document.getElementById("selectorCripto").value;
+  const id = document.getElementById("selectorCripto").value;
   const periodo = document.getElementById("selectorTiempoCripto").value;
-  const cripto = criptos.find(c => c.id === criptoId);
-  if (!cripto) return;
-
-  if (chartCripto) chartCripto.destroy();
   const ctx = document.getElementById("graficoCripto").getContext("2d");
 
+  if (chartCripto) chartCripto.destroy();
+
+  let etiquetas = [];
+  let datos = [];
+
   if (periodo === "real") {
-    chartCripto = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: [new Date().toLocaleTimeString()],
-        datasets: [{
-          label: `${cripto.name} en USD`,
-          data: [cripto.current_price],
-          borderColor: "#ff9800",
-          fill: false
-        }]
-      },
-      options: {
-        responsive: true,
-        animation: false,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: ctx => `${ctx.dataset.label}: $${ctx.raw}`
-            }
-          }
-        }
-      }
-    });
+    etiquetas = [new Date().toLocaleTimeString()];
+    datos = [Math.random() * 1000 + 500];
   } else {
-    const dias = Array.from({ length: periodo === "7d" ? 7 : 30 }, (_, i) => `Día ${i + 1}`);
-    const datos = dias.map(() => +(cripto.current_price * (0.9 + Math.random() * 0.2)).toFixed(2));
-    chartCripto = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: dias,
-        datasets: [{
-          label: `${cripto.name} en USD`,
-          data: datos,
-          borderColor: "#ff9800",
-          fill: false
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: ctx => `${ctx.dataset.label}: $${ctx.raw}`
-            }
+    const dias = { "1d": 1, "7d": 7, "30d": 30 }[periodo];
+    for (let i = dias - 1; i >= 0; i--) {
+      const fecha = new Date();
+      fecha.setDate(fecha.getDate() - i);
+      etiquetas.push(fecha.toLocaleDateString());
+      datos.push((Math.random() * 1000 + 500).toFixed(2));
+    }
+  }
+
+  chartCripto = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: etiquetas,
+      datasets: [{
+        label: `Valor de ${id}`,
+        data: datos,
+        borderColor: "green",
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `Precio: $${ctx.raw}`
           }
         }
+      },
+      scales: {
+        y: { beginAtZero: false }
       }
-    });
-  }
+    }
+  });
 }
