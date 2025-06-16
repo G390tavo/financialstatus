@@ -1,174 +1,97 @@
-// Variables globales
-let chartMoneda = null, chartCripto = null;
-let intervaloMoneda = null, intervaloCripto = null;
-
-// Inicio
-document.addEventListener("DOMContentLoaded", () => {
-  initMonedas();
-  initCriptos();
-  initEmpresas();
-  mostrarSeccion('monedas');
+document.addEventListener("DOMContentLoaded", async () => {
+  await cargarMonedas();
+  await cargarCriptos();
+  await cargarEmpresas();
 });
 
-// Navegación
-function mostrarSeccion(id){
-  document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));
-  document.getElementById(id).classList.add('activa');
-}
-
-// Modo oscuro
-function alternarModoOscuro(){
-  document.body.classList.toggle('dark-mode');
-}
-
-// IA básica
-function responderIA(){
-  const p = document.getElementById('preguntaIA').value;
-  const out = document.getElementById('respuestaIA');
-  const res = {
-    tutorial: "Selecciona sección, elige moneda/cripto/empresa para ver detalles en tiempo real.",
-    fuente: "La IA obtiene datos reales desde internet y los almacena localmente si se desconecta.",
-    conectividad: "Si no hay internet, se muestran datos guardados hasta la próxima conexión.",
-  }[p] || "";
-  out.textContent = res;
-}
-
-// Monedas
-function initMonedas(){
-  const sel = document.getElementById('selectMoneda');
-  const per = document.getElementById('selectPeriodoMoneda');
-  sel.addEventListener('change', cargarMoneda);
-  per.addEventListener('change', cargarMoneda);
-  ['USD','EUR','PEN','MXN','ARS','CLP'].forEach(m=>{
-    const o = document.createElement('option'); o.value=m; o.textContent=m;
-    sel.appendChild(o);
-  });
-  cargarMoneda();
-}
-
-async function cargarMoneda(){
-  const m = document.getElementById('selectMoneda').value;
-  const p = document.getElementById('selectPeriodoMoneda').value;
-  clearInterval(intervaloMoneda);
-  document.getElementById('valorActualMoneda').textContent = 'Cargando...';
-
+async function cargarMonedas() {
   try {
-    const data = await fetchData('moneda', m, p);
-    showChart('graficoMoneda', data.labels, data.valores, chartMoneda, 'USD → ' + m, 'valorActualMoneda');
-    if(p==='realtime'){
-      intervaloMoneda = setInterval(() => cargarMoneda(),30000);
-    }
-  } catch(e){
-    console.error(e);
-    loadFromStorage('moneda_'+m, data => {
-      showChart('graficoMoneda', data.labels, data.valores, chartMoneda, 'USD → ' + m + ' (offline)', 'valorActualMoneda');
-    });
+    const monedas = await obtenerMonedas();
+    mostrarLista("listaMonedas", monedas);
+  } catch (e) {
+    console.error("Error cargando monedas:", e);
   }
 }
 
-// Criptos
-function initCriptos(){
-  const sel = document.getElementById('selectCripto');
-  const per = document.getElementById('selectPeriodoCripto');
-  sel.addEventListener('change', cargarCripto);
-  per.addEventListener('change', cargarCripto);
-  ['bitcoin','ethereum','solana','litecoin'].forEach(id=>{
-    const o = document.createElement('option'); o.value=id; o.textContent=id;
-    sel.appendChild(o);
-  });
-  cargarCripto();
-}
-
-async function cargarCripto(){
-  const id = document.getElementById('selectCripto').value;
-  const p = document.getElementById('selectPeriodoCripto').value;
-  clearInterval(intervaloCripto);
-  document.getElementById('valorActualCripto').textContent = 'Cargando...';
-
+async function cargarCriptos() {
   try {
-    const data = await fetchData('cripto', id, p);
-    showChart('graficoCripto', data.labels, data.valores, chartCripto, id.toUpperCase()+' USD', 'valorActualCripto');
-    if(p==='realtime'){
-      intervaloCripto = setInterval(() => cargarCripto(),30000);
-    }
-  } catch(e){
-    console.error(e);
-    loadFromStorage('cripto_'+id, data => {
-      showChart('graficoCripto', data.labels, data.valores, chartCripto, id.toUpperCase()+' USD (offline)', 'valorActualCripto');
-    });
+    const criptos = await obtenerCriptos();
+    mostrarLista("listaCriptos", criptos);
+  } catch (e) {
+    console.error("Error cargando criptos:", e);
   }
 }
 
-// Empresas
-async function initEmpresas(){
-  const div = document.getElementById('listaEmpresas');
-  const empresas = ['Apple','Tesla','Samsung'];
-  for(let nombre of empresas){
-    const d = document.createElement('div'); d.className='empresa';
-    d.textContent = 'Cargando ' + nombre + '...';
-    div.appendChild(d);
-    setTimeout(async()=>{
-      try{
-        const info = await fetchData('empresa', nombre);
-        d.innerHTML = `<strong>${nombre}</strong>: ${info.descripcion} • $${info.valor}`;
-      }catch{
-        d.textContent = nombre + ' (offline o error)';
-      }
-    },0);
-  }
-}
-
-// Mostrar gráfico
-function showChart(canvasId, labels, data, existingChart, label, lblElemId){
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  if(existingChart) existingChart.destroy();
-  const chart = new Chart(ctx, {
-    type:'line', data:{labels, datasets:[{label,data,borderColor:'green',fill:false}]},
-    options:{
-      responsive:true, plugins: {
-        tooltip: { callbacks:{ title:()=>'', label:ctx=>'$'+ctx.raw }},
-      },
-      scales: { x:{ticks:{autoSkip:true,maxTicksLimit:6}}}
-    }
+function mostrarLista(id, lista) {
+  const contenedor = document.getElementById(id);
+  if (!contenedor) return;
+  contenedor.innerHTML = "";
+  lista.slice(0, 10).forEach(nombre => {
+    const div = document.createElement("div");
+    div.textContent = nombre;
+    contenedor.appendChild(div);
   });
-  document.getElementById(lblElemId).textContent = label + ': $' + data[data.length - 1].toFixed(2);
-  if(canvasId==='graficoMoneda') chartMoneda = chart; else chartCripto = chart;
-  saveToStorage(canvasId+'_data', {labels,data});
 }
 
-// Almacenamiento
-function saveToStorage(key, obj){
-  localStorage.setItem(key, JSON.stringify({ t:Date.now(), d:obj }));
-}
-function loadFromStorage(key, cb){
-  const s = localStorage.getItem(key);
-  if(!s) throw 'sin datos';
-  const {t,d} = JSON.parse(s);
-  if(Date.now() - t > 5*60*1000) throw 'expirado';
-  cb(d);
+function alternarModoOscuro() {
+  document.body.classList.toggle("dark");
 }
 
-// Simulación IA / Datos
-async function fetchData(tipo, id, periodo){
-  const urlMap = {
-    moneda:()=>'https://api.exchangerate.host/timeseries?...',
-    cripto:id=>`https://api.coingecko.com/api/v3/coins/${id}/market_chart?...`,
-    empresa:nombre=>`https://finance.yahoo.com/quote/${nombre}`
+function cambiarTiempo(periodo) {
+  const grafico = document.getElementById("graficoRenderizado");
+  if (!grafico) return;
+  grafico.innerHTML = `Cargando gráfico para el periodo: ${periodo}...`;
+  setTimeout(() => {
+    grafico.innerHTML = `Gráfico simulado de ${periodo} cargado (IA en desarrollo).`;
+    document.getElementById("infoValorActual").textContent = `Valor actual: $${(
+      Math.random() * 1000
+    ).toFixed(2)}`;
+  }, 800);
+}
+
+async function cargarEmpresas() {
+  const empresas = [
+    {
+      nombre: "Tesla",
+      descripcion: "Empresa de automóviles eléctricos y energía.",
+      valor: "$235.50"
+    },
+    {
+      nombre: "Apple",
+      descripcion: "Tecnología y productos electrónicos.",
+      valor: "$188.30"
+    },
+    {
+      nombre: "Google",
+      descripcion: "Servicios de búsqueda y publicidad.",
+      valor: "$2750.10"
+    }
+  ];
+
+  const contenedor = document.getElementById("listaEmpresas");
+  if (!contenedor) return;
+
+  contenedor.innerHTML = "";
+  empresas.forEach(emp => {
+    const card = document.createElement("div");
+    card.className = "empresa";
+    card.innerHTML = `
+      <h3>${emp.nombre}</h3>
+      <p>${emp.descripcion}</p>
+      <strong>Valor actual: ${emp.valor}</strong>
+    `;
+    contenedor.appendChild(card);
+  });
+}
+
+function preguntarIA(pregunta) {
+  const respuesta = document.getElementById("respuestaIA");
+  const respuestas = {
+    tutorial: "Haz clic en las monedas, criptos o empresas y cambia el tiempo del gráfico arriba.",
+    monedas: "Las monedas provienen de ExchangeRate.host con datos reales.",
+    empresas: "Las empresas incluyen nombre, valor y sector. Pronto estarán en tiempo real.",
+    fuente: "Los datos provienen de fuentes reales. La IA pronto mejorará su calidad.",
+    graficos: "Los gráficos son simulados pero se actualizarán con IA en tiempo real."
   };
-  // Simulación de IA: buscar y parsear
-  await new Promise(r=>setTimeout(r, 1000));
-  // Genero datos ficticios para la demo
-  const vals = periodToLength(periodo).map((_,i) => Math.random()*100 + 50);
-  const labs = vals.map((_,i) => {
-    const d = new Date(Date.now() - (vals.length - i -1) * 3600*1000);
-    return d.toLocaleDateString();
-  });
-  return { labels: labs, valores: vals, descripcion:'Empresa líder', valor: (Math.random()*1000).toFixed(2) };
-}
-function periodToLength(p){
-  if(p==='1h') return new Array(6);
-  if(p==='1d') return new Array(24);
-  if(p==='1w') return new Array(7);
-  if(p==='1m') return new Array(30);
-  if(p==='realtime') return new Array(10);
+  respuesta.textContent = respuestas[pregunta] || "La IA aún no tiene una respuesta precisa.";
 }
