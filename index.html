@@ -1,74 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FinancialStatus AI</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>FinancialStatus AI</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+  <header>
+    <h1>FinancialStatus AI</h1>
+    <button id="btnDark">🌓</button>
+    <button id="toggleSidebar">☰</button>
+  </header>
 
-<header>
-  <h1>FinancialStatus AI</h1>
-  <button id="btnDark">🌓</button>
-</header>
+  <aside id="sidebar" class="closed">
+    <nav>
+      <button data-sec="monedas">Monedas</button>
+      <button data-sec="criptos">Criptos</button>
+      <button data-sec="empresas">Empresas</button>
+      <button data-sec="ia">Asistente IA</button>
+    </nav>
+  </aside>
 
-<nav>
-  <button data-sec="monedas" class="nav-btn">Monedas</button>
-  <button data-sec="criptos" class="nav-btn">Criptomonedas</button>
-  <button data-sec="empresas" class="nav-btn">Empresas</button>
-  <button data-sec="ia" class="nav-btn">Asistente IA</button>
-</nav>
+  <main id="contenido">
+    <section id="monedas" class="seccion activa">
+      <h2>Monedas</h2>
+      <div class="controles">
+        <select id="selMoneda"></select>
+        <select id="selPeriodoMoneda"><option value="1h">1H</option><option value="1d">1D</option><option value="1w">1S</option><option value="1m">1M</option><option value="realtime">Real‑Time</option></select>
+      </div>
+      <div id="grafMoneda"></div>
+    </section>
 
-<main>
-  <section id="monedas" class="seccion activa">
-    <div class="controls">
-      <select id="selMoneda"></select>
-      <select id="selPeriodoMoneda">
-        <option value="1h">1 H</option>
-        <option value="1d" selected>1 D</option>
-        <option value="1w">1 S</option>
-        <option value="1m">1 M</option>
-        <option value="realtime">Tiempo Real</option>
-      </select>
-      <span id="valMoneda"></span>
-    </div>
-    <div id="grafMoneda"></div>
-  </section>
+    <section id="criptos" class="seccion">
+      <h2>Criptos</h2>
+      <div class="controles">
+        <select id="selCripto"></select>
+        <select id="selPeriodoCripto"><option value="1h">1H</option><option value="1d">1D</option><option value="1w">1S</option><option value="1m">1M</option><option value="realtime">Real‑Time</option></select>
+      </div>
+      <div id="grafCripto"></div>
+    </section>
 
-  <section id="criptos" class="seccion">
-    <div class="controls">
-      <select id="selCripto"></select>
-      <select id="selPeriodoCripto">
-        <option value="1h">1 H</option>
-        <option value="1d" selected>1 D</option>
-        <option value="1w">1 S</option>
-        <option value="1m">1 M</option>
-        <option value="realtime">Tiempo Real</option>
-      </select>
-      <span id="valCripto"></span>
-    </div>
-    <div id="grafCripto"></div>
-  </section>
+    <section id="empresas" class="seccion">
+      <h2>Empresas</h2>
+      <div id="listaEmpresas"></div>
+    </section>
 
-  <section id="empresas" class="seccion">
-    <div id="listaEmpresas"></div>
-  </section>
+    <section id="ia" class="seccion">
+      <h2>Asistente IA</h2>
+      <div id="respIA">Selecciona una sección para explicaciones rápidas.</div>
+    </section>
+  </main>
 
-  <section id="ia" class="seccion">
-    <div id="preguntasIA">
-      <button onclick="preguntarIA('tutorial')">¿Cómo usar?</button>
-      <button onclick="preguntarIA('datos')">¿De dónde vienen los datos?</button>
-      <button onclick="preguntarIA('offline')">¿Qué pasa sin internet?</button>
-      <button onclick="preguntarIA('empresas')">¿Qué empresas incluye?</button>
-      <button onclick="preguntarIA('graficos')">¿Cómo funcionan los gráficos?</button>
-    </div>
-    <div id="respIA"></div>
-  </section>
-</main>
-
-<script src="config.js"></script>
-<script src="utils.js"></script>
-<script src="script.js"></script>
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
