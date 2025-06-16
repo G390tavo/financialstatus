@@ -1,43 +1,27 @@
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #f1f1f1;
-  color: #222;
+  margin: 0;
+  background-color: #f4f4f4;
+  color: #333;
 }
 
 header {
-  display: flex;
-  align-items: center;
-  background-color: #0a472e;
+  background-color: #1a1a1a;
   color: white;
   padding: 10px;
+  display: flex;
+  align-items: center;
 }
 
-#logo {
-  height: 50px;
+.logo {
+  width: 40px;
+  height: 40px;
   margin-right: 10px;
 }
 
-nav {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: #e0e0e0;
-  padding: 10px;
-  justify-content: space-around;
-}
-
-nav button {
-  margin: 5px;
-  padding: 10px;
-  background-color: #0a472e;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-nav button:hover {
-  background-color: #0d5f3c;
+h1 {
+  margin: 0;
+  font-size: 1.8em;
 }
 
 main {
@@ -45,36 +29,38 @@ main {
 }
 
 .seccion {
-  display: none;
+  margin-bottom: 40px;
 }
 
-.lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.empresa, .noticia, .moneda, .cripto {
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  width: 300px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+select, button {
+  padding: 8px;
+  margin: 5px 0;
+  font-size: 1em;
 }
 
 canvas {
-  max-width: 100%;
-  height: 400px;
+  width: 100% !important;
+  max-height: 400px;
+  margin-top: 20px;
+  background: #fff;
+  border: 1px solid #ccc;
 }
 
-.loader {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
-  z-index: 9999;
+.botones button {
+  margin-right: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.botones button:hover {
+  background-color: #218838;
+}
+
+.respuesta-ia {
+  background-color: #e0f7fa;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
 }
