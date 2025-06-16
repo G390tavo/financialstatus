@@ -1,41 +1,57 @@
 let chartInstance = null;
-let tipoActual = "monedas";
-let periodoActual = "1d";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await cargarDatos();
   crearBotonesPeriodo();
-  document.getElementById("tipoDato").addEventListener("change", async (e) => {
-    tipoActual = e.target.value;
-    await cargarDatos();
-  });
+  document.getElementById("tipoDato").addEventListener("change", cargarDatos);
+  await cargarDatos(); // Cargar al inicio
 });
 
-async function cargarDatos() {
+function crearBotonesPeriodo() {
+  const periodos = ["1d", "7d", "30d", "1a"];
+  const contenedor = document.getElementById("periodos");
+  contenedor.innerHTML = "";
+  periodos.forEach(p => {
+    const btn = document.createElement("button");
+    btn.textContent = p;
+    btn.onclick = () => cargarDatos(p);
+    contenedor.appendChild(btn);
+  });
+}
+
+async function cargarDatos(periodo = "1d") {
+  const tipo = document.getElementById("tipoDato").value;
+  const contenedor = document.getElementById("contenidoDinamico");
+  contenedor.innerHTML = "<p>Cargando...</p>";
+
   try {
-    if (tipoActual === "monedas") {
+    let datos = [];
+
+    if (tipo === "monedas") {
       const res = await fetch("https://api.exchangerate.host/latest");
       const data = await res.json();
-      const monedas = Object.keys(data.rates);
-      mostrarOpciones(monedas);
-      renderizarGrafico("grafico", ["Inicio", "Medio", "Fin"], [100, 120, 110]);
-    } else if (tipoActual === "criptomonedas") {
+      if (!data || !data.rates) throw new Error("Datos no válidos");
+      datos = Object.keys(data.rates);
+      renderizarTabla(datos);
+      renderizarGrafico(["Inicio", "Medio", "Fin"], [100, 120, 110]);
+    } else if (tipo === "criptomonedas") {
       const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd");
       const data = await res.json();
-      const criptos = data.map(c => `${c.name} (${c.symbol.toUpperCase()})`);
-      mostrarOpciones(criptos);
-      renderizarGrafico("grafico", ["Inicio", "Medio", "Fin"], [200, 180, 210]);
-    } else if (tipoActual === "empresas") {
-      const empresas = ["Apple", "Microsoft", "Amazon", "Google", "Tesla", "Meta"];
-      mostrarOpciones(empresas);
-      renderizarGrafico("grafico", ["2022", "2023", "2024"], [500, 600, 580]);
+      if (!Array.isArray(data)) throw new Error("Datos no válidos");
+      datos = data.map(c => `${c.name} (${c.symbol.toUpperCase()})`);
+      renderizarTabla(datos);
+      renderizarGrafico(["Inicio", "Medio", "Fin"], [210, 180, 230]);
+    } else if (tipo === "empresas") {
+      datos = ["Apple", "Microsoft", "Amazon", "Google", "Tesla", "Meta"];
+      renderizarTabla(datos);
+      renderizarGrafico(["2022", "2023", "2024"], [500, 620, 580]);
     }
   } catch (e) {
-    console.error("Error al cargar datos:", e);
+    contenedor.innerHTML = "<p>Error al cargar datos.</p>";
+    console.error("Error cargando datos:", e);
   }
 }
 
-function mostrarOpciones(lista) {
+function renderizarTabla(lista) {
   const contenedor = document.getElementById("contenidoDinamico");
   contenedor.innerHTML = "";
   const tabla = document.createElement("table");
@@ -47,24 +63,8 @@ function mostrarOpciones(lista) {
   contenedor.appendChild(tabla);
 }
 
-function crearBotonesPeriodo() {
-  const periodos = ["1d", "7d", "30d", "1a"];
-  const contenedor = document.getElementById("periodos");
-  contenedor.innerHTML = "";
-  periodos.forEach(p => {
-    const btn = document.createElement("button");
-    btn.textContent = p;
-    btn.onclick = () => {
-      periodoActual = p;
-      cargarDatos();
-    };
-    contenedor.appendChild(btn);
-  });
-}
-
-function renderizarGrafico(canvasId, labels, datos) {
-  const ctx = document.getElementById(canvasId).getContext("2d");
-
+function renderizarGrafico(labels, datos) {
+  const ctx = document.getElementById("grafico").getContext("2d");
   if (chartInstance instanceof Chart) {
     chartInstance.destroy();
   }
@@ -86,19 +86,19 @@ function renderizarGrafico(canvasId, labels, datos) {
       plugins: {
         legend: {
           labels: {
-            color: document.body.classList.contains("dark-mode") ? "#ffffff" : "#000000"
+            color: document.body.classList.contains("dark-mode") ? "#fff" : "#000"
           }
         }
       },
       scales: {
         x: {
           ticks: {
-            color: document.body.classList.contains("dark-mode") ? "#ffffff" : "#000000"
+            color: document.body.classList.contains("dark-mode") ? "#fff" : "#000"
           }
         },
         y: {
           ticks: {
-            color: document.body.classList.contains("dark-mode") ? "#ffffff" : "#000000"
+            color: document.body.classList.contains("dark-mode") ? "#fff" : "#000"
           }
         }
       }
@@ -108,7 +108,7 @@ function renderizarGrafico(canvasId, labels, datos) {
 
 function alternarModoOscuro() {
   document.body.classList.toggle("dark-mode");
-  cargarDatos(); // actualiza colores del gráfico también
+  renderizarGrafico(["Actualizando..."], [0]); // Forzar recarga con colores nuevos
 }
 
 function responderIA() {
@@ -116,10 +116,10 @@ function responderIA() {
   const respuesta = document.getElementById("respuestaIA");
 
   const respuestas = {
-    tutorial: "Usa los selectores para cambiar entre monedas, criptomonedas o empresas. Luego elige el período para ver datos históricos.",
-    monedas: "Se pueden consultar monedas de más de 150 países en tiempo casi real.",
-    empresas: "Se muestra información básica: nombre, evolución de precio y más pronto.",
-    fuente: "Usamos CoinGecko y ExchangeRate.host como fuentes de datos."
+    tutorial: "Selecciona un tipo de dato (moneda, cripto, empresa), luego elige un período y verás la tabla y gráfico correspondientes.",
+    monedas: "Se muestran más de 150 monedas internacionales con tasas en tiempo real.",
+    empresas: "Puedes ver algunas de las empresas más importantes y su comportamiento general.",
+    fuente: "Los datos provienen de CoinGecko y ExchangeRate.host."
   };
 
   respuesta.innerHTML = `<p>${respuestas[pregunta] || "Lo siento, no tengo esa respuesta."}</p>`;
