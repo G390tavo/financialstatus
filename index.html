@@ -1,70 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinancialStatus APP</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FinancialStatus</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
+  <div id="loader" class="loader">Cargando...</div>
 
-    <header>
-        <img src="logo.png" alt="Logo" class="logo">
-        <h1>FinancialStatus APP</h1>
-    </header>
+  <header>
+    <img src="logo.png" alt="Logo" id="logo"/>
+    <h1>FinancialStatus</h1>
+  </header>
 
-    <nav>
-        <button onclick="mostrarSeccion('inicio')">Inicio</button>
-        <button onclick="mostrarSeccion('monedas')">Monedas</button>
-        <button onclick="mostrarSeccion('criptomonedas')">Criptomonedas</button>
-        <button onclick="mostrarSeccion('empresas')">Empresas</button>
-        <button onclick="mostrarSeccion('asistente')">Asistente IA</button>
-    </nav>
+  <nav>
+    <button onclick="mostrarVista('empresas')">Empresas</button>
+    <button onclick="mostrarVista('monedas')">Monedas</button>
+    <button onclick="mostrarVista('criptos')">Criptomonedas</button>
+    <button onclick="mostrarVista('configuracion')">Configuración</button>
+    <button onclick="mostrarVista('asistente')">IA Asistente</button>
+    <button onclick="mostrarVista('noticias')">Noticias</button>
+  </nav>
 
-    <main>
-        <section id="inicio" class="seccion">
-            <h2>Bienvenido a FinancialStatus</h2>
-            <p>Consulta monedas, criptomonedas, empresas y más en tiempo real.</p>
-        </section>
+  <main>
+    <section id="empresas" class="seccion">
+      <h2>Empresas destacadas</h2>
+      <div id="listaEmpresas" class="lista"></div>
+    </section>
 
-        <section id="monedas" class="seccion">
-            <h2>Monedas Nacionales</h2>
-            <label for="monedaSelect">Selecciona una moneda:</label>
-            <select id="monedaSelect"></select>
-            <div id="graficoMonedas">
-                <p>Gráfico disponible próximamente.</p>
-            </div>
-        </section>
+    <section id="monedas" class="seccion">
+      <h2>Monedas internacionales</h2>
+      <select id="selectorMoneda"></select>
+      <select id="selectorTiempoMoneda">
+        <option value="1d">1 Día</option>
+        <option value="7d">7 Días</option>
+        <option value="30d">30 Días</option>
+        <option value="real">Tiempo real</option>
+      </select>
+      <canvas id="graficoMoneda"></canvas>
+    </section>
 
-        <section id="criptomonedas" class="seccion">
-            <h2>Criptomonedas</h2>
-            <label for="criptoSelect">Selecciona una cripto:</label>
-            <select id="criptoSelect"></select>
-            <div id="graficoCriptos">
-                <p>Gráfico de criptomonedas disponible próximamente.</p>
-            </div>
-        </section>
+    <section id="criptos" class="seccion">
+      <h2>Criptomonedas</h2>
+      <select id="selectorCripto"></select>
+      <select id="selectorTiempoCripto">
+        <option value="1d">1 Día</option>
+        <option value="7d">7 Días</option>
+        <option value="30d">30 Días</option>
+        <option value="real">Tiempo real</option>
+      </select>
+      <canvas id="graficoCripto"></canvas>
+    </section>
 
-        <section id="empresas" class="seccion">
-            <h2>Empresas Destacadas</h2>
-            <div id="listaEmpresas"></div>
-        </section>
+    <section id="configuracion" class="seccion">
+      <h2>Configuración</h2>
+      <label><input type="checkbox" id="modoOscuro"/> Activar modo oscuro</label>
+      <p>Versión: 4.0 Beta</p>
+    </section>
 
-        <section id="asistente" class="seccion">
-            <h2>Asistente Inteligente</h2>
-            <div class="botonesIA">
-                <button data-respuesta="Este es el tutorial de uso básico.">¿Cómo usar la app?</button>
-                <button data-respuesta="Cambia de sección con los botones del menú lateral.">¿Cómo navegar?</button>
-                <button data-respuesta="Próximamente más funciones en el asistente IA.">¿Qué puedo hacer aquí?</button>
-            </div>
-            <div id="respuestaIA"></div>
-        </section>
-    </main>
+    <section id="asistente" class="seccion">
+      <h2>IA Asistente</h2>
+      <p>Seleccione una pregunta:</p>
+      <select id="preguntasIA">
+        <option value="">Selecciona una pregunta</option>
+        <option value="tutorial">¿Cómo uso la aplicación?</option>
+        <option value="problemas">¿Qué hago si los gráficos no cargan?</option>
+        <option value="datos">¿De dónde vienen los datos?</option>
+      </select>
+      <button onclick="responderIA()">Responder</button>
+      <div id="respuestaIA" class="respuesta"></div>
+    </section>
 
-    <footer>
-        <p>Versión 3.9 - FinancialStatus © 2025</p>
-    </footer>
+    <section id="noticias" class="seccion">
+      <h2>Noticias Económicas</h2>
+      <div id="noticiasEconomicas" class="lista"></div>
+    </section>
+  </main>
 
-    <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
