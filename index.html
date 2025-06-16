@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABg..." />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
@@ -13,43 +13,65 @@
     <h1>FinancialStatus</h1>
     <button id="btnDark">🌓</button>
   </header>
+
   <aside id="sidebar">
     <nav>
-      <button data-seccion="monedas">Monedas Nacionales</button>
-      <button data-seccion="criptos">Criptomonedas</button>
-      <button data-seccion="empresas">Empresas</button>
-      <button data-seccion="ia">Preguntar a la IA</button>
+      <button data-sec="monedas">Monedas</button>
+      <button data-sec="criptos">Criptomonedas</button>
+      <button data-sec="empresas">Empresas</button>
+      <button data-sec="ia">IA Ayuda</button>
     </nav>
   </aside>
+
   <main>
-    <section id="monedas" class="seccion activa">
+    <section id="monedas" class="seccion">
+      <h2>Monedas</h2>
       <div class="controles">
-        <select id="selectMoneda"></select>
+        <select id="selMoneda"></select>
+        <select id="selPeriodoMoneda">
+          <option value="1h">1h</option>
+          <option value="1d">1d</option>
+          <option value="1w">1s</option>
+          <option value="1m">1m</option>
+          <option value="realtime">Tiempo real</option>
+        </select>
       </div>
       <div id="grafMoneda"></div>
     </section>
+
     <section id="criptos" class="seccion">
+      <h2>Criptomonedas</h2>
       <div class="controles">
-        <select id="selectCripto"></select>
+        <select id="selCripto"></select>
+        <select id="selPeriodoCripto">
+          <option value="1h">1h</option>
+          <option value="1d">1d</option>
+          <option value="1w">1s</option>
+          <option value="1m">1m</option>
+          <option value="realtime">Tiempo real</option>
+        </select>
       </div>
       <div id="grafCripto"></div>
     </section>
+
     <section id="empresas" class="seccion">
+      <h2>Empresas</h2>
       <div id="listaEmpresas"></div>
     </section>
+
     <section id="ia" class="seccion">
-      <h2>Asistente Financiero</h2>
-      <div id="iaButtons">
-        <button class="iaPrompt">¿Qué es una criptomoneda?</button>
-        <button class="iaPrompt">¿Cómo se lee un gráfico financiero?</button>
-        <button class="iaPrompt">¿Qué factores afectan el precio del dólar?</button>
+      <h2>IA - Ayuda</h2>
+      <div class="controles">
+        <button onclick="responderIA('como usar monedas')">¿Cómo usar monedas?</button>
+        <button onclick="responderIA('como ver criptos')">¿Cómo ver criptomonedas?</button>
+        <button onclick="responderIA('como funcionan las empresas')">¿Cómo funcionan las empresas?</button>
       </div>
-      <div id="iaRespuesta" class="respuestaIA"></div>
+      <div id="respIA">Selecciona una pregunta</div>
     </section>
   </main>
+
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="script.js"></script>
-  <script src="ai.js"></script>
 </body>
 </html>
