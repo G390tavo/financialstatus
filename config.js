@@ -1,6 +1,6 @@
 const CONFIG = {
-  version: "3.1",
-  monedaBase: "PEN",
+  version: "1.5",
+  monedaBase: "USD",
   maxEmpresas: 10,
-  modoDemostracion: true,
+  modoOffline: false // Si falla API, ChatGPT proveerá info
 };
