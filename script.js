@@ -1,47 +1,68 @@
-document.getElementById("toggleSidebar").addEventListener("click", () => {
-  document.querySelector("aside").classList.toggle("open");
-});
+document.addEventListener("DOMContentLoaded", async () => {
+  const botonesNav = document.querySelectorAll("aside nav button");
+  const secciones = document.querySelectorAll(".seccion");
+  const sidebar = document.getElementById("sidebar");
+  const toggleSidebar = document.getElementById("toggleSidebar");
+  const btnDark = document.getElementById("btnDark");
 
-const secciones = document.querySelectorAll(".seccion");
-document.querySelectorAll("aside nav button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const id = btn.dataset.seccion;
-    secciones.forEach(s => s.classList.remove("activa"));
-    document.getElementById(id).classList.add("activa");
+  let dark = false;
+  aplicarModoOscuro(dark);
+
+  toggleSidebar.onclick = () => sidebar.classList.toggle("open");
+  btnDark.onclick = () => {
+    dark = !dark;
+    aplicarModoOscuro(dark);
+  };
+
+  botonesNav.forEach(b => {
+    b.onclick = () => {
+      secciones.forEach(s => s.classList.remove("activa"));
+      document.getElementById(b.dataset.sec).classList.add("activa");
+    };
   });
-});
 
-document.getElementById("btnDark").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-});
-
-window.addEventListener("load", async () => {
-  const monedas = await utils.obtenerMonedas();
-  const criptos = await obtenerCriptos();
-  llenarSelect("selectMoneda", monedas);
-  llenarSelect("selectCripto", criptos);
-});
-
-function llenarSelect(id, items) {
-  const select = document.getElementById(id);
-  select.innerHTML = "";
-  items.forEach(i => {
+  // Cargar monedas
+  const monedas = await obtenerMonedas();
+  const selMoneda = document.getElementById("selMoneda");
+  monedas.forEach(m => {
     const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = i;
-    select.appendChild(opt);
+    opt.value = m;
+    opt.textContent = m;
+    selMoneda.appendChild(opt);
   });
-}
 
-// IA
-import { FinancialAI } from "./ai.js";
-const IA = new FinancialAI();
-
-document.querySelectorAll(".iaPrompt").forEach(btn => {
-  btn.addEventListener("click", async () => {
-    const pregunta = btn.textContent;
-    document.getElementById("iaRespuesta").textContent = "Buscando respuesta...";
-    const respuesta = await IA.responder(pregunta);
-    document.getElementById("iaRespuesta").textContent = respuesta;
+  // Cargar criptos
+  const criptos = await obtenerCriptos();
+  const selCripto = document.getElementById("selCripto");
+  criptos.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c;
+    selCripto.appendChild(opt);
   });
+
+  // Mostrar empresas
+  const contEmpresas = document.getElementById("listaEmpresas");
+  CONFIG.empresasEstaticas.forEach(emp => {
+    const div = crearElemento("div", "empresa");
+    div.innerHTML = `<strong>${emp.nombre}</strong><br>
+    Símbolo: ${emp.simbolo}<br>
+    Sector: ${emp.sector}<br>
+    País: ${emp.pais}`;
+    contEmpresas.appendChild(div);
+  });
+
+  // IA básica por botones
+  window.responderIA = function (pregunta) {
+    const div = document.getElementById("respIA");
+    if (pregunta.includes("monedas")) {
+      div.innerHTML = "Selecciona una moneda en el menú, elige el periodo, y espera el gráfico.";
+    } else if (pregunta.includes("criptos")) {
+      div.innerHTML = "Selecciona una criptomoneda, un periodo, y observa el gráfico.";
+    } else if (pregunta.includes("empresas")) {
+      div.innerHTML = "Haz clic en la pestaña Empresas para ver la información de compañías reales.";
+    } else {
+      div.innerHTML = "Estoy buscando una respuesta...";
+    }
+  };
 });
