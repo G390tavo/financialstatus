@@ -1,61 +1,90 @@
+const CONFIG = {
+  monedaBase: "USD",
+  maxEmpresas: 10,
+  version: "1.7",
+  gptRespaldo: true
+};
+
 async function obtenerMonedas() {
   try {
-    const res = await fetch("https://api.exchangerate.host/latest?base=USD");
+    const res = await fetch(`https://api.exchangerate.host/latest?base=${CONFIG.monedaBase}`);
     const data = await res.json();
     return data.rates;
-  } catch {
-    console.warn("Fallo API monedas, usando ChatGPT-3.5 como fallback...");
-    return await obtenerMonedasDesdeGPT();
+  } catch (err) {
+    console.warn("Fallo en ExchangeRate, intentando con GPT...");
+    if (CONFIG.gptRespaldo) return await respaldoGPT("monedas");
+    return {};
   }
 }
 
 async function obtenerCriptos() {
   try {
-    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd");
-    return await res.json();
-  } catch {
-    console.warn("Fallo API criptos, usando ChatGPT-3.5 como fallback...");
-    return await obtenerCriptosDesdeGPT();
+    const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1");
+    const data = await res.json();
+    return data.map(c => ({
+      id: c.id,
+      name: c.name,
+      current_price: c.current_price,
+      symbol: c.symbol
+    }));
+  } catch (err) {
+    console.warn("Fallo en CoinGecko, intentando con GPT...");
+    if (CONFIG.gptRespaldo) return await respaldoGPT("criptos");
+    return [];
   }
 }
 
 async function obtenerEmpresaInfo(nombre) {
-  const descripcionesGPT = {
-    "Apple": "Apple Inc. es una empresa de tecnología reconocida por sus iPhones, iPads y Macs. Fue fundada en EE.UU. en 1976.",
-    "Google": "Google LLC, empresa líder en tecnología y búsquedas en internet, parte de Alphabet Inc.",
-    "Amazon": "Amazon.com, Inc. es la mayor tienda online del mundo, centrada en e-commerce y servicios cloud (AWS).",
-    "Tesla": "Tesla Inc. es pionera en automóviles eléctricos y energías limpias, fundada por Elon Musk.",
-    "Microsoft": "Microsoft Corp. desarrolla sistemas operativos (Windows), software y servicios en la nube.",
-    "Meta": "Meta Platforms Inc. es la empresa matriz de Facebook, Instagram y WhatsApp.",
-    "Samsung": "Samsung Electronics es una empresa surcoreana líder en electrónica y smartphones.",
-    "Intel": "Intel Corp. es una de las mayores fabricantes de chips y microprocesadores del mundo.",
-    "IBM": "IBM es una empresa de tecnología e innovación enfocada en IA y soluciones empresariales.",
-    "Nvidia": "Nvidia Corporation es famosa por sus tarjetas gráficas y avances en IA y GPU computing."
-  };
-  return {
-    nombre,
-    descripcion: descripcionesGPT[nombre] || "Sin descripción disponible.",
-    sector: "Tecnología",
-    pais: "EE.UU.",
-    valorActual: `$${(500 + Math.random() * 1000).toFixed(2)}`
-  };
+  try {
+    const res = await fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${nombre}`);
+    const data = await res.json();
+    const quote = data.quoteResponse.result[0];
+    return {
+      nombre: nombre,
+      descripcion: "Descripción obtenida en línea",
+      sector: "Tecnología",
+      pais: quote?.region || "EE.UU.",
+      valorActual: `$${quote?.regularMarketPrice || "Desconocido"}`
+    };
+  } catch {
+    return {
+      nombre,
+      descripcion: "Descripción breve de " + nombre,
+      sector: "Tecnología",
+      pais: "EE.UU.",
+      valorActual: "$607.15"
+    };
+  }
 }
 
-// Simulación de GPT como fallback (sin conexión real)
-async function obtenerMonedasDesdeGPT() {
-  return {
-    EUR: 0.93,
-    GBP: 0.79,
-    JPY: 155.4,
-    PEN: 3.7,
-    BRL: 5.25
+async function respaldoGPT(tipo) {
+  const prompts = {
+    monedas: `Dame una lista de monedas nacionales con sus tasas respecto al dólar (USD). Ejemplo: { "PEN": 3.6, "EUR": 0.9 }`,
+    criptos: `Dame una lista de criptomonedas principales con su nombre, id y precio actual en USD. Ejemplo: [{ id: "bitcoin", name: "Bitcoin", current_price: 67000 }]`
   };
-}
 
-async function obtenerCriptosDesdeGPT() {
-  return [
-    { id: "bitcoin", name: "Bitcoin", current_price: 67250 },
-    { id: "ethereum", name: "Ethereum", current_price: 3765 },
-    { id: "solana", name: "Solana", current_price: 148 }
-  ];
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer TU_API_KEY_GPT",  // REEMPLAZAR
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "Eres una IA experta en economía." },
+          { role: "user", content: prompts[tipo] }
+        ]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.choices[0].message.content;
+
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error("Error al usar GPT como respaldo:", e);
+    return tipo === "monedas" ? {} : [];
+  }
 }
