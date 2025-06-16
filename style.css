@@ -1,110 +1,78 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  font-family: "Segoe UI", sans-serif;
-  background: #f4f4f4;
+  font-family: sans-serif;
+  margin: 0;
+  background-color: #f1f1f1;
   color: #222;
-  padding: 10px;
-}
-
-body.dark {
-  background: #121212;
-  color: #eee;
 }
 
 header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  background: #0c3;
+  color: white;
+  padding: 10px 20px;
 }
 
 #logo {
-  width: 40px;
   height: 40px;
-}
-
-h1 {
-  flex: 1;
-  font-size: 1.5em;
+  margin-right: 15px;
 }
 
 nav {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  justify-content: space-around;
+  background: #eee;
+  padding: 10px;
 }
 
-button {
-  padding: 8px 12px;
-  border: none;
-  background: #007bff;
-  color: white;
+nav button {
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #ccc;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
-button:hover {
-  background: #0056b3;
+main {
+  padding: 20px;
 }
 
 .seccion {
   display: none;
 }
 
-#listaEmpresas .empresa {
-  background: #fff;
-  margin: 10px 0;
+.empresa {
+  background: white;
+  border: 1px solid #ccc;
   padding: 12px;
+  margin-bottom: 10px;
   border-radius: 6px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-body.dark #listaEmpresas .empresa {
-  background: #1e1e1e;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
 }
 
 canvas {
   max-width: 100%;
-  margin-top: 15px;
-}
-
-select, input[type="text"] {
-  padding: 6px;
-  margin: 5px;
-  font-size: 1em;
-}
-
-#respuestaIA {
-  background: #eee;
-  padding: 10px;
-  white-space: pre-wrap;
-  border-radius: 6px;
-  margin-top: 10px;
-}
-
-body.dark #respuestaIA {
-  background: #222;
+  margin-top: 20px;
 }
 
 #loader {
   position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: white;
-  color: black;
-  font-size: 1.2em;
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 24px;
   z-index: 9999;
 }
 
-body.dark #loader {
-  background: #111;
-  color: #ccc;
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+  }
+  nav {
+    flex-direction: column;
+  }
 }
