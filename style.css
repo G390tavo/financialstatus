@@ -2,64 +2,64 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #ffffff;
-  color: #000000;
+  background: white;
+  color: black;
 }
 
 header {
-  background-color: #2e7d32; /* Verde */
+  background-color: #2e7d32;
   color: white;
   padding: 15px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-}
-
-.logo {
-  height: 40px;
-  margin-right: 10px;
+  align-items: center;
 }
 
 main {
   padding: 20px;
 }
 
+section {
+  margin-bottom: 30px;
+}
+
 select, button {
-  padding: 6px 12px;
+  padding: 8px;
   margin: 5px;
-  border: none;
   background-color: #4caf50;
   color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 4px;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #388e3c;
 }
 
-#contenidoDinamico table {
+table {
   width: 100%;
-  margin-top: 20px;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
-#contenidoDinamico td {
-  padding: 10px;
+td {
   border-bottom: 1px solid #ddd;
+  padding: 8px;
 }
 
-/* Modo Oscuro */
+/* Modo oscuro */
 body.dark-mode {
   background-color: #121212;
-  color: #ffffff;
+  color: white;
 }
 
 body.dark-mode header {
   background-color: #1b5e20;
 }
 
-body.dark-mode select,
-body.dark-mode button {
+body.dark-mode button,
+body.dark-mode select {
   background-color: #388e3c;
+  color: white;
 }
