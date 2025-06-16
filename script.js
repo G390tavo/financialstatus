@@ -1,45 +1,31 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const loader = document.getElementById("loader");
-  loader.style.display = "none";
-
-  document.getElementById("modoOscuro").addEventListener("change", toggleModoOscuro);
-  document.getElementById("preguntasIA").addEventListener("change", () => {
-    document.getElementById("respuestaIA").textContent = "";
-  });
-
   await cargarEmpresas();
   await cargarMonedas();
-  await cargarCriptos();
-  cargarNoticias();
+  await cargarCriptomonedas();
 });
-
-function mostrarVista(id) {
-  document.querySelectorAll(".seccion").forEach(seccion => {
-    seccion.style.display = "none";
-  });
-  document.getElementById(id).style.display = "block";
-}
-
-function toggleModoOscuro() {
-  document.body.classList.toggle("oscuro");
-}
 
 async function cargarEmpresas() {
   const empresas = [
-    { nombre: "Apple", descripcion: "Empresa tecnológica estadounidense conocida por el iPhone, Mac, iPad y servicios digitales.", sector: "Tecnología", pais: "EE.UU.", valor: "$607.15" },
-    { nombre: "Microsoft", descripcion: "Corporación multinacional de software, responsable del sistema operativo Windows.", sector: "Tecnología", pais: "EE.UU.", valor: "$422.31" },
-    { nombre: "Tesla", descripcion: "Empresa automotriz y energética especializada en vehículos eléctricos y energía renovable.", sector: "Automotriz", pais: "EE.UU.", valor: "$183.17" },
+    { nombre: "Apple", sector: "Tecnología", pais: "EE.UU.", valor: 607.15 },
+    { nombre: "Google", sector: "Tecnología", pais: "EE.UU.", valor: 2748.80 },
+    { nombre: "Amazon", sector: "Comercio", pais: "EE.UU.", valor: 3456.23 },
+    { nombre: "Tesla", sector: "Automotriz", pais: "EE.UU.", valor: 1234.56 },
+    { nombre: "Samsung", sector: "Tecnología", pais: "Corea", valor: 890.50 },
+    { nombre: "Microsoft", sector: "Tecnología", pais: "EE.UU.", valor: 3490.80 },
+    { nombre: "NVIDIA", sector: "Tecnología", pais: "EE.UU.", valor: 980.60 },
+    { nombre: "Toyota", sector: "Automotriz", pais: "Japón", valor: 165.70 },
+    { nombre: "Facebook", sector: "Redes", pais: "EE.UU.", valor: 329.10 },
+    { nombre: "Alibaba", sector: "Comercio", pais: "China", valor: 198.20 }
   ];
+
   const contenedor = document.getElementById("listaEmpresas");
   contenedor.innerHTML = "";
   empresas.forEach(e => {
-    contenedor.innerHTML += `
-      <div class="empresa">
-        <h3>${e.nombre}</h3>
-        <p>${e.descripcion}</p>
-        <p><strong>Sector:</strong> ${e.sector} | <strong>País:</strong> ${e.pais}</p>
-        <p><strong>Valor actual:</strong> ${e.valor}</p>
-      </div>`;
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${e.nombre}</strong><br>
+    Sector: ${e.sector} | País: ${e.pais}<br>
+    Valor actual: $${e.valor}`;
+    contenedor.appendChild(div);
   });
 }
 
@@ -47,92 +33,42 @@ async function cargarMonedas() {
   try {
     const res = await fetch("https://api.exchangerate.host/latest?base=USD");
     const data = await res.json();
-    if (!data.rates) throw new Error("Sin datos");
-    const selector = document.getElementById("selectorMoneda");
-    selector.innerHTML = "";
+    const select = document.getElementById("monedaSelect");
+    select.innerHTML = "";
     Object.keys(data.rates).slice(0, 10).forEach(moneda => {
       const option = document.createElement("option");
       option.value = moneda;
       option.textContent = moneda;
-      selector.appendChild(option);
+      select.appendChild(option);
     });
-    selector.addEventListener("change", actualizarGraficoMoneda);
-    document.getElementById("selectorTiempoMoneda").addEventListener("change", actualizarGraficoMoneda);
-    actualizarGraficoMoneda();
-  } catch (error) {
-    usarFuenteAlternaMonedas();
+  } catch (e) {
+    console.error("Error al cargar monedas", e);
   }
 }
 
-function usarFuenteAlternaMonedas() {
-  const selector = document.getElementById("selectorMoneda");
-  const monedasFicticias = ["USD", "EUR", "PEN", "JPY", "GBP"];
-  selector.innerHTML = "";
-  monedasFicticias.forEach(m => {
-    const option = document.createElement("option");
-    option.value = m;
-    option.textContent = m + " (estimado)";
-    selector.appendChild(option);
-  });
-}
-
-async function actualizarGraficoMoneda() {
-  const moneda = document.getElementById("selectorMoneda").value;
-  const tiempo = document.getElementById("selectorTiempoMoneda").value;
-  if (!moneda) return;
-  const dias = tiempo === "1d" ? 1 : tiempo === "7d" ? 7 : tiempo === "30d" ? 30 : 5;
-
-  const res = await fetch(`https://api.exchangerate.host/timeseries?base=USD&symbols=${moneda}&start_date=${obtenerFechaInicio(dias)}&end_date=${obtenerFechaHoy()}`);
-  const data = await res.json();
-  const labels = Object.keys(data.rates);
-  const valores = labels.map(fecha => data.rates[fecha][moneda]);
-
-  renderizarGrafico("graficoMoneda", labels, valores, `Historial de ${moneda}`);
-}
-
-async function cargarCriptos() {
+async function cargarCriptomonedas() {
   try {
     const res = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd");
-    const criptos = await res.json();
-    const selector = document.getElementById("selectorCripto");
-    selector.innerHTML = "";
-    criptos.slice(0, 10).forEach(cripto => {
+    const data = await res.json();
+    const select = document.getElementById("criptoSelect");
+    select.innerHTML = "";
+    data.slice(0, 10).forEach(c => {
       const option = document.createElement("option");
-      option.value = cripto.id;
-      option.textContent = cripto.name;
-      selector.appendChild(option);
+      option.value = c.id;
+      option.textContent = c.name;
+      select.appendChild(option);
     });
-    selector.addEventListener("change", actualizarGraficoCripto);
-    document.getElementById("selectorTiempoCripto").addEventListener("change", actualizarGraficoCripto);
-    actualizarGraficoCripto();
-  } catch (error) {
-    usarFuenteAlternaCripto();
+  } catch (e) {
+    console.error("Error al cargar criptomonedas", e);
   }
-}
-
-function usarFuenteAlternaCripto() {
-  const selector = document.getElementById("selectorCripto");
-  selector.innerHTML = `<option value="bitcoin">Bitcoin (estimado)</option>`;
-}
-
-async function actualizarGraficoCripto() {
-  const cripto = document.getElementById("selectorCripto").value;
-  const tiempo = document.getElementById("selectorTiempoCripto").value;
-  if (!cripto) return;
-
-  const dias = tiempo === "1d" ? 1 : tiempo === "7d" ? 7 : tiempo === "30d" ? 30 : 5;
-
-  const res = await fetch(`https://api.coingecko.com/api/v3/coins/${cripto}/market_chart?vs_currency=usd&days=${dias}`);
-  const data = await res.json();
-  const labels = data.prices.map(p => new Date(p[0]).toLocaleDateString());
-  const valores = data.prices.map(p => p[1]);
-
-  renderizarGrafico("graficoCripto", labels, valores, `Precio de ${cripto}`);
 }
 
 function renderizarGrafico(canvasId, etiquetas, valores, titulo) {
   const ctx = document.getElementById(canvasId).getContext("2d");
-  if (window[canvasId]) window[canvasId].destroy();
+  if (window[canvasId] && typeof window[canvasId].destroy === "function") {
+    window[canvasId].destroy();
+  }
+
   window[canvasId] = new Chart(ctx, {
     type: 'line',
     data: {
@@ -150,17 +86,15 @@ function renderizarGrafico(canvasId, etiquetas, valores, titulo) {
       plugins: {
         tooltip: {
           callbacks: {
-            label: (context) => `Precio: $${context.parsed.y.toFixed(2)}`
+            label: context => `Precio: $${context.parsed.y.toFixed(2)}`
           }
         }
       },
       scales: {
         x: {
-          display: true,
           title: { display: true, text: "Fecha" }
         },
         y: {
-          display: true,
           title: { display: true, text: "Valor" }
         }
       }
@@ -168,39 +102,32 @@ function renderizarGrafico(canvasId, etiquetas, valores, titulo) {
   });
 }
 
-function obtenerFechaHoy() {
-  return new Date().toISOString().split("T")[0];
+function actualizarGraficoMoneda(periodo) {
+  const moneda = document.getElementById("monedaSelect").value;
+  if (!moneda) return;
+  const etiquetas = ["Inicio", "Mitad", "Final"];
+  const valores = [1, 1.05, 1.1]; // Temporal, reemplazar por datos reales
+  renderizarGrafico("graficoMoneda", etiquetas, valores, `USD a ${moneda} (${periodo})`);
 }
 
-function obtenerFechaInicio(dias) {
-  const fecha = new Date();
-  fecha.setDate(fecha.getDate() - dias);
-  return fecha.toISOString().split("T")[0];
+function actualizarGraficoCripto(periodo) {
+  const cripto = document.getElementById("criptoSelect").value;
+  if (!cripto) return;
+  const etiquetas = ["Inicio", "Mitad", "Final"];
+  const valores = [1000, 1050, 1100]; // Temporal, reemplazar por datos reales
+  renderizarGrafico("graficoCripto", etiquetas, valores, `${cripto} (${periodo})`);
 }
 
 function responderIA() {
   const pregunta = document.getElementById("preguntasIA").value;
   const respuestaDiv = document.getElementById("respuestaIA");
   const respuestas = {
-    tutorial: "Para usar la aplicación, selecciona una sección en el menú (Empresas, Monedas, Criptomonedas). Luego elige una opción y espera a que se cargue el gráfico.",
-    problemas: "Si los gráficos no cargan, revisa tu conexión o espera unos segundos. Si el problema persiste, reinicia la aplicación.",
-    datos: "Los datos se obtienen de fuentes como CoinGecko y ExchangeRate.host. Si fallan, usamos estimaciones internas."
+    tutorial: "Selecciona una sección (Empresas, Monedas o Criptos). Luego escoge el valor y período que deseas ver. La gráfica se actualizará automáticamente.",
+    problemas: "Si no ves los gráficos, puede ser por una mala conexión, una API caída o un error interno. Intenta recargar o revisa si seleccionaste correctamente.",
+    datos: "Tomamos datos en tiempo real de fuentes como CoinGecko y ExchangeRate.host. Si fallan, se mostrará un mensaje o un gráfico estimado.",
+    empresas: "Muestra las principales empresas y su valor actual. Pronto podrás ver más detalles como evolución histórica y noticias relacionadas.",
+    criptomonedas: "Selecciona entre las principales criptos para ver su evolución por día, semana, mes o tiempo real.",
+    seguridad: "La app no guarda tus datos y usa APIs públicas. En el futuro tendrá defensas de ciberseguridad tipo Alpha y honeypots en Matrix."
   };
   respuestaDiv.textContent = respuestas[pregunta] || "Selecciona una pregunta válida.";
-}
-
-function cargarNoticias() {
-  const noticias = [
-    { titulo: "Mercado bursátil sube por segundo día consecutivo", fuente: "Bloomberg" },
-    { titulo: "Bitcoin alcanza nuevo máximo semanal", fuente: "CoinDesk" },
-    { titulo: "La inflación en EE.UU. se modera", fuente: "Reuters" }
-  ];
-  const contenedor = document.getElementById("noticiasEconomicas");
-  noticias.forEach(n => {
-    contenedor.innerHTML += `
-      <div class="noticia">
-        <h4>${n.titulo}</h4>
-        <p><strong>Fuente:</strong> ${n.fuente}</p>
-      </div>`;
-  });
 }
