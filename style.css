@@ -1,66 +1,39 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: sans-serif;
   margin: 0;
-  background-color: #f4f4f4;
-  color: #333;
+  padding: 0;
+  background: white;
+  color: black;
 }
 
 header {
-  background-color: #1a1a1a;
-  color: white;
-  padding: 10px;
   display: flex;
   align-items: center;
+  background-color: #f2f2f2;
+  padding: 10px;
 }
 
 .logo {
-  width: 40px;
-  height: 40px;
+  height: 50px;
   margin-right: 10px;
 }
 
-h1 {
-  margin: 0;
-  font-size: 1.8em;
+.periodos button {
+  margin: 5px;
 }
 
-main {
-  padding: 20px;
-}
-
-.seccion {
-  margin-bottom: 40px;
-}
-
-select, button {
-  padding: 8px;
-  margin: 5px 0;
-  font-size: 1em;
-}
-
-canvas {
-  width: 100% !important;
-  max-height: 400px;
-  margin-top: 20px;
-  background: #fff;
+.ia {
+  margin: 20px;
+  padding: 10px;
   border: 1px solid #ccc;
 }
 
-.botones button {
-  margin-right: 10px;
-  background-color: #28a745;
+/* Modo Oscuro */
+body.dark-mode {
+  background-color: #121212;
   color: white;
-  border: none;
-  cursor: pointer;
 }
 
-.botones button:hover {
-  background-color: #218838;
-}
-
-.respuesta-ia {
-  background-color: #e0f7fa;
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 10px;
+body.dark-mode header {
+  background-color: #1e1e1e;
 }
