@@ -1,124 +1,36 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
-  color: #111;
-  transition: background 0.3s, color 0.3s;
-}
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #007a33;
-  color: white;
-  padding: 1rem;
-}
-nav {
-  display: flex;
-  background: #e0e0e0;
-}
-nav button {
-  flex: 1;
-  padding: 0.8rem;
-  border: none;
-  background: white;
-  cursor: pointer;
-}
-nav button:hover, nav button.active {
-  background: #007a33;
-  color: white;
-}
-main {
-  display: grid;
-  grid-template-areas:
-    "sec1"
-    "sec2"
-    "sec3"
-    "sec4";
-}
-.seccion {
-  display: none;
-  padding: 1rem;
-}
-.seccion.activa {
-  display: block;
-}
-.controls {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-.controls select {
-  padding: 0.5rem;
-}
-.controls span {
-  font-weight: bold;
-  align-self: center;
-}
-#grafMoneda, #grafCripto {
-  height: 200px;
-  background: white;
-  border: 1px solid #ccc;
-}
-#listaEmpresas .empresa {
-  border: 1px solid #ccc;
-  padding: 0.8rem;
-  margin-bottom: 0.5rem;
-  background: #fff;
-}
-#preguntasIA button {
-  display: block;
-  width: 100%;
-  margin-bottom: 0.5rem;
-  padding: 0.8rem;
-  border: none;
-  background: #007a33;
-  color: white;
-  cursor: pointer;
-}
-#respIA {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #fff;
-  border: 1px solid #ccc;
-}
-
-/* Responsive */
-@media(min-width: 768px) {
-  main {
-    grid-template-areas:
-      "sec1 sec2"
-      "sec3 sec4";
-    grid-template-columns: 1fr 1fr;
-  }
-  #monedas { grid-area: sec1; }
-  #criptos { grid-area: sec2; }
-  #empresas { grid-area: sec3; }
-  #ia { grid-area: sec4; }
-}
-
-/* Dark mode */
-body.dark {
-  background: #121212;
-  color: #ddd;
-}
-body.dark header {
-  background: #004d1a;
-}
-body.dark nav button {
-  background: #333;
-  color: #ddd;
-}
-body.dark .controls select {
-  background: #333;
-  color: #ddd;
-}
-body.dark #grafMoneda, body.dark #grafCripto {
-  background: #222;
-  border-color: #444;
-}
-body.dark #listaEmpresas .empresa, body.dark #respIA {
-  background: #222;
-  border-color: #444;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;display:flex;min-height:100vh;
+     background:#f4f4f4;transition:background .3s,color .3s}
+header{position:fixed;top:0;left:0;right:0;height:50px;
+       background:#007a33;color:#fff;display:flex;align-items:center;
+       justify-content:space-between;padding:0 1rem;z-index:2}
+#toggleSidebar,#btnDark{background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer}
+aside{position:fixed;top:50px;left:0;bottom:0;width:220px;
+      background:#e0e0e0;overflow-y:auto;transform:translateX(-100%);
+      transition:transform .3s;z-index:1}
+aside.open{transform:translateX(0)}
+aside nav button{display:block;width:100%;padding:1rem;border:none;
+                 background:none;text-align:left;cursor:pointer;
+                 font-size:1rem;color:#111}
+aside nav button:hover{background:#007a33;color:#fff}
+main{margin-top:50px;flex:1;margin-left:0;padding:1rem;
+     transition:margin-left .3s}
+aside.open + main{margin-left:220px}
+.seccion{display:none}
+.seccion.activa{display:block}
+.controles{display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+select{padding:.5rem}
+#grafMoneda,#grafCripto{height:250px;background:#fff;border:1px solid #ccc;position:relative}
+.punto{position:absolute;width:8px;height:8px;border-radius:50%;
+       background:green;transform:translate(-50%,50%)}
+.lbl{position:absolute;padding:2px 4px;background:#fff;
+     border:1px solid #007a33;border-radius:4px;font-size:0.8rem;
+     transform:translate(-50%, calc(-100% - 8px))}
+#listaEmpresas .empresa{background:#fff;border:1px solid #ccc;
+                        padding:.8rem;margin-bottom:.5rem}
+.dark{background:#121212;color:#ddd}
+.dark header{background:#004d1a}
+.dark aside{background:#222;color:#ddd}
+.dark aside nav button:hover{background:#004d1a;color:#ddd}
+.dark #grafMoneda,#dark #grafCripto,
+.dark .empresa{background:#222;border-color:#444}
