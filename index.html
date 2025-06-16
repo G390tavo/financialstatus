@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FinancialStatus</title>
+  <title>FinancialStatus v4.3 Beta</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>🌍 FinancialStatus</h1>
+    <h1>FinancialStatus</h1>
     <button onclick="alternarModoOscuro()">🌓 Modo Oscuro</button>
   </header>
 
@@ -22,12 +22,34 @@
   <main>
     <section id="monedas" class="seccion">
       <h2>Monedas Nacionales</h2>
-      <div id="listaMonedas"></div>
+      <div class="controls">
+        <select id="selectMoneda"></select>
+        <select id="selectPeriodoMoneda">
+          <option value="1h">1 H</option>
+          <option value="1d" selected>1 D</option>
+          <option value="1w">1 S</option>
+          <option value="1m">1 M</option>
+          <option value="realtime">Tiempo Real</option>
+        </select>
+      </div>
+      <p id="valorActualMoneda"></p>
+      <canvas id="graficoMoneda"></canvas>
     </section>
 
     <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <div id="listaCriptos"></div>
+      <div class="controls">
+        <select id="selectCripto"></select>
+        <select id="selectPeriodoCripto">
+          <option value="1h">1 H</option>
+          <option value="1d" selected>1 D</option>
+          <option value="1w">1 S</option>
+          <option value="1m">1 M</option>
+          <option value="realtime">Tiempo Real</option>
+        </select>
+      </div>
+      <p id="valorActualCripto"></p>
+      <canvas id="graficoCripto"></canvas>
     </section>
 
     <section id="empresas" class="seccion">
@@ -38,19 +60,18 @@
     <section id="ia" class="seccion">
       <h2>Asistente Financiero IA</h2>
       <select id="preguntaIA">
-        <option value="tutorial">¿Cómo uso la app?</option>
-        <option value="fuente">¿De dónde provienen los datos?</option>
-        <option value="monedas">¿Qué monedas hay disponibles?</option>
-        <option value="empresas">¿Qué tipo de empresas muestra?</option>
+        <option value="tutorial">¿Cómo usar la app?</option>
+        <option value="fuente">¿De dónde vienen los datos?</option>
+        <option value="conectividad">¿Qué pasa si no hay internet?</option>
       </select>
       <button onclick="responderIA()">Preguntar</button>
       <p id="respuestaIA"></p>
     </section>
-
-    <section id="graficos">
-      <canvas id="grafico" width="400" height="200"></canvas>
-    </section>
   </main>
+
+  <footer>
+    <p>FinancialStatus v4.3 Beta – IA + Off­line + Tiempo Real</p>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
