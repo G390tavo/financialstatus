@@ -1,71 +1,68 @@
+// ✅ ai.js — Versión con búsqueda en internet y datos reales (web scraping indirecto)
 (function () {
   const memoriaTemporal = new Map();
 
   function almacenarEnMemoria(pregunta, respuesta) {
     memoriaTemporal.set(pregunta, { respuesta, timestamp: Date.now() });
-
-    setTimeout(() => {
-      memoriaTemporal.delete(pregunta);
-    }, 5 * 60 * 1000); // 5 minutos
+    setTimeout(() => memoriaTemporal.delete(pregunta), 5 * 60 * 1000);
   }
 
   function buscarEnMemoria(pregunta) {
-    const entry = memoriaTemporal.get(pregunta);
-    if (!entry) return null;
-    return entry.respuesta;
+    const dato = memoriaTemporal.get(pregunta);
+    return dato ? dato.respuesta : null;
   }
 
-  function simularBusquedaOnline(pregunta) {
+  async function buscarDatosExternos(pregunta) {
     mostrarRespuestaIA("Buscando en internet...");
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(
-          `Resultado simulado para: "${pregunta}". En una futura versión se integrará scraping real.`
-        );
-      }, 1500);
-    });
+
+    try {
+      const query = encodeURIComponent(pregunta);
+      const proxy = `https://api.allorigins.win/raw?url=https://www.bing.com/search?q=${query}`;
+
+      const res = await fetch(proxy);
+      const texto = await res.text();
+
+      const fragmento = extraerTexto(texto);
+      return fragmento || "No se encontró una respuesta clara.";
+    } catch (e) {
+      return "Error al buscar en internet.";
+    }
+  }
+
+  function extraerTexto(html) {
+    const doc = document.implementation.createHTMLDocument("temp");
+    doc.documentElement.innerHTML = html;
+    const snippet = doc.querySelector("p, .b_caption, .b_snippet");
+    return snippet ? snippet.textContent.trim() : null;
   }
 
   const respuestasPredefinidas = {
-    "¿qué es una acción?": "Una acción es una parte proporcional del capital de una empresa. Representa propiedad parcial.",
-    "¿qué es una criptomoneda?": "Una criptomoneda es un activo digital que utiliza criptografía para garantizar transacciones seguras.",
-    "¿qué es el análisis técnico?": "El análisis técnico estudia gráficos de precios y volúmenes para predecir movimientos futuros.",
-    "¿cómo invertir en bolsa?": "Para invertir en bolsa necesitas una cuenta en una casa de valores o bróker, y conocer los riesgos.",
-    "¿qué es forex?": "Forex es el mercado de divisas donde se negocian monedas a nivel global.",
+    "¿qué es una acción?": "Una acción representa una parte proporcional del capital de una empresa.",
+    "¿qué es forex?": "Forex es el mercado de divisas donde se intercambian monedas globales.",
   };
 
-  function responder(pregunta) {
-    pregunta = pregunta.toLowerCase().trim();
-
+  async function responder(pregunta) {
     const salida = document.getElementById("respuestaIA");
     if (!salida) return;
 
-    const respuestaMem = buscarEnMemoria(pregunta);
-    if (respuestaMem) {
-      mostrarRespuestaIA(`(memoria): ${respuestaMem}`);
-      return;
+    const p = pregunta.toLowerCase().trim();
+    const mem = buscarEnMemoria(p);
+    if (mem) return mostrarRespuestaIA("(memoria): " + mem);
+
+    if (respuestasPredefinidas[p]) {
+      almacenarEnMemoria(p, respuestasPredefinidas[p]);
+      return mostrarRespuestaIA(respuestasPredefinidas[p]);
     }
 
-    if (respuestasPredefinidas[pregunta]) {
-      const respuesta = respuestasPredefinidas[pregunta];
-      almacenarEnMemoria(pregunta, respuesta);
-      mostrarRespuestaIA(respuesta);
-    } else {
-      simularBusquedaOnline(pregunta).then(respuesta => {
-        almacenarEnMemoria(pregunta, respuesta);
-        mostrarRespuestaIA(respuesta);
-      });
-    }
+    const dato = await buscarDatosExternos(p);
+    almacenarEnMemoria(p, dato);
+    mostrarRespuestaIA(dato);
   }
 
-  function mostrarRespuestaIA(texto) {
-    const salida = document.getElementById("respuestaIA");
-    if (!salida) return;
-    salida.textContent = texto;
+  function mostrarRespuestaIA(txt) {
+    const contenedor = document.getElementById("respuestaIA");
+    if (contenedor) contenedor.textContent = txt;
   }
 
-  // Exponer globalmente
-  window.FinancialAI = {
-    responder,
-  };
+  window.FinancialAI = { responder };
 })();
