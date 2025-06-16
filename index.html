@@ -3,66 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FinancialStatus</title>
+  <title>FinancialStatus APP</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <div id="loader" class="loader">Cargando FinancialStatus APP...</div>
+
   <header>
-    <img src="logo.png" alt="Logo" id="logo">
-    <h1>FinancialStatus</h1>
+    <img src="logo.png" alt="Logo" class="logo"/>
+    <h1>FinancialStatus APP</h1>
+    <label class="modoOscuro">
+      <input type="checkbox" id="modoOscuro"/> 🌙
+    </label>
   </header>
 
   <nav>
-    <button onclick="mostrarSeccion('monedas')">Monedas</button>
-    <button onclick="mostrarSeccion('criptomonedas')">Criptomonedas</button>
-    <button onclick="mostrarSeccion('empresas')">Empresas</button>
-    <button onclick="mostrarSeccion('configuracion')">Configuración</button>
+    <button onclick="mostrarVista('empresas')">Empresas</button>
+    <button onclick="mostrarVista('monedas')">Monedas</button>
+    <button onclick="mostrarVista('criptos')">Criptomonedas</button>
+    <button onclick="mostrarVista('config')">Configuración</button>
   </nav>
 
   <main>
+    <!-- Sección Empresas -->
+    <section id="empresas" class="seccion">
+      <h2>Empresas</h2>
+      <div id="listaEmpresas" class="contenedor"></div>
+    </section>
+
+    <!-- Sección Monedas Nacionales -->
     <section id="monedas" class="seccion">
       <h2>Monedas Nacionales</h2>
-      <label for="selectorMoneda">Selecciona una moneda:</label>
-      <select id="selectorMoneda"></select>
-      <label for="selectorTiempoMoneda">Periodo:</label>
-      <select id="selectorTiempoMoneda">
-        <option value="7">7 días</option>
-        <option value="30">30 días</option>
-        <option value="real">Tiempo Real</option>
-      </select>
-      <canvas id="graficoMoneda"></canvas>
+      <label>Moneda base: 
+        <select id="selectorMoneda" onchange="actualizarGraficoMoneda()"></select>
+      </label>
+      <label>Periodo:
+        <select id="selectorTiempoMoneda" onchange="actualizarGraficoMoneda()">
+          <option value="real">Tiempo real</option>
+          <option value="30d">30 días</option>
+        </select>
+      </label>
+      <canvas id="graficoMoneda" height="120"></canvas>
     </section>
 
-    <section id="criptomonedas" class="seccion oculto">
+    <!-- Sección Criptomonedas -->
+    <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <label for="selectorCripto">Selecciona una cripto:</label>
-      <select id="selectorCripto"></select>
-      <label for="selectorTiempoCripto">Periodo:</label>
-      <select id="selectorTiempoCripto">
-        <option value="7">7 días</option>
-        <option value="30">30 días</option>
-        <option value="real">Tiempo Real</option>
-      </select>
-      <canvas id="graficoCripto"></canvas>
+      <label>Criptomoneda:
+        <select id="selectorCripto" onchange="actualizarGraficoCripto()"></select>
+      </label>
+      <label>Periodo:
+        <select id="selectorTiempoCripto" onchange="actualizarGraficoCripto()">
+          <option value="real">Tiempo real</option>
+          <option value="30d">30 días</option>
+        </select>
+      </label>
+      <canvas id="graficoCripto" height="120"></canvas>
     </section>
 
-    <section id="empresas" class="seccion oculto">
-      <h2>Empresas</h2>
-      <div id="listaEmpresas" class="empresas"></div>
-    </section>
-
-    <section id="configuracion" class="seccion oculto">
+    <!-- Sección Configuración -->
+    <section id="config" class="seccion">
       <h2>Configuración</h2>
-      <button onclick="cambiarModo()">Cambiar a modo oscuro / claro</button>
+      <p>Modo oscuro, animaciones, IA secundaria con respaldo GPT, etc.</p>
     </section>
   </main>
 
   <footer>
-    <p>Versión 1.7 | Desarrollado por GPT y tú ❤️</p>
+    <p>Versión 1.7 • FinancialStatus APP</p>
   </footer>
 
-  <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="script.js"></script>
 </body>
