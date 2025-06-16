@@ -1,66 +1,43 @@
-:root {
-  --color-principal: #4CAF50;
-  --color-fondo: #ffffff;
-  --color-texto: #333;
-  --color-contraste: #e0f2f1;
-  --color-borde: #ccc;
-}
-
-body.dark {
-  --color-fondo: #121212;
-  --color-texto: #f0f0f0;
-  --color-contraste: #1e1e1e;
-  --color-borde: #333;
-}
-
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: var(--color-fondo);
-  color: var(--color-texto);
-  transition: background-color 0.3s, color 0.3s;
+  font-family: Arial, sans-serif;
+  background-color: #f1f1f1;
+  color: #222;
 }
 
 header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background-color: var(--color-principal);
+  background-color: #0a472e;
   color: white;
-  padding: 10px 20px;
+  padding: 10px;
 }
 
-.logo {
-  height: 40px;
-  width: auto;
+#logo {
+  height: 50px;
   margin-right: 10px;
-}
-
-h1 {
-  font-size: 24px;
-  margin: 0;
 }
 
 nav {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  background-color: var(--color-contraste);
-  border-bottom: 1px solid var(--color-borde);
+  background-color: #e0e0e0;
+  padding: 10px;
+  justify-content: space-around;
 }
 
 nav button {
-  background-color: transparent;
-  color: var(--color-texto);
+  margin: 5px;
+  padding: 10px;
+  background-color: #0a472e;
+  color: white;
   border: none;
-  padding: 12px 20px;
-  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  border-radius: 5px;
 }
 
 nav button:hover {
-  background-color: var(--color-borde);
+  background-color: #0d5f3c;
 }
 
 main {
@@ -72,103 +49,32 @@ main {
 }
 
 .lista {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 15px;
 }
 
-.empresa {
-  background-color: var(--color-contraste);
-  border: 1px solid var(--color-borde);
-  padding: 15px;
+.empresa, .noticia, .moneda, .cripto {
+  background: white;
+  padding: 10px;
   border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 canvas {
   max-width: 100%;
-  margin-top: 20px;
-  background-color: white;
-  border: 1px solid var(--color-borde);
-  border-radius: 5px;
-}
-
-label {
-  display: block;
-  margin-top: 10px;
-}
-
-select {
-  padding: 6px;
-  margin-left: 10px;
-}
-
-footer {
-  text-align: center;
-  padding: 15px;
-  background-color: var(--color-contraste);
-  border-top: 1px solid var(--color-borde);
-  font-size: 12px;
+  height: 400px;
 }
 
 .loader {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--color-fondo);
-  color: var(--color-principal);
+  width: 100%;
+  height: 100%;
+  background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 1.5em;
   z-index: 9999;
-}
-
-.chatbox {
-  background-color: var(--color-contraste);
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid var(--color-borde);
-}
-
-.botonesIA {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.botonesIA button {
-  padding: 8px 12px;
-  font-size: 14px;
-  background-color: var(--color-principal);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.botonesIA button:hover {
-  background-color: #388e3c;
-}
-
-.respuesta {
-  font-weight: bold;
-  font-size: 15px;
-}
-
-/* Adaptación móvil */
-@media screen and (max-width: 600px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  nav {
-    flex-direction: column;
-  }
-
-  .botonesIA {
-    flex-direction: column;
-  }
 }
