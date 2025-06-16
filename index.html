@@ -1,64 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus App</title>
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google-favicon-2015.png">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo" class="logo">
+    <img src="logo.png" alt="Logo" class="logo" />
     <h1>FinancialStatus</h1>
+    <button onclick="alternarModoOscuro()">🌙</button>
   </header>
 
   <main>
-    <section class="seccion">
-      <h2>Empresas</h2>
-      <div id="listaEmpresas"></div>
-    </section>
-
-    <section class="seccion">
-      <h2>Monedas Nacionales</h2>
-      <select id="monedaSelect"></select>
-      <div class="botones">
-        <button onclick="actualizarGraficoMoneda('1d')">1 día</button>
-        <button onclick="actualizarGraficoMoneda('7d')">7 días</button>
-        <button onclick="actualizarGraficoMoneda('30d')">30 días</button>
-        <button onclick="actualizarGraficoMoneda('real')">Tiempo real</button>
-      </div>
-      <canvas id="graficoMoneda"></canvas>
-    </section>
-
-    <section class="seccion">
-      <h2>Criptomonedas</h2>
-      <select id="criptoSelect"></select>
-      <div class="botones">
-        <button onclick="actualizarGraficoCripto('1d')">1 día</button>
-        <button onclick="actualizarGraficoCripto('7d')">7 días</button>
-        <button onclick="actualizarGraficoCripto('30d')">30 días</button>
-        <button onclick="actualizarGraficoCripto('real')">Tiempo real</button>
-      </div>
-      <canvas id="graficoCripto"></canvas>
-    </section>
-
-    <section class="seccion">
-      <h2>Asistente IA</h2>
-      <select id="preguntasIA" onchange="responderIA()">
-        <option value="">Selecciona una pregunta</option>
-        <option value="tutorial">¿Cómo usar la app?</option>
-        <option value="problemas">¿Por qué no cargan los gráficos?</option>
-        <option value="datos">¿De dónde salen los datos?</option>
-        <option value="empresas">¿Qué puedo ver en la sección de empresas?</option>
-        <option value="criptomonedas">¿Qué criptomonedas muestra la app?</option>
-        <option value="seguridad">¿La app es segura?</option>
+    <section class="opciones">
+      <select id="tipoDato" onchange="cambiarTipoDato()">
+        <option value="monedas">Monedas</option>
+        <option value="criptomonedas">Criptomonedas</option>
+        <option value="empresas">Empresas</option>
       </select>
-      <div id="respuestaIA" class="respuesta-ia"></div>
+      <div id="periodos" class="periodos"></div>
     </section>
+
+    <canvas id="grafico"></canvas>
+
+    <section id="contenidoDinamico"></section>
   </main>
 
+  <section class="ia">
+    <h2>Asistente IA</h2>
+    <select id="preguntaIA">
+      <option disabled selected>Selecciona una pregunta</option>
+      <option value="tutorial">¿Cómo usar la aplicación?</option>
+      <option value="monedas">¿Qué monedas se pueden consultar?</option>
+      <option value="empresas">¿Qué información muestra sobre empresas?</option>
+      <option value="fuente">¿Qué fuente de datos se utiliza?</option>
+    </select>
+    <button onclick="responderIA()">Responder</button>
+    <div id="respuestaIA"></div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
