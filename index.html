@@ -1,60 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FinancialStatus AI</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FinancialStatus</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo.png" type="image/png" />
 </head>
 <body>
+  <header>
+    <h1>FinancialStatus APP</h1>
+    <button onclick="alternarModoOscuro()">🌙</button>
+  </header>
 
-<header>
-  <h1>FinancialStatus AI</h1>
-  <button onclick="toggleDark()">🌙 Modo Oscuro</button>
-</header>
+  <main>
+    <section id="panel-superior">
+      <div id="zona-moneda">
+        <h2>Monedas</h2>
+        <div id="listaMonedas"></div>
+      </div>
 
-<nav>
-  <div class="nav-group">
-    <select id="selectorTipo" onchange="actualizarVista()">
-      <option value="moneda">Moneda</option>
-      <option value="cripto">Criptomoneda</option>
-    </select>
-    <select id="selectorActivo" onchange="actualizarActivo()"></select>
-    <select id="selectorPeriodo" onchange="actualizarGrafico()">
-      <option value="1h">1H</option>
-      <option value="1d" selected>1D</option>
-      <option value="1w">1S</option>
-      <option value="1m">1M</option>
-      <option value="realtime">Real‑time</option>
-    </select>
-    <span id="valorActual"></span>
-  </div>
-</nav>
+      <div id="zona-cripto">
+        <h2>Criptomonedas</h2>
+        <div id="listaCriptos"></div>
+      </div>
+    </section>
 
-<main>
-  <section id="panelIzquierdo">
-    <h2>Asistente IA</h2>
-    <select id="selectorPregunta" onchange="responderIA()">
-      <option value="ayuda">¿Cómo usar la aplicación?</option>
-      <option value="datos">¿De dónde vienen los datos?</option>
-      <option value="offline">¿Qué pasa si no tengo internet?</option>
-      <option value="empresas">¿Qué empresas muestra?</option>
-    </select>
-    <p id="respuestaIA">Selecciona una pregunta.</p>
-  </section>
+    <section id="zona-grafico">
+      <h2>Gráfico</h2>
+      <div id="infoValorActual"></div>
+      <div id="graficoContainer">
+        <div id="graficoRenderizado"></div>
+      </div>
+      <div id="controlesTiempo">
+        <button onclick="cambiarTiempo('1h')">1h</button>
+        <button onclick="cambiarTiempo('1d')">1d</button>
+        <button onclick="cambiarTiempo('1s')">1s</button>
+        <button onclick="cambiarTiempo('1m')">1m</button>
+        <button onclick="cambiarTiempo('realtime')">Tiempo real</button>
+      </div>
+    </section>
 
-  <section id="panelCentro">
-    <canvas id="canvasGrafico" width="400" height="200"></canvas>
-  </section>
+    <section id="zona-empresas">
+      <h2>Empresas</h2>
+      <div id="listaEmpresas"></div>
+    </section>
 
-  <section id="panelDerecho">
-    <h2>Empresas</h2>
-    <div id="listaEmpresas"></div>
-  </section>
-</main>
+    <section id="zona-ia">
+      <h2>Asistente IA</h2>
+      <div id="preguntasIA">
+        <button onclick="preguntarIA('tutorial')">¿Cómo usar la app?</button>
+        <button onclick="preguntarIA('monedas')">¿Qué monedas se muestran?</button>
+        <button onclick="preguntarIA('empresas')">¿Qué datos tienen las empresas?</button>
+        <button onclick="preguntarIA('fuente')">¿De dónde se obtiene la información?</button>
+        <button onclick="preguntarIA('graficos')">¿Cómo funcionan los gráficos?</button>
+      </div>
+      <div id="respuestaIA"></div>
+    </section>
+  </main>
 
-<script src="config.js"></script>
-<script src="utils.js"></script>
-<script src="script.js"></script>
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
