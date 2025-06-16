@@ -1,133 +1,200 @@
-:root {
-  --color-principal: #2e7d32;
-  --color-secundario: #1b5e20;
-  --color-fondo: #ffffff;
-  --color-texto: #000000;
-  --color-acento: #e0e0e0;
-  --fuente: 'Segoe UI', sans-serif;
-}
-
-body.dark-mode {
-  --color-fondo: #121212;
-  --color-texto: #e0e0e0;
-  --color-acento: #333;
-}
-
 body {
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  font-family: var(--fuente);
-  background: var(--color-fondo);
-  color: var(--color-texto);
+  padding: 0;
+  background-color: #f1f1f1;
+  color: #222;
   transition: background 0.3s, color 0.3s;
 }
 
 header {
   display: flex;
   align-items: center;
-  background-color: var(--color-principal);
-  color: white;
+  background-color: #2e7d32;
   padding: 10px 20px;
+  color: white;
 }
 
-header .logo {
-  width: 48px;
-  height: 48px;
-  margin-right: 15px;
+.logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
 }
 
-nav {
-  background-color: var(--color-secundario);
+h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 24px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.4s;
+}
+
+.slider:before {
+  content: "";
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  position: absolute;
+  background-color: white;
+  bottom: 3px;
+  left: 3px;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+.menu {
   display: flex;
-  justify-content: space-around;
-  padding: 10px;
+  justify-content: center;
+  background-color: #e0e0e0;
+  padding: 8px;
   flex-wrap: wrap;
 }
 
-nav button {
-  background: white;
+.menu button {
+  background-color: #4caf50;
+  color: white;
   border: none;
+  margin: 5px;
   padding: 10px 15px;
-  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  color: var(--color-principal);
+  border-radius: 4px;
 }
 
-nav button:hover {
-  background: var(--color-acento);
+.menu button:hover {
+  background-color: #388e3c;
 }
 
 main {
   padding: 20px;
 }
 
-section.seccion {
+.seccion {
   display: none;
 }
 
-section.seccion.active {
-  display: block;
+.lista {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.empresa {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+canvas {
+  width: 100% !important;
+  max-width: 700px;
+  height: 400px !important;
+  margin-top: 20px;
 }
 
 footer {
-  background: var(--color-principal);
-  color: white;
   text-align: center;
+  background: #2e7d32;
+  color: white;
   padding: 10px;
+  margin-top: 20px;
 }
 
 .loader {
   position: fixed;
+  top: 0;
+  left: 0;
+  background: white;
+  color: black;
   width: 100%;
   height: 100%;
-  background: white;
-  color: var(--color-principal);
-  font-size: 24px;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 99;
+  font-size: 1.5em;
 }
 
-body.dark-mode .loader {
-  background: #121212;
-  color: #66bb6a;
+/* Modo oscuro */
+body.dark {
+  background-color: #121212;
+  color: #eee;
 }
 
-.empresa {
-  background: var(--color-acento);
-  border-radius: 8px;
-  padding: 15px;
-  margin: 10px 0;
+body.dark .empresa,
+body.dark .seccion,
+body.dark header,
+body.dark footer {
+  background-color: #1c1c1c;
+  color: #eee;
 }
 
-canvas {
-  background: #f9f9f9;
-  padding: 10px;
-  border-radius: 10px;
-  max-width: 100%;
+body.dark .menu {
+  background-color: #333;
 }
 
-label {
-  display: block;
-  margin: 10px 0 5px;
-  font-weight: bold;
+body.dark .menu button {
+  background-color: #2e7d32;
 }
 
-select {
-  width: 100%;
-  padding: 6px;
-  border-radius: 6px;
-  margin-bottom: 10px;
+body.dark .menu button:hover {
+  background-color: #1b5e20;
 }
 
-.modoOscuro {
-  margin-left: auto;
+/* Ayuda / IA */
+#chat {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.modoOscuro input[type="checkbox"] {
-  transform: scale(1.5);
-  margin-left: 8px;
+#chat button {
+  background-color: #388e3c;
+  border: none;
+  padding: 8px 10px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#chat button:hover {
+  background-color: #2e7d32;
+}
+
+.respuesta-ia {
+  background-color: #e8f5e9;
+  padding: 10px;
+  border-left: 4px solid #4caf50;
+  margin-top: 10px;
+  white-space: pre-wrap;
 }
