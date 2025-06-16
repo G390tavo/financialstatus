@@ -2,82 +2,65 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FinancialStatus App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinancialStatus APP</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div id="loader" class="loader">Cargando...</div>
-
+  <div id="loader">Cargando...</div>
   <header>
-    <h1>FinancialStatus APP</h1>
+    <img src="logo.png" alt="Logo" id="logo">
+    <h1>FinancialStatus</h1>
     <label>
-      <input type="checkbox" id="modoOscuro"> Modo Oscuro
+      🌙<input type="checkbox" id="modoOscuro"> Modo Oscuro
     </label>
   </header>
 
   <nav>
     <button onclick="mostrarVista('empresas')">Empresas</button>
     <button onclick="mostrarVista('monedas')">Monedas</button>
-    <button onclick="mostrarVista('criptomonedas')">Criptomonedas</button>
-    <button onclick="mostrarVista('configuracion')">Configuración</button>
+    <button onclick="mostrarVista('criptos')">Criptomonedas</button>
+    <button onclick="mostrarVista('ia')">IA</button>
   </nav>
 
   <main>
-    <!-- EMPRESAS -->
     <section id="empresas" class="seccion">
-      <h2>Empresas del mercado</h2>
+      <h2>Empresas</h2>
       <div id="listaEmpresas"></div>
     </section>
 
-    <!-- MONEDAS -->
     <section id="monedas" class="seccion">
       <h2>Monedas Nacionales</h2>
-      <label for="selectorMoneda">Selecciona una moneda:</label>
-      <select id="selectorMoneda"></select>
-
-      <label for="selectorTiempoMoneda">Periodo:</label>
-      <select id="selectorTiempoMoneda">
-        <option value="real">Tiempo Real</option>
-        <option value="1d">1 Día</option>
-        <option value="1s">1 Semana</option>
-        <option value="1m">1 Mes</option>
+      <select id="selectorMoneda" onchange="actualizarGraficoMoneda()"></select>
+      <select id="selectorTiempoMoneda" onchange="actualizarGraficoMoneda()">
+        <option value="real">Tiempo real</option>
+        <option value="7d">Últimos 7 días</option>
+        <option value="30d">Últimos 30 días</option>
       </select>
-
       <canvas id="graficoMoneda"></canvas>
     </section>
 
-    <!-- CRIPTOMONEDAS -->
-    <section id="criptomonedas" class="seccion">
+    <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <label for="selectorCripto">Selecciona una criptomoneda:</label>
-      <select id="selectorCripto"></select>
-
-      <label for="selectorTiempoCripto">Periodo:</label>
-      <select id="selectorTiempoCripto">
-        <option value="real">Tiempo Real</option>
-        <option value="1d">1 Día</option>
-        <option value="1s">1 Semana</option>
-        <option value="1m">1 Mes</option>
+      <select id="selectorCripto" onchange="actualizarGraficoCripto()"></select>
+      <select id="selectorTiempoCripto" onchange="actualizarGraficoCripto()">
+        <option value="real">Tiempo real</option>
+        <option value="7d">Últimos 7 días</option>
+        <option value="30d">Últimos 30 días</option>
       </select>
-
       <canvas id="graficoCripto"></canvas>
     </section>
 
-    <!-- CONFIGURACIÓN -->
-    <section id="configuracion" class="seccion">
-      <h2>Configuración de la App</h2>
-      <p>Aquí podrás ajustar futuras opciones como notificaciones, IA, sincronización en la nube, entre otros.</p>
+    <section id="ia" class="seccion">
+      <h2>Asistente Financiero (IA)</h2>
+      <input type="text" id="inputIA" placeholder="¿Qué deseas saber?">
+      <button id="preguntarIA">Preguntar</button>
+      <pre id="respuestaIA"></pre>
     </section>
   </main>
 
-  <script>
-    const CONFIG = {
-      monedaBase: "PEN",
-      maxEmpresas: 10
-    };
-  </script>
+  <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="script.js"></script>
 </body>
