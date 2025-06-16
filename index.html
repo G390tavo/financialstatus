@@ -13,12 +13,13 @@
     <button id="toggleSidebar">☰</button>
   </header>
 
-  <aside id="sidebar" class="closed">
+  <aside id="sidebar">
     <nav>
       <button data-sec="monedas">Monedas</button>
       <button data-sec="criptos">Criptos</button>
       <button data-sec="empresas">Empresas</button>
       <button data-sec="ia">Asistente IA</button>
+      <button data-sec="consola">Consola</button>
     </nav>
   </aside>
 
@@ -60,12 +61,21 @@
 
     <section id="ia" class="seccion">
       <h2>Asistente IA</h2>
-      <div id="respIA">Selecciona una sección para explicaciones rápidas.</div>
+      <div id="respIA">Escribe algo para obtener ayuda…</div>
+      <input id="iaInput" type="text" placeholder="Pregúntame algo..." />
+      <button id="iaEnviar">Enviar</button>
+    </section>
+
+    <section id="consola" class="seccion">
+      <h2>Consola</h2>
+      <div id="terminal"></div>
+      <input type="text" id="cmdInput" placeholder="Escribe un comando..." />
     </section>
   </main>
 
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="script.js"></script>
+  <script src="ai.js"></script>
 </body>
 </html>
