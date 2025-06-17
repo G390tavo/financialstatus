@@ -11,23 +11,42 @@
   <header>
     <img src="logo.png" alt="Logo" class="logo">
     <h1>FinancialStatus</h1>
-    <button id="toggle-dark">Modo Oscuro</button>
+    <button id="toggleSidebar">☰</button>
+    <button id="btnDark">Modo Oscuro</button>
   </header>
 
-  <nav>
-    <button id="btn-moneda">Monedas</button>
-    <button id="btn-cripto">Criptomonedas</button>
-    <button id="btn-empresas">Empresas</button>
-  </nav>
-
-  <aside id="sidebar" class="hidden">
-    <div id="monedas-lista"></div>
-    <div id="criptos-lista"></div>
+  <aside id="sidebar">
+    <nav>
+      <button id="btn-moneda">Monedas</button>
+      <button id="btn-cripto">Criptomonedas</button>
+      <button id="btn-empresas">Empresas</button>
+    </nav>
   </aside>
 
   <main>
-    <section id="grafico"></section>
-    <section id="info"></section>
+    <section id="monedas" class="seccion">
+      <h2>Monedas</h2>
+      <div class="controles">
+        <select id="selectMoneda1"></select>
+        <select id="selectMoneda2"></select>
+      </div>
+      <div id="grafMoneda"></div>
+    </section>
+
+    <section id="criptos" class="seccion">
+      <h2>Criptomonedas</h2>
+      <div class="controles">
+        <select id="selectCripto1"></select>
+        <select id="selectCripto2"></select>
+      </div>
+      <div id="grafCripto"></div>
+    </section>
+
+    <section id="empresas" class="seccion">
+      <h2>Empresas</h2>
+      <div id="listaEmpresas"></div>
+    </section>
+
     <section id="ia-chat">
       <h2>Pregúntale a la IA</h2>
       <select id="ia-preguntas">
