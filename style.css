@@ -1,35 +1,182 @@
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;display:flex;min-height:100vh;
-     background:#f4f4f4;transition:background .3s,color .3s}
-header{position:fixed;top:0;left:0;right:0;height:50px;
-       background:#007a33;color:#fff;display:flex;align-items:center;
-       justify-content:space-between;padding:0 1rem;z-index:2}
-#toggleSidebar,#btnDark{background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer}
-aside{position:fixed;top:50px;left:0;bottom:0;width:220px;
-      background:#e0e0e0;overflow-y:auto;transform:translateX(-100%);
-      transition:transform .3s;z-index:1}
-aside.open{transform:translateX(0)}
-aside nav button{display:block;width:100%;padding:1rem;border:none;
-                 background:none;text-align:left;cursor:pointer;
-                 font-size:1rem;color:#111}
-aside nav button:hover{background:#007a33;color:#fff}
-main{margin-top:50px;flex:1;margin-left:0;padding:1rem;
-     transition:margin-left .3s}
-aside.open + main{margin-left:220px}
-.seccion{display:none}
-.seccion.activa{display:block}
-.controles{display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
-select,button{padding:.5rem}
-#grafMoneda,#grafCripto{height:250px;background:#fff;border:1px solid #ccc;position:relative}
-.punto{position:absolute;width:8px;height:8px;border-radius:50%;
-       background:green;transform:translate(-50%,50%)}
-.linea{position:absolute;height:2px;background:#007a33;z-index:0}
-.lbl{position:absolute;padding:2px 4px;background:#fff;
-     border:1px solid #007a33;border-radius:4px;font-size:0.8rem;
-     transform:translate(-50%, calc(-100% - 8px))}
-.empresa{background:#fff;border:1px solid #ccc;padding:.8rem;margin-bottom:.5rem}
-.dark{background:#121212;color:#ddd}
-.dark header{background:#004d1a}
-.dark aside{background:#222;color:#ddd}
-.dark aside nav button:hover{background:#004d1a;color:#ddd}
-.dark #grafMoneda,.dark #grafCripto,.dark .empresa{background:#222;border-color:#444}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  background: #f4f4f4;
+  transition: background 0.3s, color 0.3s;
+  flex-direction: column;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: #007a33;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  z-index: 2;
+}
+
+.logo {
+  height: 32px;
+  margin-right: 1rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+#toggle-dark {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+}
+
+nav {
+  margin-top: 50px;
+  background: #eee;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  position: sticky;
+  top: 50px;
+  z-index: 1;
+}
+
+nav button {
+  padding: 0.5rem 1rem;
+  background: #007a33;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+aside {
+  background: #e0e0e0;
+  padding: 1rem;
+  display: none;
+}
+
+aside.visible {
+  display: block;
+}
+
+main {
+  flex: 1;
+  padding: 1rem;
+  margin-top: 60px;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+#grafico {
+  position: relative;
+  height: 250px;
+  background: #fff;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.punto {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: green;
+  transform: translate(-50%, 50%);
+}
+
+.linea {
+  position: absolute;
+  height: 2px;
+  background: green;
+  transform-origin: left;
+}
+
+.lbl {
+  position: absolute;
+  padding: 2px 4px;
+  background: #fff;
+  border: 1px solid #007a33;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  transform: translate(-50%, calc(-100% - 8px));
+}
+
+#info {
+  background: #fff;
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+
+#ia-chat {
+  background: #fff;
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+
+#ia-respuesta {
+  margin-top: 1rem;
+  background: #f0f0f0;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.dark {
+  background: #121212;
+  color: #ddd;
+}
+
+.dark header {
+  background: #004d1a;
+}
+
+.dark nav {
+  background: #1a1a1a;
+}
+
+.dark nav button {
+  background: #004d1a;
+  color: #ddd;
+}
+
+.dark aside {
+  background: #222;
+  color: #ddd;
+}
+
+.dark #grafico,
+.dark #info,
+.dark #ia-chat {
+  background: #222;
+  border-color: #444;
+}
+
+.dark .lbl {
+  background: #222;
+  border-color: #007a33;
+  color: #fff;
+}
+
+.dark .punto {
+  background: #4caf50;
+}
+
+.dark .linea {
+  background: #4caf50;
+}
