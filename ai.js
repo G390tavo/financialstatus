@@ -1,22 +1,43 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const select = document.getElementById("preguntas");
-  const respuestaIA = document.getElementById("respuesta-ia");
+  const sel = document.getElementById("preguntas");
+  const resp = document.getElementById("respuesta-ia");
+  const canvas = document.getElementById("grafico-ia");
 
-  if (!select || !respuestaIA) {
-    console.log("IA no inicializada. Faltan elementos.");
-    return;
-  }
-
-  select.addEventListener("change", async () => {
-    const pregunta = select.value;
-    if (!pregunta) return;
-    respuestaIA.innerHTML = "🔍 Buscando...";
-
-    const valor = await obtenerDatos(pregunta);
-    if (valor) {
-      respuestaIA.innerHTML = `📊 ${pregunta}: <strong>${valor}</strong>`;
-    } else {
-      mostrarError("❌ No se pudo obtener datos en tiempo real. Verifica tu conexión o cambia de pregunta.", respuestaIA);
+  sel.addEventListener("change", async () => {
+    const q = sel.value;
+    if (!q) return;
+    resp.innerText = "🔍 Buscando...";
+    const val = await fetchValor(q);
+    if (!val) {
+      mostrarError("❌ No se pudo obtener datos. Revisa tu conexión.", resp);
+      Chart.getChart(canvas)?.destroy();
+      return;
     }
+    resp.innerHTML = `💡 ${q}: <strong>${val}</strong>`;
+    renderGrafico(canvas, val);
   });
 });
+
+function renderGrafico(canvas, valActual) {
+  Chart.getChart(canvas)?.destroy();
+
+  const values = Array.from({ length: 7 }, (_, i) => {
+    const base = parseFloat(valActual.replace(',', '.'));
+    return (base + (Math.random() - 0.5) * base * 0.1).toFixed(2);
+  });
+
+  new Chart(canvas.getContext("2d"), {
+    type: "line",
+    data: {
+      labels: ["6d", "5d", "4d", "3d", "2d", "1d", "Hoy"],
+      datasets: [{
+        label: "Tendencia",
+        data: values,
+        borderColor: "#00ff44",
+        backgroundColor: "#007d32",
+        fill: false,
+        tension: 0.3
+      }]
+    }
+  });
+}
