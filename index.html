@@ -4,54 +4,61 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <aside>
-    <h1>FinancialStatus</h1>
+  <aside id="menuLateral" class="menu-lateral">
+    <button id="cerrarMenu">✖</button>
+    <h2>FinancialStatus</h2>
     <nav>
-      <button id="btn-inicio">Inicio</button>
-      <button id="btn-monedas">Monedas</button>
-      <button id="btn-criptomonedas">Criptomonedas</button>
-      <button id="btn-empresas">Empresas</button>
-      <button id="btn-ia">IA</button>
+      <button class="nav-btn" data-seccion="inicio">Inicio</button>
+      <button class="nav-btn" data-seccion="monedas">Monedas</button>
+      <button class="nav-btn" data-seccion="criptos">Criptomonedas</button>
+      <button class="nav-btn" data-seccion="empresas">Empresas</button>
+      <button class="nav-btn" data-seccion="ia">IA</button>
     </nav>
-    <button id="cerrar-menu">Cerrar menú</button>
-    <button id="modo-oscuro">🌙 Modo oscuro</button>
+    <button id="modoOscuroToggle">🌓 Modo Oscuro</button>
   </aside>
 
   <main>
-    <section id="inicio">
-      <h2>Bienvenido a FinancialStatus</h2>
+    <section id="inicio" class="seccion">
+      <h1>Bienvenido a FinancialStatus</h1>
       <p>En futuras versiones verás aquí noticias económicas recientes.</p>
     </section>
 
-    <section id="monedas">
+    <section id="monedas" class="seccion" style="display:none;">
       <h2>Monedas Internacionales</h2>
-      <div id="monedas-lista" class="lista-items"></div>
-      <div id="grafico"></div>
+      <div id="listaMonedas" class="lista-datos"></div>
     </section>
 
-    <section id="criptomonedas">
+    <section id="criptos" class="seccion" style="display:none;">
       <h2>Criptomonedas</h2>
-      <div id="criptomonedas-lista" class="lista-items"></div>
-      <div id="grafico"></div>
+      <div id="listaCriptos" class="lista-datos"></div>
     </section>
 
-    <section id="empresas">
+    <section id="empresas" class="seccion" style="display:none;">
       <h2>Empresas</h2>
-      <div id="empresas-lista" class="lista-items"></div>
-      <div id="grafico"></div>
+      <div id="listaEmpresas" class="lista-datos"></div>
     </section>
 
-    <section id="ia">
-      <h2></h2>
-      <button id="btn-activar-ia">Activar IA</button>
-      <div id="ia-respuesta"></div>
-      <div id="grafico"></div>
+    <section id="ia" class="seccion" style="display:none;">
+      <h2>Pregúntale a la IA</h2>
+      <p id="introIA">¿En qué te puedo ayudar?</p>
+      <select id="preguntasIA">
+        <option value="">Selecciona una pregunta...</option>
+        <option value="precio de bitcoin">¿Cuál es el precio actual del Bitcoin?</option>
+        <option value="precio del dólar">¿Cuál es el precio actual del dólar?</option>
+        <option value="apple">¿Cuál es el valor de la acción de Apple?</option>
+      </select>
+      <div id="respuestaIA"></div>
     </section>
+
+    <section id="grafico" class="seccion-grafico"></section>
   </main>
 
-  <script type="module" src="script.js"></script>
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <script src="ai.js" type="module"></script>
+  <script src="script.js" type="module"></script>
 </body>
 </html>
