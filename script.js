@@ -60,4 +60,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const lista = document.querySelector(`.${clase}`);
     if (lista) {
       lista.addEventListener("click", (e) => {
-       
+        const item = e.target.closest(".item-dato");
+        if (item) {
+          const nombre = item.dataset.nombre;
+          if (typeof graficarElemento === "function") {
+            graficarElemento(nombre);
+          }
+        }
+      });
+    }
+  });
+});
