@@ -1,153 +1,154 @@
-/* style.css */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  background: #f0f4f0;
-  color: #222;
-  transition: background 0.3s, color 0.3s;
-}
-
-body.modo-oscuro {
-  background: #121212;
-  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+  background-color: #0e0e0e;
+  color: #f0f0f0;
+  display: flex;
 }
 
 .menu-lateral {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 220px;
-  height: 100%;
-  background: #2e7d32;
-  color: white;
+  width: 250px;
+  background-color: #111;
   padding: 1em;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease-in-out;
-  z-index: 1000;
-}
-
-.menu-lateral nav {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  margin-top: 1em;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
 }
 
-.menu-lateral button {
+.menu-lateral h2 {
+  color: #4caf50;
+  margin-top: 0;
+}
+
+.menu-lateral nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-lateral nav ul li {
+  margin: 1em 0;
+}
+
+.boton-menu {
+  background-color: transparent;
+  color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  text-align: left;
+  width: 100%;
+}
+
+#cerrarMenu {
+  align-self: flex-end;
   background: none;
   border: none;
-  color: white;
-  font-weight: bold;
-  text-align: left;
+  color: #f44336;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
+#modoOscuroBtn {
+  margin-top: auto;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
   padding: 0.5em;
   cursor: pointer;
 }
 
-#cerrarMenu {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  background: white;
-  color: #2e7d32;
-  border: none;
-  border-radius: 50%;
-  font-weight: bold;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
-
 main {
-  margin-left: 240px;
+  margin-left: 260px;
   padding: 1em;
+  flex-grow: 1;
 }
 
 .seccion {
   display: none;
 }
 
-.seccion.visible {
+.seccion.activa {
   display: block;
 }
 
-.listaMonedas, .listaCriptos, .listaEmpresas {
+.tarjetas {
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
 }
 
-.item-dato {
-  background: #e8f5e9;
+.tarjeta {
+  background-color: #1e1e1e;
+  border-left: 5px solid #4caf50;
   padding: 1em;
-  border-radius: 10px;
+  flex: 1 1 250px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.tarjeta:hover {
+  background-color: #2b2b2b;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
-.item-dato:hover {
-  background: #c8e6c9;
-}
-
-#grafico {
-  margin-top: 2em;
-}
-
-#contenedorIA {
+.grafico {
   margin-top: 1em;
+}
+
+.respuesta {
+  margin-top: 1em;
+  background-color: #222;
   padding: 1em;
-  background: #f1f8e9;
-  border-left: 5px solid #2e7d32;
+  border-radius: 5px;
+  border-left: 4px solid #4caf50;
 }
 
-#contenedorIA input, #contenedorIA button {
+select {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #4caf50;
   padding: 0.5em;
-  margin: 0.2em;
+  font-size: 1em;
+  border-radius: 4px;
 }
 
-#contenedorIA button {
-  background: #2e7d32;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
+/* Modo claro */
+
+body.claro {
+  background-color: #ffffff;
+  color: #222;
 }
 
-body.modo-oscuro .menu-lateral {
-  background: #1b5e20;
+body.claro .menu-lateral {
+  background-color: #f5f5f5;
 }
 
-body.modo-oscuro #contenedorIA {
-  background: #2c3e50;
-  color: white;
-  border-left-color: #81c784;
+body.claro .menu-lateral h2 {
+  color: #2e7d32;
 }
 
-body.modo-oscuro .item-dato {
-  background: #263238;
-  color: white;
+body.claro .boton-menu {
+  color: #222;
 }
 
-body.modo-oscuro .item-dato:hover {
-  background: #37474f;
+body.claro .tarjeta {
+  background-color: #f0f0f0;
+  border-left-color: #2e7d32;
 }
 
-/* Responsividad para móviles */
-@media (max-width: 768px) {
-  .menu-lateral {
-    transform: translateX(-100%);
-  }
+body.claro .respuesta {
+  background-color: #e0e0e0;
+  border-left-color: #2e7d32;
+}
 
-  .menu-lateral.abierto {
-    transform: translateX(0%);
-  }
-
-  main {
-    margin-left: 0;
-    padding-top: 3em;
-  }
-
-  #cerrarMenu {
-    top: 5px;
-    right: 5px;
-  }
+body.claro select {
+  background-color: #fff;
+  color: #000;
+  border-color: #2e7d32;
 }
