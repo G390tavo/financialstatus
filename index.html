@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="menu-lateral abierto">
+<body class="oscuro">
+  <aside class="menu-lateral" id="menuLateral">
     <h2>FinancialStatus</h2>
     <button id="cerrarMenu">✖</button>
     <nav>
-      <button id="btnInicio">Inicio</button>
-      <button id="btnMonedas">Monedas</button>
-      <button id="btnCriptomonedas">Criptomonedas</button>
-      <button id="btnEmpresas">Empresas</button>
-      <button id="btnIA">IA</button>
-      <button id="modoOscuro">Modo Oscuro</button>
+      <ul>
+        <li><button class="boton-menu" data-seccion="inicio">Inicio</button></li>
+        <li><button class="boton-menu" data-seccion="monedas">Monedas</button></li>
+        <li><button class="boton-menu" data-seccion="criptos">Criptomonedas</button></li>
+        <li><button class="boton-menu" data-seccion="empresas">Empresas</button></li>
+        <li><button class="boton-menu" data-seccion="ia">IA</button></li>
+      </ul>
     </nav>
-  </div>
+    <button id="modoOscuroBtn">Modo claro</button>
+  </aside>
 
   <main>
     <section id="inicio" class="seccion">
@@ -26,46 +28,33 @@
       <p>En futuras versiones verás aquí noticias económicas recientes.</p>
     </section>
 
-    <section id="monedas" class="seccion">
+    <section id="monedas" class="seccion oculto">
       <h2>Monedas Internacionales</h2>
-      <div class="listaMonedas">
-        <div class="item-dato" data-nombre="Dólar">Dólar</div>
-        <div class="item-dato" data-nombre="Euro">Euro</div>
-        <div class="item-dato" data-nombre="Yen">Yen</div>
-      </div>
+      <div id="contenedor-monedas" class="tarjetas"></div>
     </section>
 
-    <section id="criptomonedas" class="seccion">
+    <section id="criptos" class="seccion oculto">
       <h2>Criptomonedas</h2>
-      <div class="listaCriptos">
-        <div class="item-dato" data-nombre="Bitcoin">Bitcoin</div>
-        <div class="item-dato" data-nombre="Ethereum">Ethereum</div>
-        <div class="item-dato" data-nombre="USDT">USDT</div>
-      </div>
+      <div id="contenedor-criptos" class="tarjetas"></div>
     </section>
 
-    <section id="empresas" class="seccion">
+    <section id="empresas" class="seccion oculto">
       <h2>Empresas</h2>
-      <div class="listaEmpresas">
-        <div class="item-dato" data-nombre="Google">Google</div>
-        <div class="item-dato" data-nombre="Apple">Apple</div>
-        <div class="item-dato" data-nombre="Amazon">Amazon</div>
-        <div class="item-dato" data-nombre="Tesla">Tesla</div>
-        <div class="item-dato" data-nombre="Microsoft">Microsoft</div>
-      </div>
+      <div id="contenedor-empresas" class="tarjetas"></div>
     </section>
 
-    <section id="ia" class="seccion">
+    <section id="ia" class="seccion oculto">
       <h2>Pregúntale a la IA</h2>
-      <div id="contenedorIA">
-        <input type="text" id="preguntaIA" placeholder="¿Qué hace esta app?">
-        <button id="btnPreguntar">Preguntar</button>
-        <div id="salidaIA"></div>
-      </div>
-    </section>
-
-    <section id="grafico" class="seccion">
-      <!-- Aquí se mostrará el gráfico automáticamente -->
+      <p>¿Qué hace esta app?</p>
+      <select id="preguntaIA">
+        <option value="">Selecciona una pregunta</option>
+        <option value="¿Qué es FinancialStatus?">¿Qué es FinancialStatus?</option>
+        <option value="¿Cómo obtengo información de criptomonedas?">¿Cómo obtengo información de criptomonedas?</option>
+        <option value="¿Qué empresas están disponibles?">¿Qué empresas están disponibles?</option>
+        <option value="Muéstrame el gráfico del Bitcoin.">Muéstrame el gráfico del Bitcoin.</option>
+        <option value="¿Qué hace la IA en esta app?">¿Qué hace la IA en esta app?</option>
+      </select>
+      <div id="respuestaIA" class="respuesta"></div>
     </section>
   </main>
 
