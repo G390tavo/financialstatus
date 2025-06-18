@@ -1,26 +1,31 @@
-// Lista de monedas internacionales (códigos ISO estándar)
-const MONEDAS = [
-  { nombre: "Dólar estadounidense", codigo: "USD" },
-  { nombre: "Euro", codigo: "EUR" },
-  { nombre: "Yen japonés", codigo: "JPY" },
-  { nombre: "Libra esterlina", codigo: "GBP" },
-  { nombre: "Sol peruano", codigo: "PEN" },
+// config.js
+export const FUENTES_CRIPTO = [
+  "https://www.google.com/search?q=precio+de+bitcoin",
+  "https://www.google.com/search?q=precio+de+ethereum",
+  "https://www.google.com/search?q=precio+de+usdt"
 ];
 
-// Lista de criptomonedas principales
-const CRIPTOS = [
-  { nombre: "Bitcoin", simbolo: "BTC" },
-  { nombre: "Ethereum", simbolo: "ETH" },
-  { nombre: "Tether", simbolo: "USDT" },
-  { nombre: "BNB", simbolo: "BNB" },
-  { nombre: "Solana", simbolo: "SOL" },
+export const FUENTES_MONEDAS = [
+  "https://www.google.com/search?q=precio+dolar",
+  "https://www.google.com/search?q=precio+euro",
+  "https://www.google.com/search?q=precio+yen"
 ];
 
-// Lista de empresas con símbolo bursátil (referencia simple)
-const EMPRESAS = [
-  { nombre: "Apple", simbolo: "AAPL" },
-  { nombre: "Google", simbolo: "GOOGL" },
-  { nombre: "Amazon", simbolo: "AMZN" },
-  { nombre: "Tesla", simbolo: "TSLA" },
-  { nombre: "Microsoft", simbolo: "MSFT" },
+export const FUENTES_EMPRESAS = [
+  { nombre: "Apple", url: "https://www.google.com/search?q=apple+stock" },
+  { nombre: "Tesla", url: "https://www.google.com/search?q=tesla+stock" },
+  { nombre: "Amazon", url: "https://www.google.com/search?q=amazon+stock" },
+  { nombre: "Google", url: "https://www.google.com/search?q=google+stock" },
+  { nombre: "Microsoft", url: "https://www.google.com/search?q=microsoft+stock" }
+];
+
+export const PREGUNTAS_PREDEFINIDAS = [
+  "¿Qué hace esta app?",
+  "¿Cómo funciona la IA?",
+  "¿Cómo se generan los gráficos?",
+  "¿De dónde se sacan los datos?",
+  "¿Qué son las criptomonedas?",
+  "¿Qué valor tiene el Bitcoin ahora?",
+  "¿Subió el dólar esta semana?",
+  "¿Cuál es el precio de las acciones de Apple?"
 ];
