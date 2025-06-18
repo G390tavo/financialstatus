@@ -24,16 +24,56 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("menu").style.display = "none";
   });
 
-  // Cargar contenido automático al inicio (Inicio visible)
-  mostrarSeccion("inicio");
+  mostrarSeccion("inicio"); // Inicio por defecto
 
-  // Autocargar IA al iniciar
+  // Pregunta inicial a la IA
   if (document.getElementById("respuesta-ia")) {
     preguntarIA("¿Qué es FinancialStatus?");
   }
 
-  // Simular carga de monedas/criptos/empresas (puedes reemplazar con fetch real)
-  document.getElementById("monedas").innerHTML = "<h2>Monedas Internacionales</h2><p>Ejemplo: USD, EUR, JPY...</p>";
-  document.getElementById("criptos").innerHTML = "<h2>Criptomonedas</h2><p>Ejemplo: Bitcoin, Ethereum...</p>";
-  document.getElementById("empresas").innerHTML = "<h2>Empresas</h2><p>Ejemplo: Apple, Tesla, Google...</p>";
+  // Fetch real con proxy a Google
+  async function fetchRealData(termino, destinoID) {
+    const url = `http://localhost:3000/fetch?url=https://www.google.com/search?q=${encodeURIComponent(termino)}`;
+    const contenedor = document.getElementById(destinoID);
+    contenedor.innerHTML = "<p>Cargando datos reales...</p>";
+
+    try {
+      const res = await fetch(url);
+      const texto = await res.text();
+
+      // Ejemplo simple: encontrar un valor con símbolo $
+      const regex = /(\$[\d,.]+)/;
+      const match = texto.match(regex);
+      const valor = match ? match[0] : "Valor no encontrado";
+
+      contenedor.innerHTML = `
+        <h2>${termino}</h2>
+        <p>Valor encontrado: ${valor}</p>
+        <canvas id="grafico-${destinoID}" width="300" height="150"></canvas>
+      `;
+
+      // Simula datos de gráfico (temporal mientras se mejora con scraping más avanzado)
+      const ctx = document.getElementById(`grafico-${destinoID}`).getContext("2d");
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Hoy'],
+          datasets: [{
+            label: termino,
+            data: [100, 105, 103, 107, parseFloat(valor.replace(/[^\d.]/g, "")) || 110],
+            borderColor: 'green',
+            fill: false,
+          }]
+        }
+      });
+
+    } catch (err) {
+      contenedor.innerHTML = `<p>Error al obtener datos reales para "${termino}": ${err.message}</p>`;
+    }
+  }
+
+  // Cargar secciones reales
+  fetchRealData("dólar", "monedas");
+  fetchRealData("bitcoin", "criptos");
+  fetchRealData("apple stock", "empresas");
 });
