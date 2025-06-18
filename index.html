@@ -6,54 +6,41 @@
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="dark">
   <header>
-    <img src="logo.png" alt="Logo" class="logo" />
+    <img src="logo.png" alt="Logo" class="logo">
     <h1>FinancialStatus</h1>
     <button id="toggle-dark">Modo Oscuro</button>
-    <button id="toggle-menu">Cerrar Menú</button>
   </header>
 
-  <nav id="main-nav" class="visible">
-    <button id="btn-inicio">Inicio</button>
+  <nav>
     <button id="btn-moneda">Monedas</button>
     <button id="btn-cripto">Criptomonedas</button>
     <button id="btn-empresas">Empresas</button>
   </nav>
 
-  <aside id="sidebar" class="visible">
+  <aside id="sidebar">
     <div id="monedas-lista"></div>
     <div id="criptos-lista"></div>
-    <div id="empresas-lista"></div>
   </aside>
 
   <main>
-    <section id="inicio" class="bloque-seccion">
-      <h2>Bienvenido a FinancialStatus</h2>
-      <p>Consulta el estado financiero del mundo. Noticias económicas próximamente.</p>
-    </section>
-
-    <section id="grafico" class="bloque-seccion" style="display: none;"></section>
-    <section id="info" class="bloque-seccion" style="display: none;"></section>
-
-    <section id="ia-chat" class="bloque-seccion" style="display: none;">
+    <section id="grafico"></section>
+    <section id="info"></section>
+    <section id="ia-chat">
       <h2>Pregúntale a la IA</h2>
       <select id="ia-preguntas">
         <option value="funciona">¿Cómo funciona esta aplicación?</option>
         <option value="tutorial">Dame un tutorial rápido</option>
         <option value="info">¿Qué son las criptomonedas?</option>
-        <option value="empresa">¿Qué es una acción de empresa?</option>
-        <option value="moneda">¿Qué representa el valor de una moneda?</option>
       </select>
       <button id="preguntar">Preguntar</button>
       <div id="ia-respuesta"></div>
     </section>
   </main>
 
-  <script src="config.js"></script>
-  <script src="utils.js"></script>
-  <script src="ai.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
