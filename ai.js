@@ -1,38 +1,51 @@
+// ai.js
+
 document.addEventListener("DOMContentLoaded", () => {
   const select = document.getElementById("pregunta-ia");
-  const respuestaDiv = document.getElementById("respuesta-ia");
+  const respuestaIA = document.getElementById("respuesta-ia");
   const cargando = document.getElementById("ia-cargando");
 
-  preguntasIA.forEach(p => {
-    const opt = document.createElement("option");
-    opt.value = p;
-    opt.textContent = p;
-    select.appendChild(opt);
+  // Cargar preguntas
+  preguntasIA.forEach(pregunta => {
+    const option = document.createElement("option");
+    option.value = pregunta;
+    option.textContent = pregunta;
+    select.appendChild(option);
   });
 
+  // Mostrar introducción
+  respuestaIA.innerHTML = "<p>Selecciona una pregunta para comenzar.</p>";
+
+  // Escuchar cambios
   select.addEventListener("change", async () => {
     const pregunta = select.value;
     if (!pregunta) return;
 
-    respuestaDiv.innerHTML = "";
     cargando.style.display = "block";
+    respuestaIA.innerHTML = "";
 
     try {
-      const busqueda = encodeURIComponent(pregunta + " precio");
-      const html = await fetchHTML(`https://www.google.com/search?q=${busqueda}`);
-      if (!html) throw new Error("Sin datos");
-
-      const match = html.match(/(?:\$|S\/\.|€)?\s?([\d,]+\.\d{2})/);
-      if (match) {
-        const valor = match[1];
-        respuestaDiv.innerHTML = `<p>Respuesta: ${pregunta} es ${valor}</p>`;
+      const html = await fetchHTML(pregunta);
+      const resultado = extraerRespuesta(html);
+      if (resultado) {
+        respuestaIA.innerHTML = `<p>${resultado}</p>`;
+        if (pregunta.toLowerCase().includes("bitcoin")) {
+          // también graficar automáticamente si es una pregunta de valor
+          obtenerDatosYGraficar("Bitcoin", "cripto");
+        }
       } else {
-        respuestaDiv.innerHTML = `<p>No se pudo interpretar respuesta.</p>`;
+        respuestaIA.innerHTML = "<p>No se pudo interpretar respuesta.</p>";
       }
-    } catch (e) {
-      respuestaDiv.innerHTML = "<p>Error: no se pudieron obtener datos.</p>";
+    } catch (err) {
+      mostrarError(err.message);
     } finally {
       cargando.style.display = "none";
     }
   });
 });
+
+// Extraer contenido simplificado desde HTML crudo
+function extraerRespuesta(html) {
+  const match = html.match(/(\d+[.,]?\d*)\s?(USD|EUR|\$|dólares?|euros?)/i);
+  return match ? `Valor aproximado: ${match[0]}` : null;
+}
