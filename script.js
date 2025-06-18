@@ -1,100 +1,81 @@
+// script.js - Control general de la aplicación
 document.addEventListener("DOMContentLoaded", () => {
-  const modoOscuroBtn = document.getElementById("toggle-dark");
-  const body = document.body;
   const btnMoneda = document.getElementById("btn-moneda");
   const btnCripto = document.getElementById("btn-cripto");
   const btnEmpresas = document.getElementById("btn-empresas");
-  const sectionGrafico = document.getElementById("grafico");
-  const sectionInfo = document.getElementById("info");
-  const preguntasIA = document.getElementById("ia-preguntas");
-  const respuestaIA = document.getElementById("ia-respuesta");
-  const preguntarBtn = document.getElementById("preguntar");
+  const toggleDark = document.getElementById("toggle-dark");
+  const sidebar = document.getElementById("sidebar");
 
-  // Toggle dark mode
-  modoOscuroBtn.addEventListener("click", () => {
-    body.classList.toggle("dark");
+  // Mostrar el menú lateral al inicio
+  sidebar.classList.remove("hidden");
+
+  // Cambiar modo oscuro
+  toggleDark.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
   });
 
-  // Mostrar secciones
-  btnMoneda.addEventListener("click", async () => {
-    sectionInfo.textContent = "Cargando monedas...";
-    const data = await obtenerMonedas();
-    mostrarGrafico(data, "Monedas");
+  // Botones principales
+  btnMoneda.addEventListener("click", () => {
+    mostrarSeccion("monedas");
+    obtenerMonedas();
   });
 
-  btnCripto.addEventListener("click", async () => {
-    sectionInfo.textContent = "Cargando criptomonedas...";
-    const data = await obtenerCriptomonedas();
-    mostrarGrafico(data, "Criptomonedas");
+  btnCripto.addEventListener("click", () => {
+    mostrarSeccion("criptos");
+    obtenerCriptos();
   });
 
-  btnEmpresas.addEventListener("click", async () => {
-    sectionInfo.textContent = "Cargando empresas...";
-    const data = await obtenerEmpresas();
-    mostrarGrafico(data, "Empresas");
+  btnEmpresas.addEventListener("click", () => {
+    mostrarSeccion("empresas");
+    obtenerEmpresas();
   });
 
-  // IA respuestas básicas
-  preguntarBtn.addEventListener("click", () => {
-    const pregunta = preguntasIA.value;
-    respuestaIA.textContent = "Buscando respuesta...";
-    usarIA(pregunta).then(res => {
-      respuestaIA.textContent = res;
-    });
-  });
-
-  // Mostrar gráfico con puntos y líneas
-  function mostrarGrafico(data, titulo) {
-    sectionGrafico.innerHTML = ""; // limpiar gráfico
-    sectionInfo.textContent = `Datos actuales para: ${titulo}`;
-
-    if (!data || data.length === 0) {
-      sectionGrafico.textContent = "No hay datos disponibles.";
-      return;
-    }
-
-    const valores = data.map(d => d.valor);
-    const fechas = data.map(d => d.fecha);
-    const max = Math.max(...valores);
-    const ancho = sectionGrafico.clientWidth;
-    const alto = sectionGrafico.clientHeight;
-    const margen = 30;
-
-    data.forEach((p, i) => {
-      const x = (i / (data.length - 1)) * (ancho - 2 * margen) + margen;
-      const y = alto - ((p.valor / max) * (alto - 2 * margen)) - margen;
-
-      const punto = document.createElement("div");
-      punto.className = "punto";
-      punto.style.left = `${x}px`;
-      punto.style.top = `${y}px`;
-      sectionGrafico.appendChild(punto);
-
-      const etiqueta = document.createElement("div");
-      etiqueta.className = "lbl";
-      etiqueta.textContent = `${p.valor}`;
-      etiqueta.style.left = `${x}px`;
-      etiqueta.style.top = `${y}px`;
-      sectionGrafico.appendChild(etiqueta);
-
-      if (i > 0) {
-        const anterior = data[i - 1];
-        const x0 = ((i - 1) / (data.length - 1)) * (ancho - 2 * margen) + margen;
-        const y0 = alto - ((anterior.valor / max) * (alto - 2 * margen)) - margen;
-
-        const dx = x - x0;
-        const dy = y - y0;
-        const distancia = Math.sqrt(dx * dx + dy * dy);
-        const angulo = Math.atan2(dy, dx) * (180 / Math.PI);
-
-        const linea = document.createElement("div");
-        linea.className = "linea";
-        linea.style.width = `${distancia}px`;
-        linea.style.left = `${x0}px`;
-        linea.style.top = `${y0}px`;
-        linea.style.transform = `rotate(${angulo}deg)`;
-        sectionGrafico.appendChild(linea);
-      }
-    });
+  // Inicializar IA
+  if (typeof setupGlobalIA === "function") {
+    setupGlobalIA();
+  } else {
+    console.warn("setupGlobalIA no está definido");
   }
 });
+
+function mostrarSeccion(seccion) {
+  document.getElementById("monedas-lista").style.display = seccion === "monedas" ? "block" : "none";
+  document.getElementById("criptos-lista").style.display = seccion === "criptos" ? "block" : "none";
+  document.getElementById("info").innerText = "";
+  document.getElementById("grafico").innerHTML = "";
+}
+
+// Adaptar a global si no usas módulos
+function setupGlobalIA() {
+  const IA = new FinancialAI();
+
+  const select = document.getElementById("ia-preguntas");
+  const btn = document.getElementById("preguntar");
+  const salida = document.getElementById("ia-respuesta");
+
+  if (!select || !btn || !salida) {
+    console.warn("IA no inicializada. Faltan elementos.");
+    return;
+  }
+
+  btn.addEventListener("click", () => {
+    const pregunta = select.value;
+    const respuesta = IA.responder(pregunta);
+    salida.innerText = respuesta;
+  });
+}
+
+// Mover clase FinancialAI aquí si no estás usando módulos
+class FinancialAI {
+  constructor() {
+    this.respuestas = {
+      funciona: "Esta aplicación permite visualizar precios actualizados de monedas, criptomonedas y empresas, junto con explicaciones básicas gracias a una IA integrada.",
+      tutorial: "Selecciona una categoría como Monedas, Criptomonedas o Empresas. Al hacer clic en una opción, verás información y gráficos. También puedes preguntarle a la IA para entender mejor.",
+      info: "Las criptomonedas son activos digitales que utilizan criptografía para garantizar transacciones seguras. Ejemplos incluyen Bitcoin, Ethereum y muchas más.",
+    };
+  }
+
+  responder(pregunta) {
+    return this.respuestas[pregunta] || "Lo siento, aún no tengo respuesta para eso.";
+  }
+}
