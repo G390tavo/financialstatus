@@ -3,63 +3,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const respuestaDiv = document.getElementById("respuesta-ia");
   const cargando = document.getElementById("ia-cargando");
 
-  // Cargar preguntas desde config.js
   preguntasIA.forEach(p => {
-    const opcion = document.createElement("option");
-    opcion.textContent = p;
-    opcion.value = p;
-    select.appendChild(opcion);
+    const opt = document.createElement("option");
+    opt.value = p;
+    opt.textContent = p;
+    select.appendChild(opt);
   });
 
-  // Evento al cambiar de pregunta
   select.addEventListener("change", async () => {
     const pregunta = select.value;
     if (!pregunta) return;
 
-    cargando.style.display = "block";
     respuestaDiv.innerHTML = "";
+    cargando.style.display = "block";
 
-    // Buscar texto en cascada de fuentes
-    const query = encodeURIComponent(pregunta);
-    const fuentes = [
-      `https://www.google.com/search?q=${query}`,
-      `https://www.bing.com/search?q=${query}`,
-      `https://duckduckgo.com/html/?q=${query}`
-    ];
+    try {
+      const busqueda = encodeURIComponent(pregunta + " precio");
+      const html = await fetchHTML(`https://www.google.com/search?q=${busqueda}`);
+      if (!html) throw new Error("Sin datos");
 
-    let contenido = "";
-    for (let url of fuentes) {
-      const html = await fetchHTML(url);
-      if (html && html.length > 100) {
-        contenido = html;
-        break;
+      const match = html.match(/(?:\$|S\/\.|€)?\s?([\d,]+\.\d{2})/);
+      if (match) {
+        const valor = match[1];
+        respuestaDiv.innerHTML = `<p>Respuesta: ${pregunta} es ${valor}</p>`;
+      } else {
+        respuestaDiv.innerHTML = `<p>No se pudo interpretar respuesta.</p>`;
       }
-    }
-
-    cargando.style.display = "none";
-
-    if (!contenido) {
-      mostrarError("No se pudo obtener datos en tiempo real.", "#respuesta-ia");
-      return;
-    }
-
-    // Extraer el primer número real encontrado como valor
-    const match = contenido.match(/(\d{1,3}(?:[.,]\d{1,2})?)\s?(USD|\$|euros|soles)?/i);
-    let valor = match ? match[1].replace(",", ".") : null;
-
-    // Mostrar respuesta textual
-    const resumen = valor
-      ? `El valor estimado es <strong>${valor}</strong>.`
-      : "La información fue encontrada, pero no se detectó un valor claro.";
-
-    respuestaDiv.innerHTML = `<p>${resumen}</p>`;
-
-    // Si hay valor, graficar
-    if (valor) {
-      mostrarGrafico(respuestaDiv, pregunta, parseFloat(valor));
+    } catch (e) {
+      respuestaDiv.innerHTML = "<p>Error: no se pudieron obtener datos.</p>";
+    } finally {
+      cargando.style.display = "none";
     }
   });
-
-  // Mostrar introducción automáticamente
-  document.getElementById("ia-introduccion").style.display = "block";
 });
