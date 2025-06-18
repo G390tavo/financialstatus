@@ -5,43 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo" class="logo">
+    <img src="logo.png" alt="Logo" class="logo" />
     <h1>FinancialStatus</h1>
     <button id="toggle-dark">Modo Oscuro</button>
+    <button id="toggle-menu">Cerrar Menú</button>
   </header>
 
-  <nav>
+  <nav id="main-nav" class="visible">
+    <button id="btn-inicio">Inicio</button>
     <button id="btn-moneda">Monedas</button>
     <button id="btn-cripto">Criptomonedas</button>
     <button id="btn-empresas">Empresas</button>
-    <button id="btn-close-menu">Cerrar Menú</button>
   </nav>
 
-  <aside id="sidebar">
+  <aside id="sidebar" class="visible">
     <div id="monedas-lista"></div>
     <div id="criptos-lista"></div>
     <div id="empresas-lista"></div>
   </aside>
 
   <main>
-    <section id="inicio">
+    <section id="inicio" class="bloque-seccion">
       <h2>Bienvenido a FinancialStatus</h2>
-      <p>Selecciona una opción del menú para comenzar.</p>
+      <p>Consulta el estado financiero del mundo. Noticias económicas próximamente.</p>
     </section>
 
-    <section id="grafico"></section>
-    <section id="info"></section>
+    <section id="grafico" class="bloque-seccion" style="display: none;"></section>
+    <section id="info" class="bloque-seccion" style="display: none;"></section>
 
-    <section id="ia-chat">
+    <section id="ia-chat" class="bloque-seccion" style="display: none;">
       <h2>Pregúntale a la IA</h2>
       <select id="ia-preguntas">
         <option value="funciona">¿Cómo funciona esta aplicación?</option>
         <option value="tutorial">Dame un tutorial rápido</option>
         <option value="info">¿Qué son las criptomonedas?</option>
+        <option value="empresa">¿Qué es una acción de empresa?</option>
+        <option value="moneda">¿Qué representa el valor de una moneda?</option>
       </select>
       <button id="preguntar">Preguntar</button>
       <div id="ia-respuesta"></div>
