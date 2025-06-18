@@ -1,47 +1,37 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Aquí va TODO el código actual de script.js (pegar dentro de esta función)
+// script.js
+import { mostrarError } from "./utils.js";
 
-  const botones = {
-    inicio: document.getElementById('btn-inicio'),
-    monedas: document.getElementById('btn-monedas'),
-    criptos: document.getElementById('btn-criptos'),
-    empresas: document.getElementById('btn-empresas'),
-    ia: document.getElementById('btn-ia')
-  };
+document.addEventListener("DOMContentLoaded", () => {
+  const secciones = document.querySelectorAll(".seccion");
+  const botones = document.querySelectorAll(".nav-btn");
+  const btnCerrar = document.getElementById("cerrarMenu");
+  const menu = document.getElementById("menu");
+  const modoClaro = document.getElementById("modoClaro");
 
-  const secciones = {
-    inicio: document.getElementById('seccion-inicio'),
-    monedas: document.getElementById('seccion-monedas'),
-    criptos: document.getElementById('seccion-criptos'),
-    empresas: document.getElementById('seccion-empresas'),
-    ia: document.getElementById('seccion-ia')
-  };
-
-  function mostrarSeccion(nombre) {
-    for (const sec in secciones) {
-      secciones[sec].style.display = sec === nombre ? 'block' : 'none';
-    }
+  function mostrarSeccion(id) {
+    secciones.forEach(seccion => seccion.style.display = "none");
+    const activa = document.getElementById(id);
+    if (activa) activa.style.display = "block";
   }
 
-  botones.inicio.addEventListener('click', () => mostrarSeccion('inicio'));
-  botones.monedas.addEventListener('click', () => mostrarSeccion('monedas'));
-  botones.criptos.addEventListener('click', () => mostrarSeccion('criptos'));
-  botones.empresas.addEventListener('click', () => mostrarSeccion('empresas'));
-  botones.ia.addEventListener('click', () => mostrarSeccion('ia'));
-
-  // Modo claro/oscuro
-  const modoBtn = document.getElementById('modo-claro');
-  modoBtn.addEventListener('click', () => {
-    document.body.classList.toggle('claro');
+  botones.forEach(btn => {
+    btn.addEventListener("click", () => {
+      mostrarSeccion(btn.dataset.seccion);
+    });
   });
 
-  // Cerrar menú
-  const cerrarBtn = document.getElementById('cerrar-menu');
-  const aside = document.querySelector('aside');
-  cerrarBtn.addEventListener('click', () => {
-    aside.style.display = 'none';
-  });
+  if (btnCerrar && menu) {
+    btnCerrar.addEventListener("click", () => {
+      menu.style.display = menu.style.display === "none" ? "block" : "none";
+    });
+  }
 
-  // Mostrar solo inicio al cargar
-  mostrarSeccion('inicio');
+  if (modoClaro) {
+    modoClaro.addEventListener("click", () => {
+      document.body.classList.toggle("claro");
+    });
+  }
+
+  // Mostrar sección inicio por defecto
+  mostrarSeccion("inicio");
 });
