@@ -1,43 +1,37 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const sel = document.getElementById("preguntas");
-  const resp = document.getElementById("respuesta-ia");
-  const canvas = document.getElementById("grafico-ia");
+// Simulación de IA integrada sin API externa
+function iniciarIA() {
+  const bloqueIA = document.getElementById("ia-output");
+  const preguntasPredefinidas = [
+    "¿Qué es esta aplicación?",
+    "¿Cómo puedo ver el precio del dólar?",
+    "¿Qué empresas se muestran?",
+    "¿Qué criptomonedas incluye?",
+    "¿Cómo interpretar los gráficos?",
+  ];
 
-  sel.addEventListener("change", async () => {
-    const q = sel.value;
-    if (!q) return;
-    resp.innerText = "🔍 Buscando...";
-    const val = await fetchValor(q);
-    if (!val) {
-      mostrarError("❌ No se pudo obtener datos. Revisa tu conexión.", resp);
-      Chart.getChart(canvas)?.destroy();
-      return;
-    }
-    resp.innerHTML = `💡 ${q}: <strong>${val}</strong>`;
-    renderGrafico(canvas, val);
-  });
-});
-
-function renderGrafico(canvas, valActual) {
-  Chart.getChart(canvas)?.destroy();
-
-  const values = Array.from({ length: 7 }, (_, i) => {
-    const base = parseFloat(valActual.replace(',', '.'));
-    return (base + (Math.random() - 0.5) * base * 0.1).toFixed(2);
+  let respuesta = "Bienvenido a FinancialStatus, una app para ver precios reales de monedas, criptos y empresas. Pregunta algo como:\n\n";
+  preguntasPredefinidas.forEach(p => {
+    respuesta += `• ${p}\n`;
   });
 
-  new Chart(canvas.getContext("2d"), {
-    type: "line",
-    data: {
-      labels: ["6d", "5d", "4d", "3d", "2d", "1d", "Hoy"],
-      datasets: [{
-        label: "Tendencia",
-        data: values,
-        borderColor: "#00ff44",
-        backgroundColor: "#007d32",
-        fill: false,
-        tension: 0.3
-      }]
-    }
-  });
+  bloqueIA.textContent = respuesta;
+}
+
+function responderIA(pregunta) {
+  const bloque = document.getElementById("ia-output");
+
+  const respuestas = {
+    "precio del dólar": "Para ver el precio del dólar, ve a la sección de monedas.",
+    "precio del bitcoin": "Bitcoin está en la sección de criptomonedas.",
+    "empresas": "Mostramos valores de empresas como Apple, Amazon, Google, etc.",
+    "cómo ver": "Haz clic en la sección correspondiente y se mostrarán resultados reales.",
+    "graficos": "Los gráficos muestran el valor en el tiempo de forma simple y conectada.",
+  };
+
+  const clave = Object.keys(respuestas).find(k => pregunta.toLowerCase().includes(k));
+  if (clave) {
+    bloque.textContent = respuestas[clave];
+  } else {
+    bloque.textContent = "No se pudo obtener datos en tiempo real. Verifica tu conexión o cambia de pregunta.";
+  }
 }
