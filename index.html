@@ -8,64 +8,55 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo" class="logo" />
     <h1>FinancialStatus</h1>
     <button id="toggle-dark">Modo Oscuro</button>
   </header>
 
-  <nav>
+  <aside id="sidebar">
     <button id="btn-inicio">Inicio</button>
     <button id="btn-moneda">Monedas</button>
     <button id="btn-cripto">Criptomonedas</button>
     <button id="btn-empresas">Empresas</button>
     <button id="btn-ia">IA</button>
-  </nav>
-
-  <aside id="sidebar" class="">
-    <button id="cerrar-menu">Cerrar Menú</button>
-    <div id="monedas-lista"></div>
-    <div id="criptos-lista"></div>
-    <div id="empresas-lista"></div>
   </aside>
 
   <main>
-    <section id="inicio" class="seccion visible">
+    <section id="inicio" class="seccion">
       <h2>Bienvenido a FinancialStatus</h2>
       <p>En futuras versiones verás aquí noticias económicas recientes.</p>
     </section>
 
     <section id="monedas" class="seccion hidden">
       <h2>Monedas Internacionales</h2>
-      <div id="monedas-contenido"></div>
+      <div id="monedas-lista"></div>
     </section>
 
     <section id="criptos" class="seccion hidden">
       <h2>Criptomonedas</h2>
-      <div id="criptos-contenido"></div>
+      <div id="criptos-lista"></div>
+      <div id="grafico-cripto"></div>
     </section>
 
     <section id="empresas" class="seccion hidden">
       <h2>Empresas</h2>
-      <div id="empresas-contenido"></div>
+      <div id="empresas-lista"></div>
     </section>
 
     <section id="ia" class="seccion hidden">
       <h2>Pregúntale a la IA</h2>
       <select id="ia-preguntas">
-        <option value="intro">¿Qué hace esta app?</option>
+        <option value="funciona">¿Qué hace esta app?</option>
         <option value="tutorial">Dame un tutorial rápido</option>
-        <option value="bitcoin">Grafica el precio de Bitcoin</option>
+        <option value="bitcoin">¿Cuál es el precio actual del Bitcoin?</option>
       </select>
       <button id="preguntar">Preguntar</button>
       <div id="ia-respuesta"></div>
-      <div id="grafico"></div>
-      <div id="info"></div>
     </section>
   </main>
 
-  <script type="module" src="config.js"></script>
-  <script type="module" src="utils.js"></script>
-  <script type="module" src="ai.js"></script>
-  <script type="module" src="script.js"></script>
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <script src="ai.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
