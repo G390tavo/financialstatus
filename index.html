@@ -2,61 +2,56 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <header>
+  <aside>
     <h1>FinancialStatus</h1>
-    <button id="toggle-dark">Modo Oscuro</button>
-  </header>
-
-  <aside id="sidebar">
-    <button id="btn-inicio">Inicio</button>
-    <button id="btn-moneda">Monedas</button>
-    <button id="btn-cripto">Criptomonedas</button>
-    <button id="btn-empresas">Empresas</button>
-    <button id="btn-ia">IA</button>
+    <nav>
+      <button id="btn-inicio">Inicio</button>
+      <button id="btn-monedas">Monedas</button>
+      <button id="btn-criptomonedas">Criptomonedas</button>
+      <button id="btn-empresas">Empresas</button>
+      <button id="btn-ia">IA</button>
+    </nav>
+    <button id="cerrar-menu">Cerrar menú</button>
+    <button id="modo-oscuro">🌙 Modo oscuro</button>
   </aside>
 
   <main>
-    <section id="inicio" class="seccion">
+    <section id="inicio">
       <h2>Bienvenido a FinancialStatus</h2>
       <p>En futuras versiones verás aquí noticias económicas recientes.</p>
     </section>
 
-    <section id="monedas" class="seccion hidden">
+    <section id="monedas">
       <h2>Monedas Internacionales</h2>
-      <div id="monedas-lista"></div>
+      <div id="monedas-lista" class="lista-items"></div>
+      <div id="grafico"></div>
     </section>
 
-    <section id="criptos" class="seccion hidden">
+    <section id="criptomonedas">
       <h2>Criptomonedas</h2>
-      <div id="criptos-lista"></div>
-      <div id="grafico-cripto"></div>
+      <div id="criptomonedas-lista" class="lista-items"></div>
+      <div id="grafico"></div>
     </section>
 
-    <section id="empresas" class="seccion hidden">
+    <section id="empresas">
       <h2>Empresas</h2>
-      <div id="empresas-lista"></div>
+      <div id="empresas-lista" class="lista-items"></div>
+      <div id="grafico"></div>
     </section>
 
-    <section id="ia" class="seccion hidden">
-      <h2>Pregúntale a la IA</h2>
-      <select id="ia-preguntas">
-        <option value="funciona">¿Qué hace esta app?</option>
-        <option value="tutorial">Dame un tutorial rápido</option>
-        <option value="bitcoin">¿Cuál es el precio actual del Bitcoin?</option>
-      </select>
-      <button id="preguntar">Preguntar</button>
+    <section id="ia">
+      <h2></h2>
+      <button id="btn-activar-ia">Activar IA</button>
       <div id="ia-respuesta"></div>
+      <div id="grafico"></div>
     </section>
   </main>
 
-  <script src="config.js"></script>
-  <script src="utils.js"></script>
-  <script src="ai.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
