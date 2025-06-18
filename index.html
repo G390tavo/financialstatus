@@ -5,54 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" />
 </head>
-<body>
-  <div id="container">
-    <aside id="menu">
-      <button id="toggle-menu">☰</button>
-      <h2>FinancialStatus</h2>
-      <nav>
-        <button onclick="mostrarSeccion('inicio')">Inicio</button>
-        <button onclick="mostrarSeccion('monedas')">Monedas</button>
-        <button onclick="mostrarSeccion('criptos')">Criptomonedas</button>
-        <button onclick="mostrarSeccion('empresas')">Empresas</button>
-        <button onclick="mostrarSeccion('ia')">IA</button>
-      </nav>
-    </aside>
+<body class="dark-mode">
+  <aside id="menu">
+    <button id="cerrarMenu">✖</button>
+    <h2>FinancialStatus</h2>
+    <button class="nav-btn" data-section="inicio">Inicio</button>
+    <button class="nav-btn" data-section="monedas">Monedas Internacionales</button>
+    <button class="nav-btn" data-section="criptos">Criptomonedas</button>
+    <button class="nav-btn" data-section="empresas">Empresas</button>
+    <button class="nav-btn" data-section="ia">IA Financiera</button>
+    <button id="toggleDarkMode">🌙 Modo Oscuro</button>
+  </aside>
 
-    <main id="contenido">
-      <section id="inicio" class="seccion visible">
-        <h1>Bienvenido a FinancialStatus</h1>
-        <p>Consulta valores reales del mercado financiero, IA incluida.</p>
-      </section>
+  <main id="contenido">
+    <section id="inicio" class="seccion visible">
+      <h1>Bienvenido a FinancialStatus</h1>
+      <p>Aquí verás información económica en tiempo real.</p>
+    </section>
 
-      <section id="monedas" class="seccion">
-        <h2>Monedas Internacionales</h2>
-        <div id="lista-monedas"></div>
-      </section>
+    <section id="monedas" class="seccion"></section>
+    <section id="criptos" class="seccion"></section>
+    <section id="empresas" class="seccion"></section>
 
-      <section id="criptos" class="seccion">
-        <h2>Criptomonedas</h2>
-        <div id="lista-criptos"></div>
-      </section>
-
-      <section id="empresas" class="seccion">
-        <h2>Empresas</h2>
-        <div id="lista-empresas"></div>
-      </section>
-
-      <section id="ia" class="seccion">
-        <h2>Pregúntale a la IA</h2>
-        <div id="respuesta-ia"></div>
-        <div id="preguntas-ia">
-          <button onclick="preguntarIA('¿Qué es el dólar?')">¿Qué es el dólar?</button>
-          <button onclick="preguntarIA('¿Qué es una criptomoneda?')">¿Qué es una criptomoneda?</button>
-          <button onclick="preguntarIA('¿Cómo interpretar un gráfico?')">¿Cómo interpretar un gráfico?</button>
-        </div>
-      </section>
-    </main>
-  </div>
+    <section id="ia" class="seccion">
+      <div class="ia-container">
+        <h2>Asistente Financiero</h2>
+        <p id="respuesta-ia">Cargando IA...</p>
+        <button onclick="preguntarIA('¿Qué es una criptomoneda?')">¿Qué es una criptomoneda?</button>
+        <button onclick="preguntarIA('¿Cómo funciona la bolsa de valores?')">¿Cómo funciona la bolsa de valores?</button>
+      </div>
+    </section>
+  </main>
 
   <script src="config.js"></script>
   <script src="utils.js"></script>
