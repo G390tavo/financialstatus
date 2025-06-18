@@ -5,59 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" />
 </head>
-<body class="oscuro">
+<body class="dark">
+
+  <!-- Botón flotante para abrir el menú -->
+  <button id="abrir-menu" style="display: none;">☰</button>
 
   <!-- Menú lateral -->
-  <aside id="menuLateral">
-    <h2>Menú</h2>
-    <button class="menu-btn" data-seccion="inicio">Inicio</button>
-    <button class="menu-btn" data-seccion="monedas">Monedas</button>
-    <button class="menu-btn" data-seccion="criptos">Criptos</button>
-    <button class="menu-btn" data-seccion="empresas">Empresas</button>
-    <button class="menu-btn" data-seccion="ia">IA</button>
-    <button id="cerrarMenu">Cerrar Menú</button>
+  <aside id="menu-lateral">
+    <button id="cerrar-menu">✖</button>
+    <h2>FinancialStatus</h2>
+    <nav>
+      <button data-section="inicio">🏠 Inicio</button>
+      <button data-section="monedas">💱 Monedas</button>
+      <button data-section="criptos">🪙 Criptomonedas</button>
+      <button data-section="empresas">🏢 Empresas</button>
+      <button data-section="ia">🤖 IA</button>
+    </nav>
   </aside>
-  <button id="abrirMenu" style="display: none;">Abrir Menú</button>
 
-  <!-- Sección: Inicio -->
-  <section id="inicio" class="seccion">
-    <h1>Bienvenido a FinancialStatus</h1>
-    <p>Visualiza datos económicos reales, criptomonedas, monedas y empresas.</p>
-  </section>
+  <!-- Botón para cambiar modo -->
+  <button id="modo-toggle" class="modo-boton">Modo claro</button>
 
-  <!-- Sección: Monedas -->
-  <section id="monedas" class="seccion">
-    <h2>Monedas Internacionales</h2>
-    <div id="listaMonedas"></div>
-  </section>
+  <!-- Secciones -->
+  <main>
+    <section id="inicio" class="seccion activa">
+      <h1>Bienvenido a FinancialStatus</h1>
+      <p>En futuras versiones se mostrarán noticias económicas y análisis del mercado.</p>
+    </section>
 
-  <!-- Sección: Criptomonedas -->
-  <section id="criptos" class="seccion">
-    <h2>Criptomonedas</h2>
-    <div id="listaCriptos"></div>
-  </section>
+    <section id="monedas" class="seccion">
+      <h2>Monedas Internacionales</h2>
+      <div id="lista-monedas" class="contenedor-tarjetas"></div>
+    </section>
 
-  <!-- Sección: Empresas -->
-  <section id="empresas" class="seccion">
-    <h2>Empresas</h2>
-    <div id="listaEmpresas"></div>
-  </section>
+    <section id="criptos" class="seccion">
+      <h2>Criptomonedas</h2>
+      <div id="lista-criptos" class="contenedor-tarjetas"></div>
+    </section>
 
-  <!-- Sección: IA -->
-  <section id="ia" class="seccion">
-    <h2>Asistente Financiero (IA)</h2>
-    <div id="bloqueIA">
-      <p>Haz clic en una pregunta o escribe una consulta:</p>
-      <button onclick="preguntarIA('¿Qué es una criptomoneda?')">¿Qué es una criptomoneda?</button>
-      <button onclick="preguntarIA('¿Cómo funciona el mercado de valores?')">¿Cómo funciona el mercado de valores?</button>
-      <button onclick="preguntarIA('Explica el tipo de cambio actual del dólar.')">Tipo de cambio del dólar</button>
-      <div id="respuestaIA"></div>
-    </div>
-  </section>
+    <section id="empresas" class="seccion">
+      <h2>Empresas</h2>
+      <div id="lista-empresas" class="contenedor-tarjetas"></div>
+    </section>
 
-  <!-- Scripts -->
+    <section id="ia" class="seccion">
+      <h2>Inteligencia Artificial</h2>
+      <div id="ia-introduccion">
+        <p>Hola, soy tu asistente financiero. Puedes preguntarme cosas útiles seleccionando una pregunta:</p>
+        <select id="pregunta-ia">
+          <option value="">Selecciona una pregunta</option>
+        </select>
+      </div>
+      <div id="ia-cargando" style="display:none;">🔄 Cargando datos...</div>
+      <div id="respuesta-ia"></div>
+    </section>
+  </main>
+
+  <!-- Zona común para mostrar gráficos -->
+  <div id="grafico"></div>
+
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
