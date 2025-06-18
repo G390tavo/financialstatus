@@ -1,63 +1,73 @@
-// 🔧 Función para obtener HTML desde una URL usando el proxy local
+// utils.js
+
+// 1. Realiza scraping usando el proxy local
 async function fetchHTML(url) {
   try {
-    const response = await fetch(`http://localhost:3000/fetch?url=${encodeURIComponent(url)}`);
-    if (!response.ok) throw new Error("Error al conectar con proxy.");
+    const response = await fetch(`http://localhost:3000/?url=${encodeURIComponent(url)}`);
     const html = await response.text();
     return html;
   } catch (error) {
-    console.error("❌ fetchHTML error:", error.message);
-    return null;
+    console.error("Error al hacer fetchHTML:", error);
+    throw new Error("No se pudo obtener datos desde internet.");
   }
 }
 
-// 🔴 Muestra un mensaje de error en la interfaz
-function mostrarError(mensaje, contenedor = "#respuesta-ia") {
-  const div = document.querySelector(contenedor);
-  div.innerHTML = `<p style="color:red;">⚠️ ${mensaje}</p>`;
+// 2. Formatea números con separador de miles y 2 decimales
+function formatearNumero(valor) {
+  return parseFloat(valor).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 }
 
-// ✅ Crea una tarjeta visual tipo Binance
-function crearTarjeta(item, tipo) {
-  const div = document.createElement("div");
-  div.className = "tarjeta";
-  div.dataset.tipo = tipo;
-  div.dataset.nombre = item.nombre;
-  div.dataset.busqueda = item.busqueda;
-
-  div.innerHTML = `
-    <h3>${item.nombre} (${item.simbolo})</h3>
-    <div class="valor">Cargando...</div>
-    <div class="variacion">🔄 Obteniendo variación...</div>
-    <div class="descripcion">${item.descripcion}</div>
-    <div class="zona-grafico" style="display:none;"></div>
-  `;
-
-  return div;
+// 3. Calcula la variación en porcentaje entre dos valores
+function calcularVariacion(actual, anterior) {
+  if (!anterior || anterior === 0) return { texto: "Sin datos", clase: "" };
+  const variacion = ((actual - anterior) / anterior) * 100;
+  const texto = `${variacion >= 0 ? "⬆️" : "⬇️"} ${Math.abs(variacion).toFixed(2)}%`;
+  const clase = variacion >= 0 ? "up" : "down";
+  return { texto, clase };
 }
 
-// 📈 Genera un gráfico automático estilo Google con datos reales y simulados
-function mostrarGrafico(contenedor, nombre, valorActual) {
-  const zona = contenedor.querySelector(".zona-grafico");
-  if (!zona) return;
+// 4. Limpia el contenido de un contenedor
+function limpiarContenedor(id) {
+  const contenedor = document.getElementById(id);
+  if (contenedor) contenedor.innerHTML = "";
+}
 
-  // Simular historial de los últimos 7 días (relativo al valor actual)
-  const historial = [];
-  for (let i = 6; i >= 0; i--) {
-    const variacion = Math.random() * 4 - 2; // +-2%
-    const valor = +(valorActual * (1 + variacion / 100)).toFixed(2);
-    historial.push(valor);
+// 5. Muestra un mensaje de error dentro de un contenedor
+function mostrarMensajeError(msg, id = "respuesta-ia") {
+  const contenedor = document.getElementById(id);
+  if (contenedor) {
+    contenedor.innerHTML = `<p style="color: #e74c3c; font-weight: bold;">⚠️ ${msg}</p>`;
   }
-  historial.push(valorActual);
+}
 
-  // Dibujar gráfico simple como texto (puedes reemplazar por canvas.js, chart.js, etc.)
-  const puntos = historial.map((val, idx) => `<div style="margin-right:6px; display:inline-block; color:#2ecc71;">●</div>`).join("");
-  const valores = historial.map(v => `<small>${v}</small>`).join(" | ");
+// 6. Realiza scroll suave hasta un elemento
+function scrollSuaveHasta(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth" });
+}
 
-  zona.style.display = "block";
-  zona.innerHTML = `
-    <p><strong>${nombre}</strong> (últimos 7 días):</p>
-    <div style="font-size: 1.2em;">${puntos}</div>
-    <div style="margin-top:8px; font-size:0.9em;">${valores}</div>
+// 7. Genera un gráfico estilo línea con puntos conectados
+function mostrarGrafico(datos, contenedorId = "grafico") {
+  const contenedor = document.getElementById(contenedorId);
+  if (!contenedor) return;
+
+  // Limpia contenido anterior
+  contenedor.innerHTML = "";
+
+  // Simulación de gráfico simple (puede reemplazarse con canvas o chart.js)
+  const max = Math.max(...datos);
+  const puntos = datos.map(valor => {
+    const altura = (valor / max) * 100;
+    return `<div style="width: 10px; height: ${altura}px; background: #2ecc71; display: inline-block; margin-right: 3px;"></div>`;
+  }).join("");
+
+  contenedor.innerHTML = `
+    <div style="display: flex; align-items: flex-end; height: 100px;">
+      ${puntos}
+    </div>
+    <p style="margin-top: 10px;">Valores: ${datos.map(d => formatearNumero(d)).join(", ")}</p>
   `;
 }
