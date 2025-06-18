@@ -1,3 +1,4 @@
+// === style.css ===
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -8,63 +9,51 @@ body {
 
 body.dark-mode {
   background-color: #121212;
-  color: #fff;
+  color: #eee;
 }
 
 header {
-  background-color: #0077cc;
-  color: white;
-  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
 }
 
-header .logo {
+.logo {
   width: 40px;
   height: 40px;
-  margin-right: 10px;
 }
 
 nav {
-  background-color: #eee;
-  padding: 10px;
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+  background-color: #ddd;
 }
 
 nav button {
+  margin: 0 10px;
   padding: 10px;
-  background-color: #ddd;
-  border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-nav button:hover {
-  background-color: #ccc;
-}
-
-aside {
-  background-color: #f9f9f9;
-  border-right: 1px solid #ccc;
-  padding: 10px;
+#sidebar {
   width: 250px;
-  height: calc(100vh - 120px);
-  overflow-y: auto;
-  position: fixed;
+  background-color: #ccc;
+  padding: 10px;
+  display: none;
+  position: absolute;
   left: 0;
-  top: 120px;
-  transition: transform 0.3s ease;
+  top: 60px;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 10;
 }
 
-aside.hidden {
-  transform: translateX(-260px);
-}
-
-aside.visible {
-  transform: translateX(0);
+#sidebar.open {
+  display: block;
 }
 
 main {
@@ -76,49 +65,10 @@ section {
   margin-bottom: 20px;
 }
 
-#grafico canvas {
-  width: 100% !important;
-  height: 300px !important;
-}
-
-#ia-chat {
-  background-color: #fff;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-#ia-respuesta {
+#ia-chat select, #ia-chat button {
   margin-top: 10px;
-  font-style: italic;
-  color: #444;
 }
 
-body.dark-mode header {
-  background-color: #222;
-}
-
-body.dark-mode nav {
-  background-color: #333;
-}
-
-body.dark-mode nav button {
-  background-color: #444;
-  color: white;
-}
-
-body.dark-mode aside {
-  background-color: #222;
-  color: white;
-}
-
-body.dark-mode main {
-  background-color: #121212;
-  color: white;
-}
-
-body.dark-mode #ia-chat {
-  background-color: #1f1f1f;
-  color: white;
-  border-color: #444;
+canvas {
+  max-width: 100%;
 }
