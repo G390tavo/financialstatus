@@ -1,74 +1,131 @@
-// === style.css ===
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  color: #333;
+:root {
+  --color-principal: #00b894;
+  --color-fondo: #ffffff;
+  --color-texto: #000000;
+  --color-secundario: #f0f0f0;
 }
 
-body.dark-mode {
-  background-color: #121212;
-  color: #eee;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
 }
 
 header {
+  background-color: var(--color-principal);
+  color: white;
+  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
 }
 
 .logo {
   width: 40px;
   height: 40px;
+  margin-right: 1rem;
 }
 
 nav {
   display: flex;
-  justify-content: center;
-  padding: 10px;
-  background-color: #ddd;
+  background-color: var(--color-secundario);
+  padding: 0.5rem;
+  justify-content: space-around;
+  border-bottom: 1px solid #ccc;
 }
 
 nav button {
-  margin: 0 10px;
-  padding: 10px;
+  background-color: var(--color-principal);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 5px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-#sidebar {
-  width: 250px;
-  background-color: #ccc;
-  padding: 10px;
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 60px;
-  bottom: 0;
-  overflow-y: auto;
-  z-index: 10;
+aside#sidebar {
+  width: 240px;
+  background-color: #f7f7f7;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+  float: left;
+  min-height: 100vh;
 }
 
-#sidebar.open {
-  display: block;
+aside.hidden {
+  display: none;
 }
 
 main {
-  margin-left: 260px;
-  padding: 20px;
+  margin-left: 240px;
+  padding: 1rem;
 }
 
 section {
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
-#ia-chat select, #ia-chat button {
-  margin-top: 10px;
+#toggle-dark {
+  background-color: white;
+  color: var(--color-principal);
+  border: 2px solid var(--color-principal);
+  border-radius: 4px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
 }
 
-canvas {
+#ia-chat {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+#ia-respuesta {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background-color: #e0ffe0;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.dark-mode {
+  --color-fondo: #121212;
+  --color-texto: #ffffff;
+  --color-secundario: #1e1e1e;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.dark-mode header {
+  background-color: #1abc9c;
+}
+
+.dark-mode nav {
+  background-color: var(--color-secundario);
+}
+
+.dark-mode aside {
+  background-color: #2e2e2e;
+  color: white;
+}
+
+.dark-mode #ia-chat {
+  background-color: #1e1e1e;
+  border-color: #444;
+}
+
+.dark-mode #ia-respuesta {
+  background-color: #2ecc71;
+  color: #000;
+}
+
+button:focus {
+  outline: none;
+}
+
+#grafico canvas {
   max-width: 100%;
 }
