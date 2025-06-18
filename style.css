@@ -1,71 +1,113 @@
-/* style.css */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #121212;
-  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #111;
+  color: #fff;
   display: flex;
 }
 
-.sidebar {
-  width: 220px;
-  background-color: #1e1e1e;
-  padding: 1rem;
-  height: 100vh;
-  overflow-y: auto;
-  position: fixed;
-  left: 0;
-  top: 0;
+body.claro {
+  background-color: #f2f2f2;
+  color: #111;
 }
 
-.sidebar button {
+aside#menu {
+  background-color: #1a1a1a;
+  width: 250px;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+aside#menu button {
   display: block;
+  margin: 8px 0;
   width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-  background: #2e2e2e;
-  color: white;
+  padding: 10px;
+  background: #333;
   border: none;
+  color: #fff;
   cursor: pointer;
 }
 
-#cerrarMenu {
-  background: #444;
-  font-size: 1.2rem;
+aside#menu button:hover {
+  background: #4caf50;
 }
 
 main {
-  margin-left: 230px;
-  padding: 1rem;
   flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
 }
 
 .seccion {
   display: none;
 }
 
-.seccion.visible {
-  display: block;
+.contenedor-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.card {
-  background: #1e1e1e;
-  border: 1px solid #2e2e2e;
-  border-radius: 10px;
+.tarjeta {
+  background-color: #222;
   padding: 1rem;
-  margin-bottom: 1rem;
-  transition: transform 0.3s;
+  border-radius: 8px;
+  width: 240px;
+  border: 1px solid #333;
 }
 
-.card:hover {
-  transform: scale(1.01);
-  background: #1a1a1a;
+.tarjeta h3 {
+  margin-top: 0;
+  font-size: 1.2em;
 }
 
-.subir {
-  color: #00ff00;
+.flecha-arriba {
+  color: #4caf50;
 }
 
-.bajar {
-  color: #ff4040;
+.flecha-abajo {
+  color: #f44336;
+}
+
+.contenedor-preguntas button {
+  display: inline-block;
+  margin: 4px;
+  padding: 8px 12px;
+  background: #4caf50;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.contenedor-preguntas button:hover {
+  background: #388e3c;
+}
+
+.contenedor-grafico {
+  margin-top: 20px;
+  background: #222;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+@media (max-width: 768px) {
+  aside#menu {
+    width: 100%;
+    min-height: auto;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .tarjeta {
+    width: 100%;
+  }
 }
