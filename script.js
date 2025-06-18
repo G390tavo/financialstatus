@@ -1,46 +1,77 @@
+// Control de navegación y datos principales
 document.addEventListener("DOMContentLoaded", () => {
-  const btns = document.querySelectorAll("aside#menu nav button");
-  const sections = document.querySelectorAll(".seccion");
-  const modeBtn = document.getElementById("modo-btn");
-  const closeBtn = document.getElementById("cerrar-menu");
-  const menu = document.getElementById("menu");
-  const body = document.body;
-
-  btns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      sections.forEach(sec => sec.classList.remove("visible"));
-      document.getElementById(btn.dataset.seccion).classList.add("visible");
+  const botones = document.querySelectorAll("nav button[data-seccion]");
+  botones.forEach(b => {
+    b.addEventListener("click", () => {
+      mostrarSeccion(b.dataset.seccion);
     });
   });
 
-  modeBtn.addEventListener("click", () => {
-    body.classList.toggle("modo-claro");
-    body.classList.toggle("modo-oscuro");
-    modeBtn.textContent = body.classList.contains("modo-claro") ? "Modo Oscuro" : "Modo Claro";
+  document.getElementById("menu-toggle").addEventListener("click", () => {
+    const aside = document.querySelector("aside");
+    aside.classList.toggle("cerrado");
   });
 
-  closeBtn.addEventListener("click", () => {
-    menu.style.display = menu.style.display === "none" ? "block" : "none";
+  document.getElementById("modo-oscuro").addEventListener("click", () => {
+    document.body.classList.toggle("oscuro");
   });
 
-  for (let tipo in ITEMS) {
-    cargarSeccion(tipo, ITEMS[tipo]);
-  }
+  document.getElementById("btn-ia").addEventListener("click", () => {
+    iniciarIA();
+  });
+
+  cargarSecciones();
 });
 
-async function cargarSeccion(tipo, lista) {
-  const cont = document.getElementById(`contenedor-${tipo}`);
-  for (let item of lista) {
-    const val = await fetchValor(item);
-    const card = crearElemento("div", "card");
-    if (val) {
-      const flecha = Math.random() < 0.5 ? "⬆️" : "⬇️";
-      const claseF = flecha === "⬆️" ? "flecha-up" : "flecha-down";
-      card.innerHTML = `<h3>${item.toUpperCase()}</h3>
-        <p><strong>${val}</strong> <span class="${claseF}">${flecha}</span></p>`;
-    } else {
-      mostrarError("No se pudo obtener " + item, card);
-    }
-    cont.appendChild(card);
-  }
+function cargarSecciones() {
+  cargarMonedas();
+  cargarCriptos();
+  cargarEmpresas();
+}
+
+function cargarMonedas() {
+  fetchHTML(FUENTES.monedas).then(html => {
+    const datos = extraerDatosSimples(html, "monedas");
+    mostrarDatos("monedas", datos);
+  });
+}
+
+function cargarCriptos() {
+  fetchHTML(FUENTES.criptos).then(html => {
+    const datos = extraerDatosSimples(html, "criptos");
+    mostrarDatos("criptos", datos);
+  });
+}
+
+function cargarEmpresas() {
+  fetchHTML(FUENTES.empresas).then(html => {
+    const datos = extraerDatosSimples(html, "empresas");
+    mostrarDatos("empresas", datos);
+  });
+}
+
+function mostrarDatos(seccion, datos) {
+  const contenedor = document.getElementById(seccion + "-datos");
+  contenedor.innerHTML = "";
+  datos.forEach((d, i) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `<strong>${d.nombre}</strong>: ${d.valor}`;
+    div.addEventListener("click", () => {
+      mostrarDetalle(d.nombre, seccion);
+    });
+    contenedor.appendChild(div);
+  });
+}
+
+function mostrarDetalle(nombre, tipo) {
+  const seccion = document.getElementById(tipo + "-detalle");
+  seccion.innerHTML = `<h4>${nombre}</h4><p>Cargando gráfico...</p>`;
+
+  // Simula historial ficticio para graficar
+  const historial = Array.from({ length: 10 }, (_, i) => ({
+    valor: (Math.random() * 100).toFixed(2),
+  }));
+
+  crearGrafico(seccion, historial);
 }
