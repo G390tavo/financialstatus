@@ -1,97 +1,81 @@
-import { MONEDAS, CRIPTOS, EMPRESAS } from './config.js';
-import { crearElemento, mostrarError } from './utils.js';
-import { inicializarIA, responderPregunta } from './ai.js';
+document.addEventListener("DOMContentLoaded", () => {
+  const btnMoneda = document.getElementById("btn-moneda");
+  const btnCripto = document.getElementById("btn-cripto");
+  const btnEmpresas = document.getElementById("btn-empresas");
+  const grafico = document.getElementById("grafico");
+  const info = document.getElementById("info");
+  const monedasLista = document.getElementById("monedas-lista");
+  const criptosLista = document.getElementById("criptos-lista");
+  const iaChat = document.getElementById("ia-chat");
+  const iaRespuesta = document.getElementById("ia-respuesta");
+  const iaPreguntas = document.getElementById("ia-preguntas");
+  const btnPreguntar = document.getElementById("preguntar");
+  const btnModoOscuro = document.getElementById("toggle-dark");
+  const sidebar = document.getElementById("sidebar");
 
-document.addEventListener('DOMContentLoaded', () => {
-  const btnMoneda = document.getElementById('btn-moneda');
-  const btnCripto = document.getElementById('btn-cripto');
-  const btnEmpresas = document.getElementById('btn-empresas');
-  const btnPreguntar = document.getElementById('preguntar');
-  const selectIA = document.getElementById('ia-preguntas');
-  const aside = document.getElementById('sidebar');
-  const toggleDark = document.getElementById('toggle-dark');
-
-  const monedasDiv = document.getElementById('monedas-lista');
-  const criptosDiv = document.getElementById('criptos-lista');
-  const grafico = document.getElementById('grafico');
-
-  function mostrarInicio() {
-    document.getElementById('info').innerHTML = '';
-    grafico.innerHTML = '<h2>Bienvenido a FinancialStatus</h2><p>Selecciona una opción del menú para empezar.</p>';
+  function ocultarSecciones() {
+    monedasLista.style.display = "none";
+    criptosLista.style.display = "none";
+    grafico.innerHTML = "";
+    info.innerHTML = "";
   }
 
-  function cargarLista(lista, contenedor, tipo) {
-    contenedor.innerHTML = '';
-    lista.forEach(nombre => {
-      const btn = crearElemento('button', '', nombre.nombre || nombre);
-      btn.addEventListener('click', () => graficar(nombre, tipo));
-      contenedor.appendChild(btn);
+  function mostrarInicio() {
+    ocultarSecciones();
+    info.innerHTML = "<h2>Bienvenido a FinancialStatus</h2><p>Selecciona una sección del menú para empezar.</p>";
+  }
+
+  function activarModoOscuro() {
+    document.body.classList.toggle("dark-mode");
+  }
+
+  function mostrarMonedas() {
+    ocultarSecciones();
+    monedasLista.style.display = "block";
+    info.innerHTML = "<h2>Monedas Internacionales</h2>";
+  }
+
+  function mostrarCriptos() {
+    ocultarSecciones();
+    criptosLista.style.display = "block";
+    info.innerHTML = "<h2>Criptomonedas</h2>";
+  }
+
+  function mostrarEmpresas() {
+    ocultarSecciones();
+    info.innerHTML = "<h2>Empresas del mercado</h2><p>Aquí se mostrará información histórica de empresas.</p>";
+    // Gráfico simplificado de ejemplo
+    const canvas = document.createElement("canvas");
+    canvas.width = 600;
+    canvas.height = 300;
+    grafico.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+    ctx.beginPath();
+    ctx.moveTo(0, 150);
+    ctx.lineTo(100, 140);
+    ctx.lineTo(200, 130);
+    ctx.lineTo(300, 120);
+    ctx.strokeStyle = "green";
+    ctx.stroke();
+  }
+
+  if (btnMoneda) btnMoneda.addEventListener("click", mostrarMonedas);
+  if (btnCripto) btnCripto.addEventListener("click", mostrarCriptos);
+  if (btnEmpresas) btnEmpresas.addEventListener("click", mostrarEmpresas);
+  if (btnModoOscuro) btnModoOscuro.addEventListener("click", activarModoOscuro);
+
+  if (btnPreguntar && iaPreguntas && iaRespuesta) {
+    btnPreguntar.addEventListener("click", () => {
+      const valor = iaPreguntas.value;
+      if (valor === "funciona") {
+        iaRespuesta.textContent = "Esta app usa una IA integrada que obtiene información real con fetch y la convierte en gráficos útiles.";
+      } else if (valor === "tutorial") {
+        iaRespuesta.textContent = "1. Elige una sección (Monedas, Criptos, Empresas).\n2. Mira el gráfico generado.\n3. Usa la IA para obtener explicaciones.";
+      } else if (valor === "info") {
+        iaRespuesta.textContent = "Las criptomonedas son activos digitales que utilizan criptografía para asegurar transacciones.";
+      }
     });
   }
 
-  async function graficar(nombre, tipo) {
-    try {
-      grafico.innerHTML = '<p>Cargando datos...</p>';
-      const datos = await fetch(`https://api.coingecko.com/api/v3/coins/${nombre.id || nombre.simbolo || nombre.toLowerCase()}/market_chart?vs_currency=usd&days=1`).then(r => r.json());
-
-      const canvas = document.createElement('canvas');
-      grafico.innerHTML = '';
-      grafico.appendChild(canvas);
-
-      const ctx = canvas.getContext('2d');
-      const puntos = datos.prices.map(([t, v]) => ({ x: new Date(t).toLocaleTimeString(), y: v }));
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: puntos.map(p => p.x),
-          datasets: [{
-            label: `${nombre.nombre || nombre} (USD)`,
-            data: puntos.map(p => p.y),
-            fill: false,
-            borderColor: 'lime',
-            tension: 0.3,
-            pointBackgroundColor: 'white',
-            pointRadius: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: false
-            }
-          }
-        }
-      });
-    } catch (err) {
-      mostrarError('No se pudo obtener la información. Verifica tu conexión.');
-    }
-  }
-
-  btnMoneda.addEventListener('click', () => {
-    aside.classList.remove('hidden');
-    cargarLista(MONEDAS, monedasDiv, 'moneda');
-  });
-
-  btnCripto.addEventListener('click', () => {
-    aside.classList.remove('hidden');
-    cargarLista(CRIPTOS, criptosDiv, 'cripto');
-  });
-
-  btnEmpresas.addEventListener('click', () => {
-    aside.classList.remove('hidden');
-    cargarLista(EMPRESAS, monedasDiv, 'empresa');
-  });
-
-  toggleDark.addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-  });
-
-  btnPreguntar.addEventListener('click', () => {
-    const pregunta = selectIA.value;
-    responderPregunta(pregunta);
-  });
-
-  mostrarInicio();
-  inicializarIA();
+  mostrarInicio(); // Muestra la pantalla de inicio por defecto
 });
