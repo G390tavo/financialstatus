@@ -1,4 +1,7 @@
-// Módulo IA - Preguntas básicas y asistencia de usuario
+// ai.js - Lógica de la IA integrada (sin export ni import)
+
+// Esta clase ya está integrada en script.js para evitar errores de dependencia,
+// pero si prefieres mantenerla separada, asegúrate de que se incluya después de ai.js y antes de script.js.
 
 class FinancialAI {
   constructor() {
@@ -14,10 +17,9 @@ class FinancialAI {
   }
 }
 
-let IA = null;
-
+// Esta función inicializa la IA desde script.js
 function setupGlobalIA() {
-  IA = new FinancialAI();
+  const IA = new FinancialAI();
 
   const select = document.getElementById("ia-preguntas");
   const btn = document.getElementById("preguntar");
@@ -34,5 +36,3 @@ function setupGlobalIA() {
     salida.innerText = respuesta;
   });
 }
-
-export { setupGlobalIA };
