@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <aside id="menuLateral" class="menu-lateral">
-    <button id="cerrarMenu">✖</button>
+  <div class="menu-lateral abierto">
     <h2>FinancialStatus</h2>
+    <button id="cerrarMenu">✖</button>
     <nav>
-      <button class="nav-btn" data-seccion="inicio">Inicio</button>
-      <button class="nav-btn" data-seccion="monedas">Monedas</button>
-      <button class="nav-btn" data-seccion="criptos">Criptomonedas</button>
-      <button class="nav-btn" data-seccion="empresas">Empresas</button>
-      <button class="nav-btn" data-seccion="ia">IA</button>
+      <button id="btnInicio">Inicio</button>
+      <button id="btnMonedas">Monedas</button>
+      <button id="btnCriptomonedas">Criptomonedas</button>
+      <button id="btnEmpresas">Empresas</button>
+      <button id="btnIA">IA</button>
+      <button id="modoOscuro">Modo Oscuro</button>
     </nav>
-    <button id="modoOscuroToggle">🌓 Modo Oscuro</button>
-  </aside>
+  </div>
 
   <main>
     <section id="inicio" class="seccion">
@@ -26,39 +26,52 @@
       <p>En futuras versiones verás aquí noticias económicas recientes.</p>
     </section>
 
-    <section id="monedas" class="seccion" style="display:none;">
+    <section id="monedas" class="seccion">
       <h2>Monedas Internacionales</h2>
-      <div id="listaMonedas" class="lista-datos"></div>
+      <div class="listaMonedas">
+        <div class="item-dato" data-nombre="Dólar">Dólar</div>
+        <div class="item-dato" data-nombre="Euro">Euro</div>
+        <div class="item-dato" data-nombre="Yen">Yen</div>
+      </div>
     </section>
 
-    <section id="criptos" class="seccion" style="display:none;">
+    <section id="criptomonedas" class="seccion">
       <h2>Criptomonedas</h2>
-      <div id="listaCriptos" class="lista-datos"></div>
+      <div class="listaCriptos">
+        <div class="item-dato" data-nombre="Bitcoin">Bitcoin</div>
+        <div class="item-dato" data-nombre="Ethereum">Ethereum</div>
+        <div class="item-dato" data-nombre="USDT">USDT</div>
+      </div>
     </section>
 
-    <section id="empresas" class="seccion" style="display:none;">
+    <section id="empresas" class="seccion">
       <h2>Empresas</h2>
-      <div id="listaEmpresas" class="lista-datos"></div>
+      <div class="listaEmpresas">
+        <div class="item-dato" data-nombre="Google">Google</div>
+        <div class="item-dato" data-nombre="Apple">Apple</div>
+        <div class="item-dato" data-nombre="Amazon">Amazon</div>
+        <div class="item-dato" data-nombre="Tesla">Tesla</div>
+        <div class="item-dato" data-nombre="Microsoft">Microsoft</div>
+      </div>
     </section>
 
-    <section id="ia" class="seccion" style="display:none;">
+    <section id="ia" class="seccion">
       <h2>Pregúntale a la IA</h2>
-      <p id="introIA">¿En qué te puedo ayudar?</p>
-      <select id="preguntasIA">
-        <option value="">Selecciona una pregunta...</option>
-        <option value="precio de bitcoin">¿Cuál es el precio actual del Bitcoin?</option>
-        <option value="precio del dólar">¿Cuál es el precio actual del dólar?</option>
-        <option value="apple">¿Cuál es el valor de la acción de Apple?</option>
-      </select>
-      <div id="respuestaIA"></div>
+      <div id="contenedorIA">
+        <input type="text" id="preguntaIA" placeholder="¿Qué hace esta app?">
+        <button id="btnPreguntar">Preguntar</button>
+        <div id="salidaIA"></div>
+      </div>
     </section>
 
-    <section id="grafico" class="seccion-grafico"></section>
+    <section id="grafico" class="seccion">
+      <!-- Aquí se mostrará el gráfico automáticamente -->
+    </section>
   </main>
 
   <script src="config.js"></script>
   <script src="utils.js"></script>
-  <script src="ai.js" type="module"></script>
-  <script src="script.js" type="module"></script>
+  <script src="ai.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
