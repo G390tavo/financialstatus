@@ -1,81 +1,97 @@
-// script.js - Control general de la aplicación
-document.addEventListener("DOMContentLoaded", () => {
-  const btnMoneda = document.getElementById("btn-moneda");
-  const btnCripto = document.getElementById("btn-cripto");
-  const btnEmpresas = document.getElementById("btn-empresas");
-  const toggleDark = document.getElementById("toggle-dark");
-  const sidebar = document.getElementById("sidebar");
+import { MONEDAS, CRIPTOS, EMPRESAS } from './config.js';
+import { crearElemento, mostrarError } from './utils.js';
+import { inicializarIA, responderPregunta } from './ai.js';
 
-  // Mostrar el menú lateral al inicio
-  sidebar.classList.remove("hidden");
+document.addEventListener('DOMContentLoaded', () => {
+  const btnMoneda = document.getElementById('btn-moneda');
+  const btnCripto = document.getElementById('btn-cripto');
+  const btnEmpresas = document.getElementById('btn-empresas');
+  const btnPreguntar = document.getElementById('preguntar');
+  const selectIA = document.getElementById('ia-preguntas');
+  const aside = document.getElementById('sidebar');
+  const toggleDark = document.getElementById('toggle-dark');
 
-  // Cambiar modo oscuro
-  toggleDark.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-  });
+  const monedasDiv = document.getElementById('monedas-lista');
+  const criptosDiv = document.getElementById('criptos-lista');
+  const grafico = document.getElementById('grafico');
 
-  // Botones principales
-  btnMoneda.addEventListener("click", () => {
-    mostrarSeccion("monedas");
-    obtenerMonedas();
-  });
-
-  btnCripto.addEventListener("click", () => {
-    mostrarSeccion("criptos");
-    obtenerCriptos();
-  });
-
-  btnEmpresas.addEventListener("click", () => {
-    mostrarSeccion("empresas");
-    obtenerEmpresas();
-  });
-
-  // Inicializar IA
-  if (typeof setupGlobalIA === "function") {
-    setupGlobalIA();
-  } else {
-    console.warn("setupGlobalIA no está definido");
+  function mostrarInicio() {
+    document.getElementById('info').innerHTML = '';
+    grafico.innerHTML = '<h2>Bienvenido a FinancialStatus</h2><p>Selecciona una opción del menú para empezar.</p>';
   }
+
+  function cargarLista(lista, contenedor, tipo) {
+    contenedor.innerHTML = '';
+    lista.forEach(nombre => {
+      const btn = crearElemento('button', '', nombre.nombre || nombre);
+      btn.addEventListener('click', () => graficar(nombre, tipo));
+      contenedor.appendChild(btn);
+    });
+  }
+
+  async function graficar(nombre, tipo) {
+    try {
+      grafico.innerHTML = '<p>Cargando datos...</p>';
+      const datos = await fetch(`https://api.coingecko.com/api/v3/coins/${nombre.id || nombre.simbolo || nombre.toLowerCase()}/market_chart?vs_currency=usd&days=1`).then(r => r.json());
+
+      const canvas = document.createElement('canvas');
+      grafico.innerHTML = '';
+      grafico.appendChild(canvas);
+
+      const ctx = canvas.getContext('2d');
+      const puntos = datos.prices.map(([t, v]) => ({ x: new Date(t).toLocaleTimeString(), y: v }));
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: puntos.map(p => p.x),
+          datasets: [{
+            label: `${nombre.nombre || nombre} (USD)`,
+            data: puntos.map(p => p.y),
+            fill: false,
+            borderColor: 'lime',
+            tension: 0.3,
+            pointBackgroundColor: 'white',
+            pointRadius: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          }
+        }
+      });
+    } catch (err) {
+      mostrarError('No se pudo obtener la información. Verifica tu conexión.');
+    }
+  }
+
+  btnMoneda.addEventListener('click', () => {
+    aside.classList.remove('hidden');
+    cargarLista(MONEDAS, monedasDiv, 'moneda');
+  });
+
+  btnCripto.addEventListener('click', () => {
+    aside.classList.remove('hidden');
+    cargarLista(CRIPTOS, criptosDiv, 'cripto');
+  });
+
+  btnEmpresas.addEventListener('click', () => {
+    aside.classList.remove('hidden');
+    cargarLista(EMPRESAS, monedasDiv, 'empresa');
+  });
+
+  toggleDark.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+  });
+
+  btnPreguntar.addEventListener('click', () => {
+    const pregunta = selectIA.value;
+    responderPregunta(pregunta);
+  });
+
+  mostrarInicio();
+  inicializarIA();
 });
-
-function mostrarSeccion(seccion) {
-  document.getElementById("monedas-lista").style.display = seccion === "monedas" ? "block" : "none";
-  document.getElementById("criptos-lista").style.display = seccion === "criptos" ? "block" : "none";
-  document.getElementById("info").innerText = "";
-  document.getElementById("grafico").innerHTML = "";
-}
-
-// Adaptar a global si no usas módulos
-function setupGlobalIA() {
-  const IA = new FinancialAI();
-
-  const select = document.getElementById("ia-preguntas");
-  const btn = document.getElementById("preguntar");
-  const salida = document.getElementById("ia-respuesta");
-
-  if (!select || !btn || !salida) {
-    console.warn("IA no inicializada. Faltan elementos.");
-    return;
-  }
-
-  btn.addEventListener("click", () => {
-    const pregunta = select.value;
-    const respuesta = IA.responder(pregunta);
-    salida.innerText = respuesta;
-  });
-}
-
-// Mover clase FinancialAI aquí si no estás usando módulos
-class FinancialAI {
-  constructor() {
-    this.respuestas = {
-      funciona: "Esta aplicación permite visualizar precios actualizados de monedas, criptomonedas y empresas, junto con explicaciones básicas gracias a una IA integrada.",
-      tutorial: "Selecciona una categoría como Monedas, Criptomonedas o Empresas. Al hacer clic en una opción, verás información y gráficos. También puedes preguntarle a la IA para entender mejor.",
-      info: "Las criptomonedas son activos digitales que utilizan criptografía para garantizar transacciones seguras. Ejemplos incluyen Bitcoin, Ethereum y muchas más.",
-    };
-  }
-
-  responder(pregunta) {
-    return this.respuestas[pregunta] || "Lo siento, aún no tengo respuesta para eso.";
-  }
-}
