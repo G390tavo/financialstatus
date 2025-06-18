@@ -1,27 +1,88 @@
-// Configuración de fuentes de scraping
-const FUENTES = {
-  google: query => `https://www.google.com/search?q=${encodeURIComponent(query)}`,
-  bing: query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
-  duckduckgo: query => `https://duckduckgo.com/?q=${encodeURIComponent(query)}`
-};
+// 📦 CONFIGURACIÓN GENERAL
 
-// Palabras clave por tipo
-const CONFIG = {
-  criptomonedas: ['bitcoin', 'ethereum', 'dogecoin'],
-  monedas: ['dólar', 'euro', 'yen'],
-  empresas: ['apple stock', 'google stock', 'amazon stock']
-};
-
-// Preguntas predefinidas para la IA
-const PREGUNTAS_IA = [
-  "¿Cuál es el precio del bitcoin?",
-  "¿Qué hace esta aplicación?",
+// Preguntas preestablecidas para IA
+const preguntasIA = [
+  "¿Qué hace esta app?",
+  "¿Cuál es el precio del Bitcoin?",
+  "¿Qué es una criptomoneda?",
   "¿Cuál es el valor actual del dólar?",
-  "¿Cuál es el precio de las acciones de Apple?",
-  "¿Qué criptomonedas están subiendo?"
+  "¿Cuánto vale una acción de Tesla?"
 ];
 
-// Exporte si se usa en entorno con módulos (por ahora no se usa import/export directo)
-window.CONFIG = CONFIG;
-window.FUENTES = FUENTES;
-window.PREGUNTAS_IA = PREGUNTAS_IA;
+// Criptomonedas
+const criptomonedas = [
+  {
+    nombre: "Bitcoin",
+    simbolo: "BTC",
+    descripcion: "Criptomoneda descentralizada líder del mercado.",
+    busqueda: "precio del bitcoin"
+  },
+  {
+    nombre: "Ethereum",
+    simbolo: "ETH",
+    descripcion: "Plataforma descentralizada de contratos inteligentes.",
+    busqueda: "precio del ethereum"
+  },
+  {
+    nombre: "Tether",
+    simbolo: "USDT",
+    descripcion: "Stablecoin vinculada al dólar estadounidense.",
+    busqueda: "precio del tether"
+  }
+];
+
+// Monedas internacionales
+const monedas = [
+  {
+    nombre: "Dólar estadounidense",
+    simbolo: "USD",
+    descripcion: "Moneda de referencia internacional.",
+    busqueda: "precio del dólar hoy"
+  },
+  {
+    nombre: "Euro",
+    simbolo: "EUR",
+    descripcion: "Moneda oficial de la eurozona.",
+    busqueda: "precio del euro hoy"
+  },
+  {
+    nombre: "Yen japonés",
+    simbolo: "JPY",
+    descripcion: "Moneda de Japón.",
+    busqueda: "precio del yen japonés hoy"
+  }
+];
+
+// Empresas
+const empresas = [
+  {
+    nombre: "Apple",
+    simbolo: "AAPL",
+    descripcion: "Empresa líder en tecnología y dispositivos móviles.",
+    busqueda: "precio acción apple"
+  },
+  {
+    nombre: "Google",
+    simbolo: "GOOG",
+    descripcion: "Empresa de tecnología y motor de búsqueda.",
+    busqueda: "precio acción google"
+  },
+  {
+    nombre: "Amazon",
+    simbolo: "AMZN",
+    descripcion: "Líder mundial en comercio electrónico.",
+    busqueda: "precio acción amazon"
+  },
+  {
+    nombre: "Tesla",
+    simbolo: "TSLA",
+    descripcion: "Fabricante de autos eléctricos y energía limpia.",
+    busqueda: "precio acción tesla"
+  },
+  {
+    nombre: "Microsoft",
+    simbolo: "MSFT",
+    descripcion: "Gigante del software y servicios en la nube.",
+    busqueda: "precio acción microsoft"
+  }
+];
