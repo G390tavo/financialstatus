@@ -24,14 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("menu").style.display = "none";
   });
 
-  mostrarSeccion("inicio"); // Inicio por defecto
+  mostrarSeccion("inicio"); // por defecto
 
-  // Pregunta inicial a la IA
   if (document.getElementById("respuesta-ia")) {
     preguntarIA("¿Qué es FinancialStatus?");
   }
 
-  // Fetch real con proxy a Google
   async function fetchRealData(termino, destinoID) {
     const url = `http://localhost:3000/fetch?url=https://www.google.com/search?q=${encodeURIComponent(termino)}`;
     const contenedor = document.getElementById(destinoID);
@@ -40,19 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const res = await fetch(url);
       const texto = await res.text();
-
-      // Ejemplo simple: encontrar un valor con símbolo $
       const regex = /(\$[\d,.]+)/;
       const match = texto.match(regex);
       const valor = match ? match[0] : "Valor no encontrado";
 
       contenedor.innerHTML = `
-        <h2>${termino}</h2>
-        <p>Valor encontrado: ${valor}</p>
+        <h3>${termino}</h3>
+        <p>Valor: ${valor}</p>
         <canvas id="grafico-${destinoID}" width="300" height="150"></canvas>
       `;
 
-      // Simula datos de gráfico (temporal mientras se mejora con scraping más avanzado)
       const ctx = document.getElementById(`grafico-${destinoID}`).getContext("2d");
       new Chart(ctx, {
         type: 'line',
@@ -68,11 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     } catch (err) {
-      contenedor.innerHTML = `<p>Error al obtener datos reales para "${termino}": ${err.message}</p>`;
+      contenedor.innerHTML = `<p>Error al obtener datos reales: ${err.message}</p>`;
     }
   }
 
-  // Cargar secciones reales
   fetchRealData("dólar", "monedas");
   fetchRealData("bitcoin", "criptos");
   fetchRealData("apple stock", "empresas");
