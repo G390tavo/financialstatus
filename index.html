@@ -5,42 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="dark">
+<body>
   <header>
-    <img src="logo.png" alt="Logo" class="logo">
+    <img src="logo.png" alt="Logo" class="logo" />
     <h1>FinancialStatus</h1>
     <button id="toggle-dark">Modo Oscuro</button>
   </header>
 
   <nav>
+    <button id="btn-inicio">Inicio</button>
     <button id="btn-moneda">Monedas</button>
     <button id="btn-cripto">Criptomonedas</button>
     <button id="btn-empresas">Empresas</button>
+    <button id="btn-ia">IA</button>
   </nav>
 
-  <aside id="sidebar">
+  <aside id="sidebar" class="">
+    <button id="cerrar-menu">Cerrar Menú</button>
     <div id="monedas-lista"></div>
     <div id="criptos-lista"></div>
+    <div id="empresas-lista"></div>
   </aside>
 
   <main>
-    <section id="grafico"></section>
-    <section id="info"></section>
-    <section id="ia-chat">
+    <section id="inicio" class="seccion visible">
+      <h2>Bienvenido a FinancialStatus</h2>
+      <p>En futuras versiones verás aquí noticias económicas recientes.</p>
+    </section>
+
+    <section id="monedas" class="seccion hidden">
+      <h2>Monedas Internacionales</h2>
+      <div id="monedas-contenido"></div>
+    </section>
+
+    <section id="criptos" class="seccion hidden">
+      <h2>Criptomonedas</h2>
+      <div id="criptos-contenido"></div>
+    </section>
+
+    <section id="empresas" class="seccion hidden">
+      <h2>Empresas</h2>
+      <div id="empresas-contenido"></div>
+    </section>
+
+    <section id="ia" class="seccion hidden">
       <h2>Pregúntale a la IA</h2>
       <select id="ia-preguntas">
-        <option value="funciona">¿Cómo funciona esta aplicación?</option>
+        <option value="intro">¿Qué hace esta app?</option>
         <option value="tutorial">Dame un tutorial rápido</option>
-        <option value="info">¿Qué son las criptomonedas?</option>
+        <option value="bitcoin">Grafica el precio de Bitcoin</option>
       </select>
       <button id="preguntar">Preguntar</button>
       <div id="ia-respuesta"></div>
+      <div id="grafico"></div>
+      <div id="info"></div>
     </section>
   </main>
 
+  <script type="module" src="config.js"></script>
+  <script type="module" src="utils.js"></script>
+  <script type="module" src="ai.js"></script>
   <script type="module" src="script.js"></script>
 </body>
 </html>
