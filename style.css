@@ -1,113 +1,59 @@
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #111;
-  color: #fff;
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: white;
   display: flex;
 }
-
-body.claro {
-  background-color: #f2f2f2;
-  color: #111;
+.modo-claro {
+  background-color: #f5f5f5;
+  color: #222;
 }
-
-aside#menu {
-  background-color: #1a1a1a;
-  width: 250px;
-  min-height: 100vh;
+aside {
+  width: 220px;
+  background-color: #1e1e1e;
   padding: 1rem;
+  position: relative;
 }
-
-aside#menu button {
-  display: block;
-  margin: 8px 0;
-  width: 100%;
-  padding: 10px;
-  background: #333;
+#cerrar-menu {
+  position: absolute;
+  top: 10px;
+  right: -40px;
+  background-color: #2e7d32;
+  color: white;
   border: none;
-  color: #fff;
+  padding: 5px;
   cursor: pointer;
 }
-
-aside#menu button:hover {
-  background: #4caf50;
-}
-
 main {
   flex: 1;
-  padding: 2rem;
-  overflow-y: auto;
+  padding: 1rem;
 }
-
 .seccion {
   display: none;
 }
-
-.contenedor-datos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.seccion.visible {
+  display: block;
 }
-
-.tarjeta {
-  background-color: #222;
-  padding: 1rem;
-  border-radius: 8px;
-  width: 240px;
-  border: 1px solid #333;
-}
-
-.tarjeta h3 {
-  margin-top: 0;
-  font-size: 1.2em;
-}
-
-.flecha-arriba {
-  color: #4caf50;
-}
-
-.flecha-abajo {
-  color: #f44336;
-}
-
-.contenedor-preguntas button {
-  display: inline-block;
-  margin: 4px;
-  padding: 8px 12px;
-  background: #4caf50;
+button {
+  margin: 5px 0;
+  padding: 10px;
+  width: 100%;
+  background-color: #2e7d32;
+  color: white;
   border: none;
-  color: #fff;
   cursor: pointer;
-  border-radius: 4px;
 }
-
-.contenedor-preguntas button:hover {
-  background: #388e3c;
-}
-
-.contenedor-grafico {
-  margin-top: 20px;
-  background: #222;
+.card {
+  background-color: #2c2c2c;
+  border: 1px solid #3c3c3c;
   padding: 1rem;
+  margin-bottom: 1rem;
   border-radius: 8px;
 }
-
-canvas {
-  width: 100% !important;
-  height: auto !important;
+.flecha-up {
+  color: #00ff00;
 }
-
-@media (max-width: 768px) {
-  aside#menu {
-    width: 100%;
-    min-height: auto;
-  }
-
-  main {
-    padding: 1rem;
-  }
-
-  .tarjeta {
-    width: 100%;
-  }
+.flecha-down {
+  color: #ff4444;
 }
