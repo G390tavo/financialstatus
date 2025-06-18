@@ -1,33 +1,31 @@
-export function crearElemento(tipo, clases = '', texto = '') {
-  const el = document.createElement(tipo);
-  if (clases) el.className = clases;
+function crearElemento(tag, clase, texto) {
+  const el = document.createElement(tag);
+  if (clase) el.className = clase;
   if (texto) el.textContent = texto;
   return el;
 }
 
-export function mostrarError(mensaje, contenedor) {
-  const error = crearElemento('div', 'error', mensaje);
-  error.style.color = 'red';
-  error.style.margin = '10px 0';
-  contenedor.innerHTML = '';
-  contenedor.appendChild(error);
+function mostrarError(mensaje, contenedor) {
+  contenedor.innerHTML = `<div class="card">${mensaje}</div>`;
 }
 
-export function obtenerCambio(valorActual, valorAnterior) {
-  const diferencia = valorActual - valorAnterior;
-  const porcentaje = ((diferencia / valorAnterior) * 100).toFixed(2);
-  const sube = diferencia > 0;
-  return { porcentaje, sube };
-}
-
-export async function fetchHTML(url) {
-  try {
-    const respuesta = await fetch(`http://localhost:3000/fetch?url=${encodeURIComponent(url)}`);
-    const texto = await respuesta.text();
-    const doc = new DOMParser().parseFromString(texto, 'text/html');
-    return doc;
-  } catch (e) {
-    console.error('Error al obtener HTML:', e);
-    return null;
+async function obtenerDatos(palabraClave) {
+  for (const fuente of FUENTES) {
+    try {
+      const res = await fetch(PROXY_URL + encodeURIComponent(fuente + palabraClave));
+      if (res.ok) {
+        const html = await res.text();
+        const valor = extraerNumero(html);
+        if (valor) return valor;
+      }
+    } catch (e) {
+      continue;
+    }
   }
+  return null;
+}
+
+function extraerNumero(texto) {
+  const match = texto.match(/\d{1,3}(?:[.,]\d{1,3}){1,2}/);
+  return match ? match[0] : null;
 }
