@@ -1,42 +1,63 @@
-// Crea un elemento con atributos y contenido fácilmente
-function crearElemento(tag, atributos = {}, contenido = '') {
-  const el = document.createElement(tag);
-  for (let key in atributos) {
-    if (key === 'class') el.className = atributos[key];
-    else if (key === 'dataset') {
-      for (let dataKey in atributos[key]) {
-        el.dataset[dataKey] = atributos[key][dataKey];
-      }
-    } else {
-      el.setAttribute(key, atributos[key]);
-    }
+// 🔧 Función para obtener HTML desde una URL usando el proxy local
+async function fetchHTML(url) {
+  try {
+    const response = await fetch(`http://localhost:3000/fetch?url=${encodeURIComponent(url)}`);
+    if (!response.ok) throw new Error("Error al conectar con proxy.");
+    const html = await response.text();
+    return html;
+  } catch (error) {
+    console.error("❌ fetchHTML error:", error.message);
+    return null;
   }
-  if (typeof contenido === 'string') {
-    el.innerHTML = contenido;
-  } else if (contenido instanceof HTMLElement) {
-    el.appendChild(contenido);
-  } else if (Array.isArray(contenido)) {
-    contenido.forEach(child => {
-      if (typeof child === 'string') {
-        el.innerHTML += child;
-      } else if (child instanceof HTMLElement) {
-        el.appendChild(child);
-      }
-    });
-  }
-  return el;
 }
 
-// Muestra un mensaje de error en la interfaz
-function mostrarError(mensaje = 'Ocurrió un error inesperado.') {
-  const errorDiv = document.getElementById('respuestaIA') || document.body;
-  const mensajeError = crearElemento('div', { class: 'error' }, `<p>${mensaje}</p>`);
-  errorDiv.appendChild(mensajeError);
-  setTimeout(() => mensajeError.remove(), 5000);
+// 🔴 Muestra un mensaje de error en la interfaz
+function mostrarError(mensaje, contenedor = "#respuesta-ia") {
+  const div = document.querySelector(contenedor);
+  div.innerHTML = `<p style="color:red;">⚠️ ${mensaje}</p>`;
 }
 
-// Limpia un elemento por ID
-function limpiarElemento(id) {
-  const elemento = document.getElementById(id);
-  if (elemento) elemento.innerHTML = '';
+// ✅ Crea una tarjeta visual tipo Binance
+function crearTarjeta(item, tipo) {
+  const div = document.createElement("div");
+  div.className = "tarjeta";
+  div.dataset.tipo = tipo;
+  div.dataset.nombre = item.nombre;
+  div.dataset.busqueda = item.busqueda;
+
+  div.innerHTML = `
+    <h3>${item.nombre} (${item.simbolo})</h3>
+    <div class="valor">Cargando...</div>
+    <div class="variacion">🔄 Obteniendo variación...</div>
+    <div class="descripcion">${item.descripcion}</div>
+    <div class="zona-grafico" style="display:none;"></div>
+  `;
+
+  return div;
+}
+
+// 📈 Genera un gráfico automático estilo Google con datos reales y simulados
+function mostrarGrafico(contenedor, nombre, valorActual) {
+  const zona = contenedor.querySelector(".zona-grafico");
+  if (!zona) return;
+
+  // Simular historial de los últimos 7 días (relativo al valor actual)
+  const historial = [];
+  for (let i = 6; i >= 0; i--) {
+    const variacion = Math.random() * 4 - 2; // +-2%
+    const valor = +(valorActual * (1 + variacion / 100)).toFixed(2);
+    historial.push(valor);
+  }
+  historial.push(valorActual);
+
+  // Dibujar gráfico simple como texto (puedes reemplazar por canvas.js, chart.js, etc.)
+  const puntos = historial.map((val, idx) => `<div style="margin-right:6px; display:inline-block; color:#2ecc71;">●</div>`).join("");
+  const valores = historial.map(v => `<small>${v}</small>`).join(" | ");
+
+  zona.style.display = "block";
+  zona.innerHTML = `
+    <p><strong>${nombre}</strong> (últimos 7 días):</p>
+    <div style="font-size: 1.2em;">${puntos}</div>
+    <div style="margin-top:8px; font-size:0.9em;">${valores}</div>
+  `;
 }
