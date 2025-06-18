@@ -5,29 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </head>
 <body class="dark">
 
-  <!-- Botón flotante para abrir el menú -->
   <button id="abrir-menu" style="display: none;">☰</button>
 
-  <!-- Menú lateral -->
   <aside id="menu-lateral">
     <button id="cerrar-menu">✖</button>
     <h2>FinancialStatus</h2>
     <nav>
-      <button data-section="inicio">🏠 Inicio</button>
-      <button data-section="monedas">💱 Monedas</button>
-      <button data-section="criptos">🪙 Criptomonedas</button>
-      <button data-section="empresas">🏢 Empresas</button>
-      <button data-section="ia">🤖 IA</button>
+      <button data-section="inicio">Inicio</button>
+      <button data-section="monedas">Monedas</button>
+      <button data-section="criptos">Criptomonedas</button>
+      <button data-section="empresas">Empresas</button>
+      <button data-section="ia">IA</button>
     </nav>
   </aside>
 
-  <!-- Botón para cambiar modo -->
   <button id="modo-toggle" class="modo-boton">Modo claro</button>
 
-  <!-- Secciones -->
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
@@ -52,17 +49,16 @@
     <section id="ia" class="seccion">
       <h2>Inteligencia Artificial</h2>
       <div id="ia-introduccion">
-        <p>Hola, soy tu asistente financiero. Puedes preguntarme cosas útiles seleccionando una pregunta:</p>
+        <p>Soy tu asistente financiero. Elige una pregunta:</p>
         <select id="pregunta-ia">
           <option value="">Selecciona una pregunta</option>
         </select>
       </div>
-      <div id="ia-cargando" style="display:none;">🔄 Cargando datos...</div>
+      <div id="ia-cargando" style="display:none;">Cargando datos...</div>
       <div id="respuesta-ia"></div>
     </section>
   </main>
 
-  <!-- Zona común para mostrar gráficos -->
   <div id="grafico"></div>
 
   <script src="config.js"></script>
