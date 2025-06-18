@@ -1,131 +1,153 @@
-/* ===== Estilo base general ===== */
+/* style.css */
 body {
+  font-family: Arial, sans-serif;
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f0fdf4;
-  color: #111;
-  display: flex;
+  background: #f0f4f0;
+  color: #222;
+  transition: background 0.3s, color 0.3s;
 }
 
-/* ===== Menú lateral ===== */
+body.modo-oscuro {
+  background: #121212;
+  color: #e0e0e0;
+}
+
 .menu-lateral {
-  width: 220px;
-  background-color: #16a34a;
-  color: white;
-  padding: 1rem;
   position: fixed;
-  height: 100vh;
-  overflow-y: auto;
   left: 0;
   top: 0;
-  transition: transform 0.3s ease;
+  width: 220px;
+  height: 100%;
+  background: #2e7d32;
+  color: white;
+  padding: 1em;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease-in-out;
   z-index: 1000;
+}
+
+.menu-lateral nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-top: 1em;
 }
 
 .menu-lateral button {
   background: none;
   border: none;
   color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  margin: 0.5rem 0;
-  width: 100%;
+  font-weight: bold;
   text-align: left;
-}
-
-.menu-lateral button:hover {
-  text-decoration: underline;
+  padding: 0.5em;
+  cursor: pointer;
 }
 
 #cerrarMenu {
-  font-size: 1.2rem;
-  float: right;
-  margin-bottom: 1rem;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: white;
+  color: #2e7d32;
+  border: none;
+  border-radius: 50%;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 
-/* ===== Contenido principal ===== */
 main {
-  margin-left: 220px;
-  padding: 2rem;
-  flex: 1;
-  background-color: #f0fdf4;
+  margin-left: 240px;
+  padding: 1em;
 }
 
 .seccion {
-  margin-bottom: 3rem;
+  display: none;
 }
 
-.lista-datos {
+.seccion.visible {
+  display: block;
+}
+
+.listaMonedas, .listaCriptos, .listaEmpresas {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1em;
 }
 
 .item-dato {
-  background-color: white;
-  border: 2px solid #22c55e;
-  padding: 1rem;
-  border-radius: 8px;
+  background: #e8f5e9;
+  padding: 1em;
+  border-radius: 10px;
   cursor: pointer;
-  flex: 1 1 150px;
-  text-align: center;
-  transition: background-color 0.2s;
+  transition: background 0.3s;
 }
 
 .item-dato:hover {
-  background-color: #bbf7d0;
+  background: #c8e6c9;
 }
 
-/* ===== Gráfico ===== */
-.seccion-grafico {
-  margin-top: 2rem;
-  padding: 1rem;
-  border: 2px dashed #22c55e;
-  background-color: #ecfdf5;
-  border-radius: 8px;
+#grafico {
+  margin-top: 2em;
 }
 
-/* ===== Modo oscuro ===== */
-body.oscuro {
-  background-color: #111827;
-  color: #f0fdf4;
+#contenedorIA {
+  margin-top: 1em;
+  padding: 1em;
+  background: #f1f8e9;
+  border-left: 5px solid #2e7d32;
 }
 
-body.oscuro main {
-  background-color: #1f2937;
+#contenedorIA input, #contenedorIA button {
+  padding: 0.5em;
+  margin: 0.2em;
 }
 
-body.oscuro .menu-lateral {
-  background-color: #065f46;
+#contenedorIA button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-body.oscuro .item-dato {
-  background-color: #1e3a2f;
-  border-color: #10b981;
-  color: #f0fdf4;
+body.modo-oscuro .menu-lateral {
+  background: #1b5e20;
 }
 
-body.oscuro .item-dato:hover {
-  background-color: #047857;
+body.modo-oscuro #contenedorIA {
+  background: #2c3e50;
+  color: white;
+  border-left-color: #81c784;
 }
 
-body.oscuro .seccion-grafico {
-  background-color: #064e3b;
-  border-color: #10b981;
+body.modo-oscuro .item-dato {
+  background: #263238;
+  color: white;
 }
 
-/* ===== Responsive ===== */
+body.modo-oscuro .item-dato:hover {
+  background: #37474f;
+}
+
+/* Responsividad para móviles */
 @media (max-width: 768px) {
   .menu-lateral {
     transform: translateX(-100%);
   }
 
   .menu-lateral.abierto {
-    transform: translateX(0);
+    transform: translateX(0%);
   }
 
   main {
     margin-left: 0;
-    padding: 1rem;
+    padding-top: 3em;
+  }
+
+  #cerrarMenu {
+    top: 5px;
+    right: 5px;
   }
 }
