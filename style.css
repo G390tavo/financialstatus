@@ -25,7 +25,8 @@ body.light {
   right: 10px;
   z-index: 1000;
   padding: 8px 12px;
-  background-color: #2ecc71;
+  background-color: #39FF14
+;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -33,7 +34,7 @@ body.light {
 }
 
 body.light .modo-boton {
-  background-color: #145a32;
+  background-color: #39FF14;
   color: #fff;
 }
 
@@ -52,7 +53,7 @@ body.light .modo-boton {
 }
 
 #menu-lateral h2 {
-  color: #2ecc71;
+  color: #39FF14;
   margin-bottom: 20px;
 }
 
@@ -68,7 +69,7 @@ body.light .modo-boton {
 }
 
 #menu-lateral nav button:hover {
-  background-color: #2ecc71;
+  background-color: #39FF14;
   color: #000;
 }
 
@@ -81,7 +82,7 @@ body.light #menu-lateral nav button {
 }
 
 body.light #menu-lateral nav button:hover {
-  background-color: #145a32;
+  background-color: #39FF14;
   color: #fff;
 }
 
@@ -101,7 +102,7 @@ body.light #menu-lateral nav button:hover {
   position: fixed;
   top: 10px;
   left: 10px;
-  background: #2ecc71;
+  background: #39FF14;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -111,7 +112,7 @@ body.light #menu-lateral nav button:hover {
 }
 
 body.light #abrir-menu {
-  background-color: #145a32;
+  background-color: ##39FF14;
 }
 
 /* === SECCIONES === */
@@ -142,13 +143,13 @@ main {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  border-left: 4px solid #2ecc71;
+  border-left: 4px solid #39FF14;
   position: relative;
 }
 
 body.light .tarjeta {
   background-color: #f9f9f9;
-  border-left: 4px solid #145a32;
+  border-left: 4px solid #39FF14;
   color: #000;
 }
 
@@ -170,7 +171,7 @@ body.light .tarjeta {
 }
 
 .variacion .up {
-  color: #2ecc71;
+  color: #39FF14;
 }
 
 .variacion .down {
@@ -189,12 +190,12 @@ body.light .tarjeta {
   background-color: #000;
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid #2ecc71;
+  border: 1px solid #39FF14;
 }
 
 body.light .zona-grafico {
   background-color: #fff;
-  border: 1px solid #145a32;
+  border: 1px solid #39FF14;
 }
 
 /* === IA === */
@@ -224,7 +225,7 @@ body.light #respuesta-ia {
 /* Cargando IA */
 #ia-cargando {
   margin-top: 15px;
-  color: #2ecc71;
+  color: #39FF14;
   font-style: italic;
 }
 
@@ -234,12 +235,12 @@ body.light #respuesta-ia {
   padding: 15px;
   background-color: #111;
   border-radius: 10px;
-  border: 1px solid #2ecc71;
+  border: 1px solid #39FF14;
 }
 
 body.light #grafico {
   background-color: #f0f0f0;
-  border: 1px solid #145a32;
+  border: 1px solid #39FF14;
 }
 
 /* === RESPONSIVE === */
