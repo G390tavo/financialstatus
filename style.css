@@ -1,191 +1,124 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 body {
   font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: #f4f4f4;
-  transition: background 0.3s, color 0.3s;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #fff;
 }
 
 header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50px;
-  background: #007a33;
-  color: #fff;
+  background-color: #0077cc;
+  color: white;
+  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
-  z-index: 1000;
 }
 
-.logo {
-  height: 30px;
-}
-
-#toggle-dark {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
+header .logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
 }
 
 nav {
-  position: fixed;
-  top: 50px;
-  left: 0;
-  width: 220px;
-  background: #e0e0e0;
-  padding: 1rem 0;
-  height: calc(100% - 50px);
-  overflow-y: auto;
-  transition: transform 0.3s;
-  z-index: 999;
+  background-color: #eee;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 nav button {
-  display: block;
-  width: 100%;
-  padding: 1rem;
-  background: none;
+  padding: 10px;
+  background-color: #ddd;
   border: none;
-  text-align: left;
   cursor: pointer;
-  font-size: 1rem;
-  color: #111;
+  transition: background-color 0.3s;
 }
 
 nav button:hover {
-  background: #007a33;
-  color: #fff;
+  background-color: #ccc;
+}
+
+aside {
+  background-color: #f9f9f9;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+  width: 250px;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  position: fixed;
+  left: 0;
+  top: 120px;
+  transition: transform 0.3s ease;
+}
+
+aside.hidden {
+  transform: translateX(-260px);
+}
+
+aside.visible {
+  transform: translateX(0);
 }
 
 main {
-  margin-top: 50px;
-  margin-left: 220px;
-  padding: 1rem;
-  flex: 1;
-  transition: margin-left 0.3s;
+  margin-left: 260px;
+  padding: 20px;
 }
 
 section {
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
 }
 
-#grafico {
-  height: 300px;
-  background: #fff;
-  border: 1px solid #ccc;
-  position: relative;
-  overflow: hidden;
-}
-
-.punto {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: green;
-  transform: translate(-50%, 50%);
-}
-
-.linea {
-  position: absolute;
-  height: 2px;
-  background: green;
-  transform-origin: left center;
-}
-
-.lbl {
-  position: absolute;
-  padding: 2px 4px;
-  background: #fff;
-  border: 1px solid #007a33;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  transform: translate(-50%, calc(-100% - 8px));
+#grafico canvas {
+  width: 100% !important;
+  height: 300px !important;
 }
 
 #ia-chat {
-  background: #fff;
+  background-color: #fff;
+  padding: 15px;
   border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 4px;
-}
-
-#ia-preguntas {
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
+  border-radius: 8px;
 }
 
 #ia-respuesta {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background: #f0f0f0;
-  border-radius: 4px;
-  min-height: 40px;
+  margin-top: 10px;
+  font-style: italic;
+  color: #444;
 }
 
-/* DARK MODE */
-
-.dark {
-  background: #121212;
-  color: #ddd;
+body.dark-mode header {
+  background-color: #222;
 }
 
-.dark header {
-  background: #004d1a;
+body.dark-mode nav {
+  background-color: #333;
 }
 
-.dark nav {
-  background: #222;
+body.dark-mode nav button {
+  background-color: #444;
+  color: white;
 }
 
-.dark nav button:hover {
-  background: #004d1a;
-  color: #ddd;
+body.dark-mode aside {
+  background-color: #222;
+  color: white;
 }
 
-.dark #grafico,
-.dark .lbl,
-.dark #ia-chat {
-  background: #222;
+body.dark-mode main {
+  background-color: #121212;
+  color: white;
+}
+
+body.dark-mode #ia-chat {
+  background-color: #1f1f1f;
+  color: white;
   border-color: #444;
-  color: #ddd;
-}
-
-.dark #ia-respuesta {
-  background: #333;
-}
-
-/* Ocultar el aside si se desea implementar botón de cerrar */
-nav.hidden {
-  transform: translateX(-100%);
-}
-
-@media (max-width: 768px) {
-  nav {
-    transform: translateX(-100%);
-    position: fixed;
-    z-index: 1001;
-  }
-
-  nav.show {
-    transform: translateX(0);
-  }
-
-  main {
-    margin-left: 0;
-  }
 }
