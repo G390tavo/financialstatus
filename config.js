@@ -1,34 +1,26 @@
-// config.js
-
-// Preguntas preestablecidas para la IA
-const preguntasIA = [
-  "¿Qué hace esta app?",
-  "¿Cómo se obtienen los datos?",
-  "¿Cómo interpretar las gráficas?",
-  "¿Por qué no aparecen datos?",
-  "¿Qué hacer si no hay conexión?",
-];
-
-// Elementos de ejemplo
-const monedas = [
+// Lista de monedas internacionales (códigos ISO estándar)
+const MONEDAS = [
   { nombre: "Dólar estadounidense", codigo: "USD" },
   { nombre: "Euro", codigo: "EUR" },
-  { nombre: "Yen japonés", codigo: "JPY" }
+  { nombre: "Yen japonés", codigo: "JPY" },
+  { nombre: "Libra esterlina", codigo: "GBP" },
+  { nombre: "Sol peruano", codigo: "PEN" },
 ];
 
-const criptomonedas = [
-  { nombre: "Bitcoin", codigo: "BTC" },
-  { nombre: "Ethereum", codigo: "ETH" },
-  { nombre: "Tether", codigo: "USDT" }
+// Lista de criptomonedas principales
+const CRIPTOS = [
+  { nombre: "Bitcoin", simbolo: "BTC" },
+  { nombre: "Ethereum", simbolo: "ETH" },
+  { nombre: "Tether", simbolo: "USDT" },
+  { nombre: "BNB", simbolo: "BNB" },
+  { nombre: "Solana", simbolo: "SOL" },
 ];
 
-const empresas = [
-  { nombre: "Apple", codigo: "AAPL" },
-  { nombre: "Google", codigo: "GOOGL" },
-  { nombre: "Amazon", codigo: "AMZN" },
-  { nombre: "Tesla", codigo: "TSLA" },
-  { nombre: "Microsoft", codigo: "MSFT" }
+// Lista de empresas con símbolo bursátil (referencia simple)
+const EMPRESAS = [
+  { nombre: "Apple", simbolo: "AAPL" },
+  { nombre: "Google", simbolo: "GOOGL" },
+  { nombre: "Amazon", simbolo: "AMZN" },
+  { nombre: "Tesla", simbolo: "TSLA" },
+  { nombre: "Microsoft", simbolo: "MSFT" },
 ];
-
-// Estilo general
-const colorPrincipal = "#00c853"; // Verde restaurado
