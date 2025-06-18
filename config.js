@@ -1,20 +1,11 @@
-// Configuración general de la app FinancialStatus
+// Lista base de monedas y criptos fácilmente obtenibles
+export const MONEDAS = ['USD', 'EUR', 'PEN', 'MXN', 'JPY'];
+export const CRIPTOS = ['bitcoin', 'ethereum', 'bnb', 'solana', 'cardano'];
 
-const API_CONFIG = {
-  monedas: 'https://api.exchangerate-api.com/v4/latest/USD',
-  criptos: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd',
-  empresas: [
-    { nombre: "Apple", ticker: "AAPL" },
-    { nombre: "Microsoft", ticker: "MSFT" },
-    { nombre: "Amazon", ticker: "AMZN" },
-    { nombre: "Tesla", ticker: "TSLA" },
-    { nombre: "Google", ticker: "GOOGL" },
-    { nombre: "Meta", ticker: "META" },
-    { nombre: "NVIDIA", ticker: "NVDA" },
-    { nombre: "Netflix", ticker: "NFLX" },
-    { nombre: "AMD", ticker: "AMD" },
-    { nombre: "Intel", ticker: "INTC" }
-  ]
-};
-
-const FETCH_TIMEOUT = 5000; // 5 segundos para considerar datos offline
+export const EMPRESAS = [
+  { nombre: 'Apple', simbolo: 'AAPL' },
+  { nombre: 'Microsoft', simbolo: 'MSFT' },
+  { nombre: 'Amazon', simbolo: 'AMZN' },
+  { nombre: 'Tesla', simbolo: 'TSLA' },
+  { nombre: 'Google', simbolo: 'GOOGL' }
+];
