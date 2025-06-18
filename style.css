@@ -1,65 +1,35 @@
 body {
   margin: 0;
-  font-family: sans-serif;
-  background-color: #f0f2f5;
-  color: #222;
-}
-
-#container {
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
   display: flex;
 }
 
 aside#menu {
-  width: 240px;
-  background-color: #013220;
-  color: white;
-  height: 100vh;
-  padding: 1rem;
-  box-sizing: border-box;
-  position: fixed;
-  left: 0;
-  top: 0;
+  width: 250px;
+  background-color: #1e1e1e;
+  padding: 20px;
+  position: relative;
   transition: transform 0.3s ease;
 }
 
-aside#menu h2 {
-  margin-top: 0;
-  font-size: 1.5rem;
-  color: #aef8ae;
-}
-
-aside#menu nav button {
-  display: block;
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-  background-color: #025e34;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-aside#menu nav button:hover {
-  background-color: #04a16c;
-}
-
-#toggle-menu {
+button#cerrarMenu {
   position: absolute;
   top: 10px;
-  right: -50px;
-  background: #04a16c;
+  right: -35px;
+  background: #1e1e1e;
   color: white;
   border: none;
   border-radius: 0 5px 5px 0;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
+  z-index: 1000;
 }
 
 main#contenido {
-  margin-left: 240px;
-  padding: 1rem;
-  flex: 1;
+  flex-grow: 1;
+  padding: 20px;
 }
 
 .seccion {
@@ -70,32 +40,35 @@ main#contenido {
   display: block;
 }
 
-h1, h2 {
-  color: #014422;
-}
-
 button {
-  font-size: 1rem;
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-@media (max-width: 768px) {
-  aside#menu {
-    transform: translateX(-100%);
-    position: absolute;
-    z-index: 10;
-  }
+button:hover {
+  background-color: #388e3c;
+}
 
-  aside#menu.abierto {
-    transform: translateX(0);
-  }
+.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
 
-  #toggle-menu {
-    right: -50px;
-    z-index: 11;
-  }
+.ia-container {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
 
-  main#contenido {
-    margin-left: 0;
-    padding-top: 60px;
-  }
+.ia-container button {
+  width: auto;
+  margin-right: 10px;
 }
