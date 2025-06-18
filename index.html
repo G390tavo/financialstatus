@@ -1,46 +1,56 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="dark">
-  <aside id="sidebar" class="sidebar open">
-    <button id="cerrarMenu">✖</button>
+<body class="oscuro">
+  <aside id="menu">
     <h2>FinancialStatus</h2>
     <nav>
-      <button data-seccion="inicio">Inicio</button>
-      <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="criptos">Criptomonedas</button>
-      <button data-seccion="empresas">Empresas</button>
-      <button data-seccion="ia">IA</button>
+      <button class="nav-btn" data-seccion="inicio">Inicio</button>
+      <button class="nav-btn" data-seccion="monedas">Monedas</button>
+      <button class="nav-btn" data-seccion="criptos">Criptomonedas</button>
+      <button class="nav-btn" data-seccion="empresas">Empresas</button>
+      <button class="nav-btn" data-seccion="ia">IA</button>
     </nav>
-    <button id="modoClaro">🌙 Modo claro</button>
+    <button id="cerrarMenu">Cerrar Menú</button>
+    <button id="modoClaro">Modo Claro</button>
   </aside>
 
   <main>
-    <section id="inicio" class="seccion visible">
+    <section id="inicio" class="seccion">
       <h1>Bienvenido a FinancialStatus</h1>
       <p>En futuras versiones verás aquí noticias económicas recientes.</p>
     </section>
 
-    <section id="monedas" class="seccion"></section>
-    <section id="criptos" class="seccion"></section>
-    <section id="empresas" class="seccion"></section>
+    <section id="monedas" class="seccion">
+      <h2>Monedas Internacionales</h2>
+      <div id="contenedorMonedas" class="contenedor-datos"></div>
+    </section>
+
+    <section id="criptos" class="seccion">
+      <h2>Criptomonedas</h2>
+      <div id="contenedorCriptos" class="contenedor-datos"></div>
+    </section>
+
+    <section id="empresas" class="seccion">
+      <h2>Empresas</h2>
+      <div id="contenedorEmpresas" class="contenedor-datos"></div>
+    </section>
 
     <section id="ia" class="seccion">
-      <div id="iaIntro">IA iniciando... Por favor espera.</div>
-      <div id="iaPreguntas"></div>
-      <div id="iaRespuesta"></div>
+      <h2>Pregúntale a la IA</h2>
+      <p>Cargando IA...</p>
+      <div id="preguntas" class="contenedor-preguntas"></div>
+      <div id="grafico" class="contenedor-grafico"></div>
     </section>
   </main>
 
-  <script src="utils.js"></script>
-  <script src="config.js"></script>
-  <script src="script.js" type="module"></script>
-  <script src="ai.js" type="module"></script>
+  <script type="module" src="script.js"></script>
+  <script type="module" src="ai.js"></script>
 </body>
 </html>
