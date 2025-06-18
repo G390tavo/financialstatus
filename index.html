@@ -1,67 +1,46 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <!-- Menú lateral -->
-  <aside>
+<body class="dark">
+  <aside id="sidebar" class="sidebar open">
+    <button id="cerrarMenu">✖</button>
     <h2>FinancialStatus</h2>
-    <button id="cerrar-menu">✖</button>
     <nav>
-      <button id="btn-inicio">Inicio</button>
-      <button id="btn-monedas">Monedas</button>
-      <button id="btn-criptos">Criptomonedas</button>
-      <button id="btn-empresas">Empresas</button>
-      <button id="btn-ia">IA</button>
+      <button data-seccion="inicio">Inicio</button>
+      <button data-seccion="monedas">Monedas</button>
+      <button data-seccion="criptos">Criptomonedas</button>
+      <button data-seccion="empresas">Empresas</button>
+      <button data-seccion="ia">IA</button>
     </nav>
-    <button id="modo-claro">🌞 Modo Claro</button>
+    <button id="modoClaro">🌙 Modo claro</button>
   </aside>
 
-  <!-- Contenido principal -->
   <main>
-    <!-- Inicio -->
-    <section id="seccion-inicio">
+    <section id="inicio" class="seccion visible">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Monitorea el estado financiero de monedas, criptomonedas y empresas en tiempo real con ayuda de una IA integrada.</p>
+      <p>En futuras versiones verás aquí noticias económicas recientes.</p>
     </section>
 
-    <!-- Monedas -->
-    <section id="seccion-monedas" style="display: none;">
-      <h2>Monedas Internacionales</h2>
-      <!-- Items se generan por JS -->
-    </section>
+    <section id="monedas" class="seccion"></section>
+    <section id="criptos" class="seccion"></section>
+    <section id="empresas" class="seccion"></section>
 
-    <!-- Criptomonedas -->
-    <section id="seccion-criptos" style="display: none;">
-      <h2>Criptomonedas</h2>
-      <!-- Items se generan por JS -->
-    </section>
-
-    <!-- Empresas -->
-    <section id="seccion-empresas" style="display: none;">
-      <h2>Empresas</h2>
-      <!-- Items se generan por JS -->
-    </section>
-
-    <!-- IA -->
-    <section id="seccion-ia" style="display: none;">
-      <h2>Asistente Financiero Inteligente</h2>
-      <div id="ia-contenido"></div>
-    </section>
-
-    <!-- Gráfico -->
-    <section id="grafico">
-      <!-- Gráficos se insertan aquí -->
+    <section id="ia" class="seccion">
+      <div id="iaIntro">IA iniciando... Por favor espera.</div>
+      <div id="iaPreguntas"></div>
+      <div id="iaRespuesta"></div>
     </section>
   </main>
 
-  <!-- Scripts -->
   <script src="utils.js"></script>
-  <script src="ai.js"></script>
-  <script src="script.js"></script>
+  <script src="config.js"></script>
+  <script src="script.js" type="module"></script>
+  <script src="ai.js" type="module"></script>
 </body>
 </html>
