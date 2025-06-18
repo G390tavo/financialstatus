@@ -1,6 +1,6 @@
-function crearElemento(tag, clase, texto) {
+function crearElemento(tag, clases, texto) {
   const el = document.createElement(tag);
-  if (clase) el.className = clase;
+  if (clases) el.className = clases;
   if (texto) el.textContent = texto;
   return el;
 }
@@ -9,23 +9,16 @@ function mostrarError(mensaje, contenedor) {
   contenedor.innerHTML = `<div class="card">${mensaje}</div>`;
 }
 
-async function obtenerDatos(palabraClave) {
-  for (const fuente of FUENTES) {
+async function fetchValor(keyword) {
+  for (let fuente of FUENTES) {
     try {
-      const res = await fetch(PROXY_URL + encodeURIComponent(fuente + palabraClave));
-      if (res.ok) {
-        const html = await res.text();
-        const valor = extraerNumero(html);
-        if (valor) return valor;
-      }
-    } catch (e) {
-      continue;
-    }
+      const url = PROXY_URL + encodeURIComponent(fuente + keyword);
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      const html = await res.text();
+      const match = html.match(/(\d{1,3}(?:[\.,]\d{1,3})+)/);
+      if (match) return match[0];
+    } catch {}
   }
   return null;
-}
-
-function extraerNumero(texto) {
-  const match = texto.match(/\d{1,3}(?:[.,]\d{1,3}){1,2}/);
-  return match ? match[0] : null;
 }
