@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const botones = document.querySelectorAll(".menu-btn");
     const secciones = document.querySelectorAll(".seccion");
 
-    // Muestra solo la sección de Inicio al cargar
+    // Mostrar solo 'inicio' al principio
     secciones.forEach(seccion => {
         seccion.style.display = seccion.id === "inicio" ? "block" : "none";
     });
 
-    // Cambiar entre secciones
+    // Navegación por secciones
     botones.forEach(boton => {
         boton.addEventListener("click", () => {
             const destino = boton.getAttribute("data-seccion");
@@ -19,24 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Activar modo oscuro por defecto
+    // Modo oscuro activado por defecto
     document.body.classList.add("oscuro");
 
-    // Botón cerrar menú (verificar existencia)
+    // Cerrar menú lateral
     const cerrarBtn = document.getElementById("cerrarMenu");
-    const menu = document.getElementById("menuLateral");
     const abrirBtn = document.getElementById("abrirMenu");
+    const menu = document.getElementById("menuLateral");
 
-    if (cerrarBtn && menu) {
+    if (cerrarBtn) {
         cerrarBtn.addEventListener("click", () => {
-            menu.style.display = "none";
+            if (menu) menu.style.display = "none";
             if (abrirBtn) abrirBtn.style.display = "block";
         });
     }
 
-    if (abrirBtn && menu) {
+    if (abrirBtn) {
         abrirBtn.addEventListener("click", () => {
-            menu.style.display = "block";
+            if (menu) menu.style.display = "block";
             abrirBtn.style.display = "none";
         });
     }
