@@ -6,59 +6,60 @@
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="oscuro">
-  <aside class="menu-lateral" id="menuLateral">
+<body>
+  <!-- Menú lateral -->
+  <aside>
     <h2>FinancialStatus</h2>
-    <button id="cerrarMenu">✖</button>
+    <button id="cerrar-menu">✖</button>
     <nav>
-      <ul>
-        <li><button class="boton-menu" data-seccion="inicio">Inicio</button></li>
-        <li><button class="boton-menu" data-seccion="monedas">Monedas</button></li>
-        <li><button class="boton-menu" data-seccion="criptos">Criptomonedas</button></li>
-        <li><button class="boton-menu" data-seccion="empresas">Empresas</button></li>
-        <li><button class="boton-menu" data-seccion="ia">IA</button></li>
-      </ul>
+      <button id="btn-inicio">Inicio</button>
+      <button id="btn-monedas">Monedas</button>
+      <button id="btn-criptos">Criptomonedas</button>
+      <button id="btn-empresas">Empresas</button>
+      <button id="btn-ia">IA</button>
     </nav>
-    <button id="modoOscuroBtn">Modo claro</button>
+    <button id="modo-claro">🌞 Modo Claro</button>
   </aside>
 
+  <!-- Contenido principal -->
   <main>
-    <section id="inicio" class="seccion">
+    <!-- Inicio -->
+    <section id="seccion-inicio">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>En futuras versiones verás aquí noticias económicas recientes.</p>
+      <p>Monitorea el estado financiero de monedas, criptomonedas y empresas en tiempo real con ayuda de una IA integrada.</p>
     </section>
 
-    <section id="monedas" class="seccion oculto">
+    <!-- Monedas -->
+    <section id="seccion-monedas" style="display: none;">
       <h2>Monedas Internacionales</h2>
-      <div id="contenedor-monedas" class="tarjetas"></div>
+      <!-- Items se generan por JS -->
     </section>
 
-    <section id="criptos" class="seccion oculto">
+    <!-- Criptomonedas -->
+    <section id="seccion-criptos" style="display: none;">
       <h2>Criptomonedas</h2>
-      <div id="contenedor-criptos" class="tarjetas"></div>
+      <!-- Items se generan por JS -->
     </section>
 
-    <section id="empresas" class="seccion oculto">
+    <!-- Empresas -->
+    <section id="seccion-empresas" style="display: none;">
       <h2>Empresas</h2>
-      <div id="contenedor-empresas" class="tarjetas"></div>
+      <!-- Items se generan por JS -->
     </section>
 
-    <section id="ia" class="seccion oculto">
-      <h2>Pregúntale a la IA</h2>
-      <p>¿Qué hace esta app?</p>
-      <select id="preguntaIA">
-        <option value="">Selecciona una pregunta</option>
-        <option value="¿Qué es FinancialStatus?">¿Qué es FinancialStatus?</option>
-        <option value="¿Cómo obtengo información de criptomonedas?">¿Cómo obtengo información de criptomonedas?</option>
-        <option value="¿Qué empresas están disponibles?">¿Qué empresas están disponibles?</option>
-        <option value="Muéstrame el gráfico del Bitcoin.">Muéstrame el gráfico del Bitcoin.</option>
-        <option value="¿Qué hace la IA en esta app?">¿Qué hace la IA en esta app?</option>
-      </select>
-      <div id="respuestaIA" class="respuesta"></div>
+    <!-- IA -->
+    <section id="seccion-ia" style="display: none;">
+      <h2>Asistente Financiero Inteligente</h2>
+      <div id="ia-contenido"></div>
+    </section>
+
+    <!-- Gráfico -->
+    <section id="grafico">
+      <!-- Gráficos se insertan aquí -->
     </section>
   </main>
 
-  <script src="config.js"></script>
+  <!-- Scripts -->
   <script src="utils.js"></script>
   <script src="ai.js"></script>
   <script src="script.js"></script>
