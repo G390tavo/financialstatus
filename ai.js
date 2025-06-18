@@ -1,38 +1,32 @@
-// ai.js - Lógica de la IA integrada (sin export ni import)
-
-// Esta clase ya está integrada en script.js para evitar errores de dependencia,
-// pero si prefieres mantenerla separada, asegúrate de que se incluya después de ai.js y antes de script.js.
-
-class FinancialAI {
-  constructor() {
-    this.respuestas = {
-      funciona: "Esta aplicación permite visualizar precios actualizados de monedas, criptomonedas y empresas, junto con explicaciones básicas gracias a una IA integrada.",
-      tutorial: "Selecciona una categoría como Monedas, Criptomonedas o Empresas. Al hacer clic en una opción, verás información y gráficos. También puedes preguntarle a la IA para entender mejor.",
-      info: "Las criptomonedas son activos digitales que utilizan criptografía para garantizar transacciones seguras. Ejemplos incluyen Bitcoin, Ethereum y muchas más.",
-    };
-  }
-
-  responder(pregunta) {
-    return this.respuestas[pregunta] || "Lo siento, aún no tengo respuesta para eso.";
+export function inicializarIA() {
+  if (!document.getElementById('ia-respuesta')) {
+    console.warn('AI no inicializada. Faltan elementos.');
+    return;
   }
 }
 
-// Esta función inicializa la IA desde script.js
-function setupGlobalIA() {
-  const IA = new FinancialAI();
+export async function responderPregunta(pregunta) {
+  const div = document.getElementById('ia-respuesta');
+  div.innerHTML = 'Pensando...';
 
-  const select = document.getElementById("ia-preguntas");
-  const btn = document.getElementById("preguntar");
-  const salida = document.getElementById("ia-respuesta");
-
-  if (!select || !btn || !salida) {
-    console.warn("AI no inicializada. Faltan elementos.");
-    return;
+  if (pregunta === 'funciona') {
+    div.innerHTML = `
+      Esta aplicación obtiene datos económicos en tiempo real usando "fetch".
+      Puedes explorar monedas, criptomonedas y empresas, y ver sus valores en gráficos.
+      También puedes preguntarme cosas básicas de finanzas.
+    `;
+  } else if (pregunta === 'tutorial') {
+    div.innerHTML = `
+      1. Usa los botones de arriba para seleccionar la categoría.<br>
+      2. Haz clic en un nombre para ver su gráfico.<br>
+      3. Pregúntame lo que quieras abajo.
+    `;
+  } else if (pregunta === 'info') {
+    div.innerHTML = `
+      Las criptomonedas son monedas digitales descentralizadas.
+      Su valor depende de la oferta, demanda y otros factores del mercado.
+    `;
+  } else {
+    div.innerHTML = 'Lo siento, aún no entiendo esa pregunta.';
   }
-
-  btn.addEventListener("click", () => {
-    const pregunta = select.value;
-    const respuesta = IA.responder(pregunta);
-    salida.innerText = respuesta;
-  });
 }
