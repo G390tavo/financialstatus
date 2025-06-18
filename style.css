@@ -10,10 +10,9 @@
 body {
   background-color: #000;
   color: #fff;
-  padding-left: 220px; /* espacio para el menú lateral */
+  padding-left: 220px;
 }
 
-/* === MODO CLARO === */
 body.light {
   background-color: #fff;
   color: #000;
