@@ -1,14 +1,39 @@
-function preguntarIA(pregunta) {
-  const respuestaIA = document.getElementById("respuesta-ia");
-  if (!respuestaIA) return;
+// ai.js
 
-  const respuestas = {
-    "¿Qué es FinancialStatus?": "Es una plataforma para consultar datos financieros reales con ayuda de una IA.",
-    "¿Qué puedo hacer aquí?": "Puedes ver valores reales de monedas, criptos y empresas con gráficas automáticas.",
-    "¿Cómo obtiene los datos?": "Utiliza web scraping real desde buscadores como Google, usando un proxy local.",
-    "¿Qué más hace la IA?": "Explica términos financieros, interpreta resultados y genera gráficas automáticas."
-  };
+async function obtenerInfo(palabraClave) {
+    try {
+        const urls = [
+            `https://www.google.com/search?q=${encodeURIComponent(palabraClave)}`,
+            `https://www.bing.com/search?q=${encodeURIComponent(palabraClave)}`,
+            `https://duckduckgo.com/?q=${encodeURIComponent(palabraClave)}`
+        ];
 
-  const respuesta = respuestas[pregunta] || "Estoy aprendiendo... intenta con otra pregunta.";
-  respuestaIA.innerHTML = `<p><strong>Pregunta:</strong> ${pregunta}</p><p><strong>Respuesta IA:</strong> ${respuesta}</p>`;
+        for (const url of urls) {
+            const response = await fetch(`http://localhost:3000/fetch?url=${encodeURIComponent(url)}`);
+            const html = await response.text();
+            const match = html.match(/<span[^>]*>([^<]{20,250})<\/span>/i);
+            if (match && match[1]) {
+                return match[1].replace(/<[^>]*>/g, '').trim();
+            }
+        }
+
+        return "No se encontró información detallada por ahora.";
+    } catch (e) {
+        return "Error al obtener información. Verifica la conexión con el proxy.";
+    }
 }
+
+async function preguntarIA(pregunta) {
+    const contenedor = document.getElementById("respuestaIA");
+    contenedor.innerHTML = "Buscando información...";
+    const respuesta = await obtenerInfo(pregunta);
+    contenedor.innerHTML = `<b>Respuesta IA:</b><br>${respuesta}`;
+}
+
+// Preguntas base al iniciar
+document.addEventListener("DOMContentLoaded", () => {
+    const intro = document.getElementById("respuestaIA");
+    if (intro) {
+        intro.innerHTML = "Hola, soy tu IA financiera. Puedes preguntarme cosas como:<br>• ¿Qué es el dólar?<br>• ¿Qué hace Google?<br>• ¿Cómo va el bitcoin?<br>Haz clic en un botón o escribe una consulta.";
+    }
+});
