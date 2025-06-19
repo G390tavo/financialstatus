@@ -8,14 +8,16 @@
 }
 
 body {
-  background-color: #000;
-  color: #fff;
+  background-color: #000000; /* negro absoluto */
+  color: #ffffff;
   padding-left: 220px;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body.light {
-  background-color: #fff;
-  color: #000;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 /* === BOTÓN MODO CLARO/OSCURO === */
@@ -23,19 +25,20 @@ body.light {
   position: fixed;
   top: 10px;
   right: 10px;
-  z-index: 1000;
+  z-index: 1001;
   padding: 8px 12px;
-  background-color: #39FF14;
-  color: #000;
+  background-color: #39FF14; /* verde neón */
+  color: #000000;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+  box-shadow: 0 0 8px #39FF14;
 }
 
 body.light .modo-boton {
   background-color: #39FF14;
-  color: #000;
+  color: #000000;
 }
 
 /* === MENÚ LATERAL === */
@@ -45,16 +48,18 @@ body.light .modo-boton {
   left: 0;
   width: 210px;
   height: 100vh;
-  background-color: #111;
+  background-color: #111111;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  z-index: 999;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0, 255, 20, 0.6);
 }
 
 #menu-lateral h2 {
   color: #39FF14;
   margin-bottom: 20px;
+  font-weight: 900;
 }
 
 #menu-lateral nav button {
@@ -62,32 +67,35 @@ body.light .modo-boton {
   color: #fff;
   border: none;
   text-align: left;
-  padding: 10px;
+  padding: 12px;
   width: 100%;
   cursor: pointer;
   border-radius: 5px;
   font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #menu-lateral nav button:hover,
 #menu-lateral nav button:focus {
   background-color: #39FF14;
-  color: #000;
+  color: #000000;
   outline: none;
 }
 
 body.light #menu-lateral {
-  background-color: #eee;
+  background-color: #eeeeee;
+  box-shadow: 2px 0 8px rgba(57, 255, 20, 0.3);
 }
 
 body.light #menu-lateral nav button {
-  color: #000;
+  color: #000000;
 }
 
 body.light #menu-lateral nav button:hover,
 body.light #menu-lateral nav button:focus {
   background-color: #39FF14;
-  color: #fff;
+  color: #000000;
 }
 
 /* === BOTONES ABRIR / CERRAR MENÚ === */
@@ -96,13 +104,20 @@ body.light #menu-lateral nav button:focus {
   top: 10px;
   right: 10px;
   background: #e74c3c;
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  padding: 5px 8px;
+  padding: 6px 10px;
   font-weight: bold;
-  z-index: 1001;
+  z-index: 1002;
+  transition: background-color 0.3s ease;
+}
+
+#cerrar-menu:hover,
+#cerrar-menu:focus {
+  background: #c0392b;
+  outline: none;
 }
 
 #abrir-menu {
@@ -110,19 +125,26 @@ body.light #menu-lateral nav button:focus {
   top: 10px;
   left: 10px;
   background: #39FF14;
-  color: #000;
+  color: #000000;
   border: none;
   border-radius: 6px;
-  padding: 6px 10px;
-  z-index: 1000;
+  padding: 8px 12px;
+  z-index: 1002;
+  cursor: pointer;
   display: none;
   font-weight: bold;
-  cursor: pointer;
+  box-shadow: 0 0 8px #39FF14;
 }
 
 body.light #abrir-menu {
   background-color: #39FF14;
-  color: #000;
+  color: #000000;
+}
+
+#abrir-menu:hover,
+#abrir-menu:focus {
+  background-color: #2ad911;
+  outline: none;
 }
 
 /* === SECCIONES === */
@@ -144,16 +166,16 @@ main {
 .contenedor-tarjetas {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   margin-top: 20px;
 }
 
 .tarjeta {
-  background-color: #111;
+  background-color: #111111;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  border-left: 4px solid #39FF14;
+  box-shadow: 0 0 10px rgba(0,255,20,0.6);
+  border-left: 5px solid #39FF14;
   position: relative;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -161,97 +183,117 @@ main {
 
 body.light .tarjeta {
   background-color: #f9f9f9;
-  border-left: 4px solid #39FF14;
-  color: #000;
+  border-left: 5px solid #39FF14;
+  color: #000000;
 }
 
 .tarjeta:hover,
 .tarjeta:focus {
-  background-color: #222;
+  background-color: #222222;
 }
 
 body.light .tarjeta:hover,
 body.light .tarjeta:focus {
-  background-color: #d5f7d5;
+  background-color: #d1ffd1;
 }
 
-.tarjeta-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 700;
-  font-size: 1.2em;
-  margin-bottom: 12px;
-}
-
-.tarjeta-header .icono {
-  width: 36px;
-  height: 36px;
-  background-color: #39FF14;
-  color: #000;
-  font-weight: bold;
+.tarjeta h3 {
+  margin-bottom: 6px;
   font-size: 1.4em;
+  font-weight: 900;
   display: flex;
-  justify-content: center;
   align-items: center;
-  border-radius: 6px;
-  user-select: none;
+  gap: 10px;
 }
 
-.tarjeta-body {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.tarjeta h3 i {
+  color: #39FF14;
+  font-size: 1.5em;
 }
 
 .tarjeta .valor {
-  font-size: 1.8em;
-  font-weight: bold;
-  color: #39FF14;
+  font-size: 1.9em;
+  font-weight: 900;
+  margin-bottom: 8px;
 }
 
-body.light .tarjeta .valor {
-  color: #008000; /* verde oscuro en modo claro */
-}
-
-.tarjeta .cambio {
-  font-weight: bold;
+.tarjeta .variacion {
   display: flex;
   align-items: center;
-  gap: 6px;
+  font-weight: 900;
   font-size: 1.1em;
+  gap: 8px;
 }
 
-.cambio.positivo {
+.variacion .up {
   color: #39FF14;
 }
 
-.cambio.negativo {
+.variacion .down {
   color: #e74c3c;
 }
 
 .tarjeta .descripcion {
+  margin-top: 8px;
   font-style: italic;
-  font-size: 0.95em;
-  color: #ccc;
+  font-size: 1em;
+  color: #b0b0b0;
 }
 
 body.light .tarjeta .descripcion {
-  color: #555;
+  color: #404040;
 }
 
-/* === BLOQUE DE GRÁFICO DEBAJO DE LA TARJETA === */
-.zona-grafico {
+/* === PANEL DE GRÁFICO (dentro de la tarjeta) === */
+.panel-grafico {
   margin-top: 15px;
-  background-color: #000;
-  padding: 10px;
+  background-color: #000000;
+  padding: 15px;
   border-radius: 10px;
-  border: 1px solid #39FF14;
+  border: 2px solid #39FF14;
+  animation: fadeIn 0.5s ease forwards;
+  position: relative;
 }
 
-body.light .zona-grafico {
-  background-color: #fff;
-  border: 1px solid #39FF14;
+body.light .panel-grafico {
+  background-color: #ffffff;
+  border: 2px solid #39FF14;
+}
+
+.panel-grafico .cerrar-panel {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: #e74c3c;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
+}
+
+.panel-grafico .cerrar-panel:hover,
+.panel-grafico .cerrar-panel:focus {
+  background-color: #c0392b;
+  outline: none;
+}
+
+/* === TOOLTIP DEL PUNTO MÁXIMO === */
+.tooltip {
+  position: absolute;
+  background-color: #39FF14;
+  color: #000000;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.9em;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 0 6px #39FF14;
+  z-index: 10;
 }
 
 /* === IA === */
@@ -260,36 +302,31 @@ body.light .zona-grafico {
 }
 
 #pregunta-ia {
-  margin-top: 10px;
-  padding: 6px;
+  margin-top: 12px;
+  padding: 8px;
   font-size: 1em;
   border-radius: 6px;
   width: 100%;
-  border: 1px solid #39FF14;
-  background-color: #111;
-  color: #39FF14;
-}
-
-body.light #pregunta-ia {
-  background-color: #fff;
-  color: #008000;
-  border: 1px solid #008000;
 }
 
 #respuesta-ia {
   margin-top: 20px;
   padding: 15px;
-  background-color: #111;
+  background-color: #111111;
   border-radius: 10px;
-  color: #39FF14;
-  font-weight: 600;
-  min-height: 80px;
-  white-space: pre-wrap;
+  min-height: 60px;
+  font-size: 1.1em;
+  line-height: 1.4;
+  color: #d0ffd0;
+  font-weight: 700;
+  box-shadow: 0 0 8px #39FF14;
+  overflow-wrap: break-word;
 }
 
 body.light #respuesta-ia {
   background-color: #f0f0f0;
-  color: #006400;
+  color: #004400;
+  box-shadow: 0 0 8px #39FF14;
 }
 
 /* Cargando IA */
@@ -297,21 +334,14 @@ body.light #respuesta-ia {
   margin-top: 15px;
   color: #39FF14;
   font-style: italic;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.1em;
 }
 
-/* === GRÁFICO GENERAL (zona compartida) === */
-#grafico {
-  margin-top: 30px;
-  padding: 15px;
-  background-color: #111;
-  border-radius: 10px;
-  border: 1px solid #39FF14;
-}
-
-body.light #grafico {
-  background-color: #f0f0f0;
-  border: 1px solid #39FF14;
+/* === ANIMACIONES === */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
 }
 
 /* === RESPONSIVE === */
