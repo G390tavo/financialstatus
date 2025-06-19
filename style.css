@@ -25,17 +25,17 @@ body.light {
   right: 10px;
   z-index: 1000;
   padding: 8px 12px;
-  background-color: #39FF14
-;
-  color: #fff;
+  background-color: #39FF14;
+  color: #000;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 body.light .modo-boton {
   background-color: #39FF14;
-  color: #fff;
+  color: #000;
 }
 
 /* === MENÚ LATERAL === */
@@ -66,11 +66,14 @@ body.light .modo-boton {
   width: 100%;
   cursor: pointer;
   border-radius: 5px;
+  font-weight: 600;
 }
 
-#menu-lateral nav button:hover {
+#menu-lateral nav button:hover,
+#menu-lateral nav button:focus {
   background-color: #39FF14;
   color: #000;
+  outline: none;
 }
 
 body.light #menu-lateral {
@@ -81,7 +84,8 @@ body.light #menu-lateral nav button {
   color: #000;
 }
 
-body.light #menu-lateral nav button:hover {
+body.light #menu-lateral nav button:hover,
+body.light #menu-lateral nav button:focus {
   background-color: #39FF14;
   color: #fff;
 }
@@ -96,6 +100,9 @@ body.light #menu-lateral nav button:hover {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  padding: 5px 8px;
+  font-weight: bold;
+  z-index: 1001;
 }
 
 #abrir-menu {
@@ -103,16 +110,19 @@ body.light #menu-lateral nav button:hover {
   top: 10px;
   left: 10px;
   background: #39FF14;
-  color: #fff;
+  color: #000;
   border: none;
   border-radius: 6px;
   padding: 6px 10px;
   z-index: 1000;
   display: none;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 body.light #abrir-menu {
-  background-color: ##39FF14;
+  background-color: #39FF14;
+  color: #000;
 }
 
 /* === SECCIONES === */
@@ -145,6 +155,8 @@ main {
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
   border-left: 4px solid #39FF14;
   position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 body.light .tarjeta {
@@ -153,35 +165,79 @@ body.light .tarjeta {
   color: #000;
 }
 
-.tarjeta h3 {
-  margin-bottom: 8px;
-  font-size: 1.3em;
+.tarjeta:hover,
+.tarjeta:focus {
+  background-color: #222;
+}
+
+body.light .tarjeta:hover,
+body.light .tarjeta:focus {
+  background-color: #d5f7d5;
+}
+
+.tarjeta-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 1.2em;
+  margin-bottom: 12px;
+}
+
+.tarjeta-header .icono {
+  width: 36px;
+  height: 36px;
+  background-color: #39FF14;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  user-select: none;
+}
+
+.tarjeta-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .tarjeta .valor {
   font-size: 1.8em;
   font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.tarjeta .variacion {
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-}
-
-.variacion .up {
   color: #39FF14;
 }
 
-.variacion .down {
+body.light .tarjeta .valor {
+  color: #008000; /* verde oscuro en modo claro */
+}
+
+.tarjeta .cambio {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.1em;
+}
+
+.cambio.positivo {
+  color: #39FF14;
+}
+
+.cambio.negativo {
   color: #e74c3c;
 }
 
 .tarjeta .descripcion {
-  margin-top: 5px;
   font-style: italic;
   font-size: 0.95em;
+  color: #ccc;
+}
+
+body.light .tarjeta .descripcion {
+  color: #555;
 }
 
 /* === BLOQUE DE GRÁFICO DEBAJO DE LA TARJETA === */
@@ -209,6 +265,15 @@ body.light .zona-grafico {
   font-size: 1em;
   border-radius: 6px;
   width: 100%;
+  border: 1px solid #39FF14;
+  background-color: #111;
+  color: #39FF14;
+}
+
+body.light #pregunta-ia {
+  background-color: #fff;
+  color: #008000;
+  border: 1px solid #008000;
 }
 
 #respuesta-ia {
@@ -216,10 +281,15 @@ body.light .zona-grafico {
   padding: 15px;
   background-color: #111;
   border-radius: 10px;
+  color: #39FF14;
+  font-weight: 600;
+  min-height: 80px;
+  white-space: pre-wrap;
 }
 
 body.light #respuesta-ia {
   background-color: #f0f0f0;
+  color: #006400;
 }
 
 /* Cargando IA */
@@ -227,9 +297,10 @@ body.light #respuesta-ia {
   margin-top: 15px;
   color: #39FF14;
   font-style: italic;
+  font-weight: 600;
 }
 
-/* === GRÁFICO GENERAL (si se usa zona compartida) === */
+/* === GRÁFICO GENERAL (zona compartida) === */
 #grafico {
   margin-top: 30px;
   padding: 15px;
