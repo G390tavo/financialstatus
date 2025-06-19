@@ -1,74 +1,68 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const select = document.getElementById("pregunta-ia");
-  const respuestaDiv = document.getElementById("respuesta-ia");
-  const cargando = document.getElementById("ia-cargando");
+// ai.js
 
-  // Llenar preguntas desde config.js
+import { preguntasIA } from './config.js';
+import { fetchHTML, extraerNumero, generarHistorial } from './utils.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const selector = document.getElementById('pregunta-ia');
+  const respuesta = document.getElementById('respuesta-ia');
+  const cargando = document.getElementById('ia-cargando');
+
+  // Llenar dropdown
   preguntasIA.forEach(p => {
-    const option = document.createElement("option");
-    option.value = p;
-    option.textContent = p;
-    select.appendChild(option);
+    const opt = document.createElement('option');
+    opt.value = p;
+    opt.textContent = p;
+    selector.appendChild(opt);
   });
 
-  select.addEventListener("change", async () => {
-    const pregunta = select.value;
+  selector.addEventListener('change', async () => {
+    const pregunta = selector.value;
     if (!pregunta) return;
+    cargando.style.display = 'block';
+    respuesta.innerHTML = '';
 
-    respuestaDiv.innerHTML = "";
-    cargando.style.display = "block";
+    const doc = await fetchHTML(pregunta);
+    cargando.style.display = 'none';
 
-    const html = await fetchHTML(pregunta);
-
-    cargando.style.display = "none";
-
-    if (!html) {
-      respuestaDiv.textContent = "No se pudo obtener datos en tiempo real.";
+    if (!doc) {
+      respuesta.innerHTML = '<p>No se pudo obtener datos en tiempo real.</p>';
       return;
     }
 
-    const texto = limpiarTexto(html);
-    respuestaDiv.textContent = texto;
+    const bodyText = doc.body.innerText;
+    const valor = extraerNumero(bodyText);
 
-    if (pregunta.toLowerCase().includes("gráfico") || pregunta.toLowerCase().includes("precio")) {
-      const datos = generarDatosSimuladosSemana();
-
-      const canvas = document.createElement("canvas");
-      canvas.style.marginTop = "20px";
-      canvas.style.maxHeight = "300px";
-      respuestaDiv.appendChild(canvas);
-
-      new Chart(canvas, {
-        type: "line",
-        data: {
-          labels: datos.map(d => d.x),
-          datasets: [{
-            label: pregunta,
-            data: datos.map(d => d.y),
-            borderColor: "#39FF14",
-            backgroundColor: "#39FF14",
-            fill: false,
-            tension: 0.4,
-            pointRadius: 5
-          }]
-        },
-        options: {
-          plugins: {
-            tooltip: {
-              enabled: true
-            },
-            legend: {
-              display: false
-            }
-          },
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: false
-            }
-          }
-        }
-      });
+    if (!valor) {
+      respuesta.innerHTML = '<p>No se pudo interpretar respuesta.</p>';
+      return;
     }
+
+    // Generar historial y mostrar gráfico
+    const historial = generarHistorial(valor);
+    mostrarGraficoEnIA(pregunta, historial, valor);
   });
 });
+
+// Inserta gráfico en sección de IA
+function mostrarGraficoEnIA(titulo, datos, valor) {
+  const contenedor = document.getElementById('respuesta-ia');
+  const max = datos.reduce((a, b) => (a.y > b.y ? a : b), datos[0]);
+
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <h4>Gráfico: ${titulo}</h4>
+    <p>Valor actual: ${valor}</p>
+    <div class="zona-grafico">
+      ${datos.length
+        ? `<p>Máximo: ${max.y} (${max.x})</p><canvas id="grafico-ia" height="150"></canvas>`
+        : `<div class="sin-resultados">NO SE ENCONTRARON RESULTADOS</div>`}
+    </div>
+  `;
+  contenedor.innerHTML = '';
+  contenedor.appendChild(div);
+
+  if (datos.length) {
+    dibujarLinea('grafico-ia', datos);
+  }
+}
