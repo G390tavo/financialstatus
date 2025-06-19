@@ -1,64 +1,59 @@
-// ai.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const preguntaSelect = document.getElementById("pregunta-ia");
-  const respuestaDiv = document.getElementById("respuesta-ia");
-  const cargando = document.getElementById("ia-cargando");
+  const respuestaIA = document.getElementById("respuesta-ia");
+  const cargandoIA = document.getElementById("ia-cargando");
 
-  function mostrarRespuesta(texto) {
-    cargando.style.display = "none";
-    respuestaDiv.innerHTML = `<p>${texto}</p>`;
+  // Introducción automática
+  const intro = document.createElement("p");
+  intro.textContent = "Bienvenido. Selecciona una pregunta para comenzar.";
+  respuestaIA.appendChild(intro);
+
+  // Cargar preguntas desde config.js
+  if (window.config && config.preguntasIA) {
+    config.preguntasIA.forEach(preg => {
+      const option = document.createElement("option");
+      option.value = preg.valor;
+      option.textContent = preg.texto;
+      preguntaSelect.appendChild(option);
+    });
   }
 
-  function mostrarErrorIA() {
-    cargando.style.display = "none";
-    respuestaDiv.innerHTML = `<p>No se pudo interpretar respuesta o conectar.</p>`;
-  }
+  // Evento: Seleccionar pregunta
+  preguntaSelect.addEventListener("change", async () => {
+    const pregunta = preguntaSelect.value;
+    if (!pregunta) return;
 
-  async function procesarPregunta(valor) {
-    cargando.style.display = "block";
-    respuestaDiv.innerHTML = "";
+    respuestaIA.innerHTML = "";
+    cargandoIA.style.display = "block";
 
     try {
-      if (valor === "explicacionApp") {
-        mostrarRespuesta("Esta app te permite consultar valores reales de criptomonedas, monedas internacionales y empresas, con gráficos automáticos y ayuda de IA.");
-      } else if (valor === "explicacionCripto") {
-        mostrarRespuesta("Una criptomoneda es un activo digital que utiliza criptografía para asegurar sus transacciones.");
+      const url = `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`;
+      const html = await fetchHTML(url);
+      const match = html.match(/[\$€S/]*\s?(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2}))/);
+
+      cargandoIA.style.display = "none";
+
+      if (match && match[1]) {
+        const valor = match[1];
+        const respuesta = document.createElement("p");
+        respuesta.textContent = `El valor actual aproximado es: ${valor}`;
+        respuestaIA.appendChild(respuesta);
+
+        // Mostrar gráfico simulado
+        const grafico = document.createElement("div");
+        grafico.textContent = `📈 (Aquí iría un gráfico del valor ${valor})`;
+        grafico.className = "grafico-ia";
+        respuestaIA.appendChild(grafico);
       } else {
-        const textoBusqueda = {
-          precioBitcoin: "precio del bitcoin hoy",
-          precioDolar: "precio del dólar hoy",
-          graficoAmazon: "acciones de Amazon hoy"
-        }[valor];
-
-        const resultado = await fetchHTML(textoBusqueda);
-        if (!resultado || resultado === "") {
-          mostrarErrorIA();
-          return;
-        }
-
-        mostrarRespuesta(`Resultado obtenido: ${resultado}`);
-        // Aquí puedes insertar la función de graficar si aplica.
+        throw new Error("No se pudo interpretar respuesta.");
       }
-    } catch (e) {
-      console.error(e);
-      mostrarErrorIA();
-    }
-  }
 
-  // Cargar preguntas en el select
-  PREGUNTAS_IA.forEach(p => {
-    const option = document.createElement("option");
-    option.value = p.accion;
-    option.textContent = p.texto;
-    preguntaSelect.appendChild(option);
-  });
-
-  // Evento al seleccionar pregunta
-  preguntaSelect.addEventListener("change", () => {
-    const accion = preguntaSelect.value;
-    if (accion) {
-      procesarPregunta(accion);
+    } catch (err) {
+      cargandoIA.style.display = "none";
+      const error = document.createElement("p");
+      error.textContent = "⚠ No se pudo obtener datos en tiempo real. Verifica tu conexión o intenta más tarde.";
+      respuestaIA.appendChild(error);
+      console.error("Error IA:", err);
     }
   });
 });
