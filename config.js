@@ -1,36 +1,42 @@
-// Preguntas predefinidas para la IA
-const preguntasIA = [
-  "¿Qué es una criptomoneda?",
-  "¿Cómo afecta la inflación a las monedas?",
-  "¿Qué es una acción de empresa?",
-  "¿Cuáles son las criptomonedas más importantes?",
-  "¿Cómo interpretar un gráfico financiero?",
-  "Precio del oro",
-  "Tendencia del mercado tecnológico",
-  "Análisis de Tesla"
+// config.js
+
+// Lista de monedas internacionales
+export const monedas = [
+  { nombre: "Dólar estadounidense", descripcion: "Moneda oficial de EE. UU. y usada globalmente." },
+  { nombre: "Euro", descripcion: "Moneda de la zona euro de la Unión Europea." },
+  { nombre: "Yen japonés", descripcion: "Moneda oficial de Japón, muy influyente en Asia." },
+  { nombre: "Libra esterlina", descripcion: "Moneda del Reino Unido, históricamente fuerte." },
+  { nombre: "Franco suizo", descripcion: "Moneda estable de Suiza, símbolo de seguridad financiera." }
 ];
 
-// Mapas de descripciones cortas para monedas, criptos y empresas
-const descripciones = {
-  monedas: {
-    USD: "Dólar estadounidense, moneda oficial de EE.UU.",
-    EUR: "Euro, moneda oficial de la Eurozona.",
-    JPY: "Yen japonés, moneda oficial de Japón."
-  },
-  criptos: {
-    BTC: "Bitcoin, la primera criptomoneda descentralizada.",
-    ETH: "Ethereum, plataforma para contratos inteligentes.",
-    ADA: "Cardano, blockchain de tercera generación."
-  },
-  empresas: {
-    Apple: "Apple Inc., líder en tecnología y electrónica.",
-    Google: "Google LLC, motor de búsqueda y tecnología.",
-    Amazon: "Amazon.com, gigante del comercio electrónico.",
-    Tesla: "Tesla, fabricante de vehículos eléctricos.",
-    Microsoft: "Microsoft, líder en software y tecnología."
-  }
-};
+// Lista de criptomonedas populares
+export const criptos = [
+  { nombre: "Bitcoin", descripcion: "Criptomoneda pionera y más reconocida." },
+  { nombre: "Ethereum", descripcion: "Cripto enfocada en contratos inteligentes." },
+  { nombre: "Binance Coin", descripcion: "Token del exchange Binance." },
+  { nombre: "Cardano", descripcion: "Criptomoneda basada en un enfoque científico." },
+  { nombre: "Solana", descripcion: "Cripto de alto rendimiento para apps descentralizadas." }
+];
 
-// Colores para variación positiva y negativa
-const colorVariacionUp = "#39FF14";    // Verde neón
-const colorVariacionDown = "#e74c3c";  // Rojo fuerte
+// Lista de empresas destacadas
+export const empresas = [
+  { nombre: "Apple", descripcion: "Gigante tecnológico con sede en EE. UU." },
+  { nombre: "Microsoft", descripcion: "Empresa líder en software y servicios digitales." },
+  { nombre: "Google", descripcion: "Motor de búsqueda y empresa de innovación digital." },
+  { nombre: "Amazon", descripcion: "Comercio electrónico y servicios en la nube." },
+  { nombre: "Tesla", descripcion: "Fabricante de autos eléctricos y tecnología energética." }
+];
+
+// Preguntas disponibles para la IA
+export const preguntasIA = [
+  "¿Cuál es el precio actual del oro?",
+  "¿Cuánto vale el petróleo hoy?",
+  "¿Tendencias del dólar esta semana?",
+  "¿Valor del euro hoy?",
+  "¿Cuánto cuesta el Bitcoin ahora?",
+  "¿Gráfico del precio del oro?",
+  "¿Cómo ha variado el yen en los últimos días?",
+  "¿Estado actual de la inflación mundial?",
+  "¿Cotización del cobre hoy?",
+  "¿Cómo está el mercado de acciones tecnológicas?"
+];
