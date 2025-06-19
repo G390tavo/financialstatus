@@ -1,77 +1,61 @@
-// Función de scraping con múltiples fuentes (Google → Bing → DuckDuckGo)
-async function fetchHTML(pregunta) {
-  const fuentes = [
-    `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`,
-    `https://www.bing.com/search?q=${encodeURIComponent(pregunta)}`,
-    `https://duckduckgo.com/html/?q=${encodeURIComponent(pregunta)}`
-  ];
+// Función para hacer fetch con proxy local (asegúrate de tener proxy.js corriendo)
+async function fetchHTML(url) {
+  const proxyBase = "http://localhost:3000/fetch?url=";
+  const fullUrl = proxyBase + encodeURIComponent(url);
+  const resp = await fetch(fullUrl);
+  if (!resp.ok) throw new Error("Error al obtener datos");
+  return await resp.text();
+}
 
-  for (let url of fuentes) {
-    try {
-      const res = await fetch(`http://localhost:3000/fetch?url=${encodeURIComponent(url)}`);
-      if (!res.ok) throw new Error(`Proxy respondió ${res.status}`);
+// Mostrar mensaje de error general (puedes adaptar o eliminar si no quieres alertas)
+function mostrarError(mensaje) {
+  alert(mensaje);
+}
 
-      const html = await res.text();
-      if (html && html.length > 1000) return html;
-    } catch (err) {
-      console.warn("Fallo fuente:", url, err);
-    }
+// Función para mostrar gráfico con Chart.js
+function mostrarGrafico(item) {
+  const ctx = document.getElementById("grafico").getContext("2d");
+
+  // Simular historial 7 días con variación coherente al cambio
+  const base = item.valorActual || 100;
+  const dataHistorial = [];
+  for (let i = 1; i <= 7; i++) {
+    const variacion = base * (0.9 + Math.random() * 0.2);
+    dataHistorial.push({ x: `Día ${i}`, y: Number(variacion.toFixed(2)) });
   }
 
-  throw new Error("No se pudo obtener datos desde ninguna fuente.");
-}
+  const labels = dataHistorial.map(d => d.x);
+  const valores = dataHistorial.map(d => d.y);
 
-// Mostrar error de forma visual
-function mostrarError(mensaje, contenedor) {
-  if (!contenedor) return;
-  contenedor.innerHTML = `<p class="error">${mensaje}</p>`;
-}
+  // Destruir gráfico previo
+  if (window.myChart) window.myChart.destroy();
 
-// ✅ ESTA FUNCIÓN ES CLAVE para mostrar monedas, criptos y empresas
-function crearTarjeta(item, tipo) {
-  const tarjeta = document.createElement("div");
-  tarjeta.className = "tarjeta";
-
-  const nombre = document.createElement("h3");
-  nombre.textContent = item.nombre;
-  tarjeta.appendChild(nombre);
-
-  const descripcion = document.createElement("p");
-  descripcion.textContent = item.descripcion;
-  tarjeta.appendChild(descripcion);
-
-  const valor = document.createElement("div");
-  valor.className = "valor";
-  valor.textContent = "Cargando...";
-  tarjeta.appendChild(valor);
-
-  const tendencia = document.createElement("div");
-  tendencia.className = "tendencia";
-  tendencia.textContent = "📈 ...";
-  tarjeta.appendChild(tendencia);
-
-  // Evento al hacer clic en la tarjeta
-  tarjeta.addEventListener("click", async () => {
-    try {
-      valor.textContent = "Buscando...";
-      const html = await fetchHTML(`precio ${item.nombre}`);
-      const match = html.match(/(?:\S)\$?(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d+)?)/);
-      const precio = match ? match[0] : "No disponible";
-
-      valor.textContent = `Valor: ${precio}`;
-
-      // Historial simulado (puedes cambiarlo por real luego)
-      const historial = Array.from({ length: 7 }, (_, i) => ({
-        x: `Día ${i + 1}`,
-        y: Math.floor(Math.random() * 100) + 50,
-      }));
-
-      mostrarGrafico(item.nombre, historial);
-    } catch (e) {
-      valor.textContent = "Error";
-      mostrarError("No se pudo obtener datos", tarjeta);
+  window.myChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: `${item.nombre} (Últimos 7 días)`,
+        data: valores,
+        borderColor: "#39FF14",
+        backgroundColor: "rgba(57, 255, 20, 0.2)",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 4,
+        pointBackgroundColor: "#39FF14",
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        tooltip: { enabled: true }
+      },
+      scales: {
+        y: { beginAtZero: false, ticks: { color: "#39FF14" } },
+        x: { ticks: { color: "#39FF14" } }
+      }
     }
   });
-
-  return tarjeta;
 }
