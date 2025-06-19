@@ -1,33 +1,86 @@
-window.config = {
-  preguntasIA: [
-    { texto: "¿Precio actual del Bitcoin?", valor: "precio del Bitcoin" },
-    { texto: "¿Valor del dólar hoy en Perú?", valor: "dólar hoy Perú" },
-    { texto: "¿Cuánto cuesta el euro en Perú?", valor: "precio euro Perú" },
-    { texto: "¿Valor de la acción de Apple?", valor: "precio acción Apple" },
-    { texto: "¿Cotización de Ethereum?", valor: "precio Ethereum" }
-  ],
+// Preguntas disponibles para la IA
+const preguntasIA = [
+  "¿Qué es Bitcoin?",
+  "¿Cuál es el precio actual del dólar?",
+  "Valor actual del euro",
+  "¿Precio del oro?",
+  "¿Qué hace esta app?",
+];
 
-  criptomonedas: [
-    { nombre: "Bitcoin", simbolo: "BTC", descripcion: "Criptomoneda descentralizada líder." },
-    { nombre: "Ethereum", simbolo: "ETH", descripcion: "Cripto enfocada en contratos inteligentes." },
-    { nombre: "Tether", simbolo: "USDT", descripcion: "Stablecoin respaldada por el dólar." },
-    { nombre: "BNB", simbolo: "BNB", descripcion: "Moneda del exchange Binance." },
-    { nombre: "Solana", simbolo: "SOL", descripcion: "Cripto rápida y de bajo costo." }
-  ],
+// Criptomonedas disponibles
+const criptos = [
+  {
+    nombre: "Bitcoin",
+    simbolo: "BTC",
+    descripcion: "Criptomoneda líder descentralizada.",
+    consulta: "precio de Bitcoin",
+  },
+  {
+    nombre: "Ethereum",
+    simbolo: "ETH",
+    descripcion: "Criptomoneda y plataforma de contratos inteligentes.",
+    consulta: "precio de Ethereum",
+  },
+  {
+    nombre: "Tether",
+    simbolo: "USDT",
+    descripcion: "Criptomoneda estable vinculada al dólar.",
+    consulta: "precio de Tether",
+  }
+];
 
-  monedas: [
-    { nombre: "Dólar estadounidense", simbolo: "USD", descripcion: "Moneda oficial de EE.UU." },
-    { nombre: "Euro", simbolo: "EUR", descripcion: "Moneda común de la eurozona." },
-    { nombre: "Yen japonés", simbolo: "JPY", descripcion: "Moneda de Japón." },
-    { nombre: "Libra esterlina", simbolo: "GBP", descripcion: "Moneda del Reino Unido." },
-    { nombre: "Sol peruano", simbolo: "PEN", descripcion: "Moneda oficial de Perú." }
-  ],
+// Monedas internacionales
+const monedas = [
+  {
+    nombre: "Dólar estadounidense",
+    simbolo: "USD",
+    descripcion: "Moneda oficial de Estados Unidos.",
+    consulta: "precio del dólar hoy",
+  },
+  {
+    nombre: "Euro",
+    simbolo: "EUR",
+    descripcion: "Moneda oficial de la zona euro.",
+    consulta: "precio del euro hoy",
+  },
+  {
+    nombre: "Yen japonés",
+    simbolo: "JPY",
+    descripcion: "Moneda de Japón.",
+    consulta: "precio del yen japonés",
+  }
+];
 
-  empresas: [
-    { nombre: "Apple", simbolo: "AAPL", descripcion: "Tecnología y consumo, creadora del iPhone." },
-    { nombre: "Google", simbolo: "GOOGL", descripcion: "Buscador, Android, y servicios digitales." },
-    { nombre: "Amazon", simbolo: "AMZN", descripcion: "E-commerce, nube (AWS) y logística." },
-    { nombre: "Tesla", simbolo: "TSLA", descripcion: "Vehículos eléctricos e innovación energética." },
-    { nombre: "Microsoft", simbolo: "MSFT", descripcion: "Software, servicios en la nube, IA." }
-  ]
-};
+// Empresas importantes
+const empresas = [
+  {
+    nombre: "Apple",
+    simbolo: "AAPL",
+    descripcion: "Tecnología y electrónica de consumo.",
+    consulta: "precio de acciones Apple",
+  },
+  {
+    nombre: "Google",
+    simbolo: "GOOGL",
+    descripcion: "Empresa matriz de Google (Alphabet Inc.).",
+    consulta: "precio de acciones Google",
+  },
+  {
+    nombre: "Amazon",
+    simbolo: "AMZN",
+    descripcion: "Comercio electrónico global.",
+    consulta: "precio de acciones Amazon",
+  },
+  {
+    nombre: "Tesla",
+    simbolo: "TSLA",
+    descripcion: "Automóviles eléctricos y energía renovable.",
+    consulta: "precio de acciones Tesla",
+  },
+  {
+    nombre: "Microsoft",
+    simbolo: "MSFT",
+    descripcion: "Desarrollador de software y servicios digitales.",
+    consulta: "precio de acciones Microsoft",
+  }
+];
