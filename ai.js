@@ -5,47 +5,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const respuestaIA = document.getElementById("respuesta-ia");
   const cargando = document.getElementById("ia-cargando");
 
-  // Cargar preguntas
-  preguntasIA.forEach(pregunta => {
-    const option = document.createElement("option");
-    option.value = pregunta;
-    option.textContent = pregunta;
-    select.appendChild(option);
-  });
+  // Preguntas predefinidas desde config.js
+  if (window.preguntasIA && Array.isArray(window.preguntasIA)) {
+    window.preguntasIA.forEach(p => {
+      const option = document.createElement("option");
+      option.value = p.query;
+      option.textContent = p.texto;
+      select.appendChild(option);
+    });
+  }
 
-  // Mostrar introducción
-  respuestaIA.innerHTML = "<p>Selecciona una pregunta para comenzar.</p>";
-
-  // Escuchar cambios
+  // Manejar selección de pregunta
   select.addEventListener("change", async () => {
-    const pregunta = select.value;
-    if (!pregunta) return;
+    const query = select.value;
+    if (!query) return;
 
     cargando.style.display = "block";
-    respuestaIA.innerHTML = "";
+    respuestaIA.textContent = "";
 
     try {
-      const html = await fetchHTML(pregunta);
-      const resultado = extraerRespuesta(html);
-      if (resultado) {
-        respuestaIA.innerHTML = `<p>${resultado}</p>`;
-        if (pregunta.toLowerCase().includes("bitcoin")) {
-          // también graficar automáticamente si es una pregunta de valor
-          obtenerDatosYGraficar("Bitcoin", "cripto");
-        }
-      } else {
-        respuestaIA.innerHTML = "<p>No se pudo interpretar respuesta.</p>";
+      const html = await fetchHTML(query);
+      const valor = extraerValorDesdeHTML(html); // función simple o personalizada
+      respuestaIA.innerHTML = `<strong>Resultado:</strong> ${valor}`;
+      
+      // (Opcional) Llama a generarGráfico si ya lo tienes implementado
+      if (typeof generarGraficoIA === "function") {
+        generarGraficoIA(valor); // o con más datos si extraes más info
       }
-    } catch (err) {
-      mostrarError(err.message);
+
+    } catch (error) {
+      respuestaIA.textContent = "No se pudo interpretar respuesta.";
+      console.error(error);
     } finally {
       cargando.style.display = "none";
     }
   });
 });
 
-// Extraer contenido simplificado desde HTML crudo
-function extraerRespuesta(html) {
-  const match = html.match(/(\d+[.,]?\d*)\s?(USD|EUR|\$|dólares?|euros?)/i);
-  return match ? `Valor aproximado: ${match[0]}` : null;
+// Simple extracción de número desde el HTML
+function extraerValorDesdeHTML(html) {
+  const regex = /\$?\s?(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2}))/;
+  const match = html.match(regex);
+  return match ? match[1] : "No encontrado";
 }
