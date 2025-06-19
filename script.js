@@ -1,55 +1,57 @@
-// script.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const secciones = document.querySelectorAll(".seccion");
-  const botones = document.querySelectorAll("aside nav button");
-  const menu = document.getElementById("menu-lateral");
-  const cerrarMenu = document.getElementById("cerrar-menu");
+  const botonesSeccion = document.querySelectorAll("aside button[data-section]");
+  const botonModo = document.getElementById("modo-toggle");
   const abrirMenu = document.getElementById("abrir-menu");
-  const modoToggle = document.getElementById("modo-toggle");
+  const cerrarMenu = document.getElementById("cerrar-menu");
+  const menuLateral = document.getElementById("menu-lateral");
 
-  // Mostrar solo una sección
+  // Mostrar solo la sección activa
   function mostrarSeccion(id) {
-    secciones.forEach(sec => sec.classList.remove("activa"));
-    const actual = document.getElementById(id);
-    if (actual) actual.classList.add("activa");
+    secciones.forEach(s => s.classList.remove("activa"));
+    const activa = document.getElementById(id);
+    if (activa) activa.classList.add("activa");
   }
 
-  // Manejar cambio de sección
-  botones.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const destino = btn.getAttribute("data-section");
-      mostrarSeccion(destino);
+  // Evento: Navegación entre secciones
+  botonesSeccion.forEach(boton => {
+    boton.addEventListener("click", () => {
+      const seccion = boton.dataset.section;
+      mostrarSeccion(seccion);
+      if (window.innerWidth < 768) menuLateral.style.display = "none";
     });
   });
 
-  // Botón de cerrar menú
+  // Mostrar sección Inicio al iniciar
+  mostrarSeccion("inicio");
+
+  // Evento: Cerrar menú lateral
   cerrarMenu.addEventListener("click", () => {
-    menu.style.display = "none";
+    menuLateral.style.display = "none";
     abrirMenu.style.display = "block";
   });
 
-  // Botón de abrir menú
+  // Evento: Abrir menú lateral
   abrirMenu.addEventListener("click", () => {
-    menu.style.display = "block";
+    menuLateral.style.display = "block";
     abrirMenu.style.display = "none";
   });
 
-  // Modo claro/oscuro
-  modoToggle.addEventListener("click", () => {
+  // Evento: Modo claro/oscuro
+  botonModo.addEventListener("click", () => {
     const body = document.body;
-    if (body.classList.contains("dark")) {
+    const oscuro = body.classList.contains("dark");
+
+    if (oscuro) {
       body.classList.remove("dark");
-      body.classList.add("light");
-      modoToggle.textContent = "Modo oscuro";
+      botonModo.textContent = "Modo oscuro";
     } else {
-      body.classList.remove("light");
       body.classList.add("dark");
-      modoToggle.textContent = "Modo claro";
+      botonModo.textContent = "Modo claro";
     }
   });
 
-  // Renderizar tarjetas de datos
+  // Renderizar tarjetas (criptos, monedas, empresas)
   function renderTarjetas(lista, contenedorId, tipo) {
     const contenedor = document.getElementById(contenedorId);
     contenedor.innerHTML = "";
@@ -59,11 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Datos desde config.js
-  renderTarjetas(MONEDAS, "lista-monedas", "moneda");
-  renderTarjetas(CRIPTOS, "lista-criptos", "cripto");
-  renderTarjetas(EMPRESAS, "lista-empresas", "empresa");
+  // Obtener datos desde config.js
+  if (window.config) {
+    renderTarjetas(config.criptomonedas, "lista-criptos", "cripto");
+    renderTarjetas(config.monedas, "lista-monedas", "moneda");
+    renderTarjetas(config.empresas, "lista-empresas", "empresa");
+  } else {
+    console.error("⚠ No se encontró la configuración global (config.js).");
+  }
 
-  // Mostrar sección inicio por defecto
-  mostrarSeccion("inicio");
 });
