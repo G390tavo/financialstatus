@@ -2,22 +2,21 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-
-  <!-- Estilos -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Chart.js para gráficas -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="dark">
 
-  <!-- Botón flotante para abrir menú (visible solo si menú cerrado) -->
-  <button id="abrir-menu" aria-label="Abrir menú" style="display:none;">☰</button>
+  <!-- Botón para abrir menú (visible en móvil) -->
+  <button id="abrir-menu" aria-label="Abrir menú">☰</button>
 
   <!-- Menú lateral -->
-  <aside id="menu-lateral" class="visible">
+  <aside id="menu-lateral" role="navigation" aria-label="Menú lateral">
     <button id="cerrar-menu" aria-label="Cerrar menú">✖</button>
     <h2>FinancialStatus</h2>
     <nav>
@@ -29,55 +28,46 @@
     </nav>
   </aside>
 
-  <!-- Botón modo claro/oscuro -->
-  <button id="modo-toggle" class="modo-boton">Modo claro</button>
+  <!-- Botón para cambiar modo claro/oscuro -->
+  <button id="modo-toggle" class="modo-boton" aria-label="Cambiar modo">Modo claro</button>
 
-  <!-- Contenedor principal -->
   <main>
-    <!-- Sección Inicio -->
-    <section id="inicio" class="seccion activa">
+    <section id="inicio" class="seccion activa" tabindex="0">
       <h1>Bienvenido a FinancialStatus</h1>
       <p>En futuras versiones se mostrarán noticias económicas y análisis del mercado.</p>
     </section>
 
-    <!-- Sección Monedas -->
-    <section id="monedas" class="seccion">
+    <section id="monedas" class="seccion" tabindex="0">
       <h2>Monedas Internacionales</h2>
       <div id="lista-monedas" class="contenedor-tarjetas"></div>
     </section>
 
-    <!-- Sección Criptos -->
-    <section id="criptos" class="seccion">
+    <section id="criptos" class="seccion" tabindex="0">
       <h2>Criptomonedas</h2>
       <div id="lista-criptos" class="contenedor-tarjetas"></div>
     </section>
 
-    <!-- Sección Empresas -->
-    <section id="empresas" class="seccion">
+    <section id="empresas" class="seccion" tabindex="0">
       <h2>Empresas</h2>
       <div id="lista-empresas" class="contenedor-tarjetas"></div>
     </section>
 
-    <!-- Sección IA -->
-    <section id="ia" class="seccion">
+    <section id="ia" class="seccion" tabindex="0">
       <h2>Inteligencia Artificial</h2>
       <div id="ia-introduccion">
-        <p>Hola, soy tu asistente financiero. Puedes preguntarme cosas útiles seleccionando una pregunta:</p>
-        <select id="pregunta-ia" aria-label="Seleccione una pregunta"></select>
+        <p>Hola, soy tu asistente financiero. Puedes seleccionar una pregunta útil:</p>
+        <select id="pregunta-ia" aria-label="Seleccionar pregunta de IA">
+          <option value="">Selecciona una pregunta</option>
+        </select>
       </div>
-      <div id="ia-cargando" style="display:none;">🔄 Cargando datos...</div>
-      <div id="respuesta-ia"></div>
+      <div id="ia-cargando" style="display:none;">Cargando datos...</div>
+      <div id="respuesta-ia" role="region" aria-live="polite"></div>
     </section>
   </main>
 
-  <!-- Área para gráficos debajo de todo -->
-  <canvas id="grafico" style="max-width: 900px; margin: 20px auto; display: block;"></canvas>
-
-  <!-- Scripts -->
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
   <script src="script.js"></script>
-
 </body>
 </html>
