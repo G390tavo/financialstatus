@@ -1,59 +1,53 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const preguntaSelect = document.getElementById("pregunta-ia");
+  const select = document.getElementById("pregunta-ia");
   const respuestaIA = document.getElementById("respuesta-ia");
-  const cargandoIA = document.getElementById("ia-cargando");
+  const loaderIA = document.getElementById("ia-cargando");
 
-  // Introducción automática
-  const intro = document.createElement("p");
-  intro.textContent = "Bienvenido. Selecciona una pregunta para comenzar.";
-  respuestaIA.appendChild(intro);
+  if (!select || !respuestaIA) return;
 
-  // Cargar preguntas desde config.js
-  if (window.config && config.preguntasIA) {
-    config.preguntasIA.forEach(preg => {
-      const option = document.createElement("option");
-      option.value = preg.valor;
-      option.textContent = preg.texto;
-      preguntaSelect.appendChild(option);
-    });
-  }
+  // Cargar preguntas en dropdown
+  preguntasIA.forEach(preg => {
+    const opt = document.createElement("option");
+    opt.value = preg;
+    opt.textContent = preg;
+    select.appendChild(opt);
+  });
 
-  // Evento: Seleccionar pregunta
-  preguntaSelect.addEventListener("change", async () => {
-    const pregunta = preguntaSelect.value;
+  // Mostrar introducción
+  respuestaIA.innerHTML = `
+    <p>Hola, soy tu asistente financiero. Selecciona una pregunta para comenzar.</p>
+  `;
+
+  // Evento al seleccionar pregunta
+  select.addEventListener("change", async () => {
+    const pregunta = select.value;
     if (!pregunta) return;
 
     respuestaIA.innerHTML = "";
-    cargandoIA.style.display = "block";
+    loaderIA.style.display = "block";
 
     try {
-      const url = `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`;
-      const html = await fetchHTML(url);
-      const match = html.match(/[\$€S/]*\s?(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2}))/);
+      const html = await fetchHTML(pregunta);
+      loaderIA.style.display = "none";
 
-      cargandoIA.style.display = "none";
+      const match = html.match(/(?:\S)\$?(\d{1,3}(?:[\.,]\d{3})*(?:[\.,]\d+)?)/);
+      const valor = match ? match[0] : "No se encontró valor";
 
-      if (match && match[1]) {
-        const valor = match[1];
-        const respuesta = document.createElement("p");
-        respuesta.textContent = `El valor actual aproximado es: ${valor}`;
-        respuestaIA.appendChild(respuesta);
+      respuestaIA.innerHTML = `
+        <p><strong>Resultado para:</strong> ${pregunta}</p>
+        <p><strong>Valor actual:</strong> ${valor}</p>
+      `;
 
-        // Mostrar gráfico simulado
-        const grafico = document.createElement("div");
-        grafico.textContent = `📈 (Aquí iría un gráfico del valor ${valor})`;
-        grafico.className = "grafico-ia";
-        respuestaIA.appendChild(grafico);
-      } else {
-        throw new Error("No se pudo interpretar respuesta.");
-      }
+      const datos = Array.from({ length: 7 }, (_, i) => ({
+        x: `Día ${i + 1}`,
+        y: Math.floor(Math.random() * 100) + 100,
+      }));
+
+      mostrarGrafico(pregunta, datos);
 
     } catch (err) {
-      cargandoIA.style.display = "none";
-      const error = document.createElement("p");
-      error.textContent = "⚠ No se pudo obtener datos en tiempo real. Verifica tu conexión o intenta más tarde.";
-      respuestaIA.appendChild(error);
-      console.error("Error IA:", err);
+      loaderIA.style.display = "none";
+      mostrarError("No se pudo interpretar respuesta.", respuestaIA);
     }
   });
 });
