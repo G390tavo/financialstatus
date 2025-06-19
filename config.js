@@ -1,86 +1,36 @@
-// Preguntas disponibles para la IA
+// Preguntas predefinidas para la IA
 const preguntasIA = [
-  "¿Qué es Bitcoin?",
-  "¿Cuál es el precio actual del dólar?",
-  "Valor actual del euro",
-  "¿Precio del oro?",
-  "¿Qué hace esta app?",
+  "¿Qué es una criptomoneda?",
+  "¿Cómo afecta la inflación a las monedas?",
+  "¿Qué es una acción de empresa?",
+  "¿Cuáles son las criptomonedas más importantes?",
+  "¿Cómo interpretar un gráfico financiero?",
+  "Precio del oro",
+  "Tendencia del mercado tecnológico",
+  "Análisis de Tesla"
 ];
 
-// Criptomonedas disponibles
-const criptos = [
-  {
-    nombre: "Bitcoin",
-    simbolo: "BTC",
-    descripcion: "Criptomoneda líder descentralizada.",
-    consulta: "precio de Bitcoin",
+// Mapas de descripciones cortas para monedas, criptos y empresas
+const descripciones = {
+  monedas: {
+    USD: "Dólar estadounidense, moneda oficial de EE.UU.",
+    EUR: "Euro, moneda oficial de la Eurozona.",
+    JPY: "Yen japonés, moneda oficial de Japón."
   },
-  {
-    nombre: "Ethereum",
-    simbolo: "ETH",
-    descripcion: "Criptomoneda y plataforma de contratos inteligentes.",
-    consulta: "precio de Ethereum",
+  criptos: {
+    BTC: "Bitcoin, la primera criptomoneda descentralizada.",
+    ETH: "Ethereum, plataforma para contratos inteligentes.",
+    ADA: "Cardano, blockchain de tercera generación."
   },
-  {
-    nombre: "Tether",
-    simbolo: "USDT",
-    descripcion: "Criptomoneda estable vinculada al dólar.",
-    consulta: "precio de Tether",
+  empresas: {
+    Apple: "Apple Inc., líder en tecnología y electrónica.",
+    Google: "Google LLC, motor de búsqueda y tecnología.",
+    Amazon: "Amazon.com, gigante del comercio electrónico.",
+    Tesla: "Tesla, fabricante de vehículos eléctricos.",
+    Microsoft: "Microsoft, líder en software y tecnología."
   }
-];
+};
 
-// Monedas internacionales
-const monedas = [
-  {
-    nombre: "Dólar estadounidense",
-    simbolo: "USD",
-    descripcion: "Moneda oficial de Estados Unidos.",
-    consulta: "precio del dólar hoy",
-  },
-  {
-    nombre: "Euro",
-    simbolo: "EUR",
-    descripcion: "Moneda oficial de la zona euro.",
-    consulta: "precio del euro hoy",
-  },
-  {
-    nombre: "Yen japonés",
-    simbolo: "JPY",
-    descripcion: "Moneda de Japón.",
-    consulta: "precio del yen japonés",
-  }
-];
-
-// Empresas importantes
-const empresas = [
-  {
-    nombre: "Apple",
-    simbolo: "AAPL",
-    descripcion: "Tecnología y electrónica de consumo.",
-    consulta: "precio de acciones Apple",
-  },
-  {
-    nombre: "Google",
-    simbolo: "GOOGL",
-    descripcion: "Empresa matriz de Google (Alphabet Inc.).",
-    consulta: "precio de acciones Google",
-  },
-  {
-    nombre: "Amazon",
-    simbolo: "AMZN",
-    descripcion: "Comercio electrónico global.",
-    consulta: "precio de acciones Amazon",
-  },
-  {
-    nombre: "Tesla",
-    simbolo: "TSLA",
-    descripcion: "Automóviles eléctricos y energía renovable.",
-    consulta: "precio de acciones Tesla",
-  },
-  {
-    nombre: "Microsoft",
-    simbolo: "MSFT",
-    descripcion: "Desarrollador de software y servicios digitales.",
-    consulta: "precio de acciones Microsoft",
-  }
-];
+// Colores para variación positiva y negativa
+const colorVariacionUp = "#39FF14";    // Verde neón
+const colorVariacionDown = "#e74c3c";  // Rojo fuerte
