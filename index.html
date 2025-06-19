@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body class="dark">
 
-  <!-- Botón para abrir menú -->
+  <!-- Botón flotante para abrir el menú cuando esté cerrado -->
   <button id="abrir-menu" style="display: none;">☰</button>
 
   <!-- Menú lateral -->
@@ -25,14 +24,14 @@
     </nav>
   </aside>
 
-  <!-- Botón para cambiar de modo -->
+  <!-- Botón de modo claro/oscuro -->
   <button id="modo-toggle" class="modo-boton">Modo claro</button>
 
   <!-- Secciones -->
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>En esta sección próximamente se mostrarán noticias económicas y alertas del mercado.</p>
+      <p>En futuras versiones se mostrarán noticias económicas y análisis del mercado.</p>
     </section>
 
     <section id="monedas" class="seccion">
@@ -51,9 +50,9 @@
     </section>
 
     <section id="ia" class="seccion">
-      <h2>Inteligencia Artificial Financiera</h2>
+      <h2>Inteligencia Artificial</h2>
       <div id="ia-introduccion">
-        <p>Selecciona una pregunta para obtener una respuesta con datos reales:</p>
+        <p>Hola, soy tu asistente financiero. Puedes preguntarme cosas útiles seleccionando una pregunta:</p>
         <select id="pregunta-ia">
           <option value="">Selecciona una pregunta</option>
         </select>
@@ -63,7 +62,7 @@
     </section>
   </main>
 
-  <!-- Gráficos -->
+  <!-- Zona para mostrar gráficos -->
   <div id="grafico"></div>
 
   <!-- Scripts -->
