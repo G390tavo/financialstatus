@@ -1,46 +1,56 @@
-// utils.js
+// Esta función realiza un fetch HTML usando proxy local
+async function fetchHTML(url) {
+  try {
+    const proxyUrl = `http://localhost:3000/?url=${encodeURIComponent(url)}`;
+    const response = await fetch(proxyUrl);
+    if (!response.ok) throw new Error("Error al cargar desde proxy.");
+    const text = await response.text();
+    return text;
+  } catch (proxyError) {
+    console.warn("Proxy falló. Intentando acceso directo...");
 
-// Convierte texto HTML a DOM
-export function parseHTML(html) {
-  const parser = new DOMParser();
-  return parser.parseFromString(html, 'text/html');
-}
-
-// Intenta múltiples fuentes en cascada (Google → Bing → DuckDuckGo)
-export async function fetchHTML(keyword) {
-  const fuentes = [
-    `https://www.google.com/search?q=${encodeURIComponent(keyword)}`,
-    `https://www.bing.com/search?q=${encodeURIComponent(keyword)}`,
-    `https://duckduckgo.com/html/?q=${encodeURIComponent(keyword)}`
-  ];
-
-  for (let url of fuentes) {
     try {
-      const res = await fetch(`http://localhost:3000/fetch?url=${encodeURIComponent(url)}`);
-      if (res.ok) {
-        const text = await res.text();
-        if (text.includes('<html')) return parseHTML(text);
-      }
-    } catch (e) {
-      console.warn(`Fallo en fuente: ${url}`);
+      const response = await fetch(url, {
+        mode: "no-cors"
+      });
+      const text = await response.text();
+      return text;
+    } catch (directError) {
+      console.error("Fallo total al obtener HTML:", directError);
+      return null;
     }
   }
+}
+
+// Extraer número desde texto con separadores
+function extraerValorDesdeTexto(texto) {
+  if (!texto) return null;
+
+  const match = texto.replace(/,/g, '.').match(/-?\d+(\.\d+)?/g);
+  if (match) return parseFloat(match[0]);
   return null;
 }
 
-// Extrae un número (precio) de texto
-export function extraerNumero(texto) {
-  const match = texto.replaceAll(',', '').match(/(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d+)?)/);
-  return match ? parseFloat(match[0].replace(',', '')) : null;
+// Simular historial para gráficos (valores aleatorios alrededor del actual)
+function generarHistorial(valorActual) {
+  if (!valorActual || isNaN(valorActual)) return [];
+
+  const historial = [];
+  const base = valorActual;
+
+  for (let i = 6; i >= 0; i--) {
+    const variacion = (Math.random() - 0.5) * 10;
+    const y = Math.max(0, Math.round((base + variacion) * 100) / 100);
+    historial.push({ x: `Día ${7 - i}`, y });
+  }
+
+  return historial;
 }
 
-// Genera historial simulado (si no hay datos reales)
-export function generarHistorial(base = 100) {
-  const historial = [];
-  for (let i = 6; i >= 0; i--) {
-    const variacion = Math.random() * 10 - 5;
-    const valor = Math.max(1, base + variacion);
-    historial.push({ x: `Día ${7 - i}`, y: parseFloat(valor.toFixed(2)) });
+// Mostrar mensaje si no hay historial
+function mostrarSinHistorial(idContenedor) {
+  const zona = document.getElementById(idContenedor);
+  if (zona) {
+    zona.innerHTML = `<p style="color:#888;font-style:italic;">NO SE ENCONTRARON RESULTADOS</p>`;
   }
-  return historial;
 }
