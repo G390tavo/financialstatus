@@ -1,51 +1,35 @@
 // utils.js
 
-async function fetchHTML(pregunta) {
-  const fuentes = [
-    `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`,
-    `https://www.bing.com/search?q=${encodeURIComponent(pregunta)}`,
-    `https://duckduckgo.com/?q=${encodeURIComponent(pregunta)}`,
-    `https://es.finance.yahoo.com/lookup?s=${encodeURIComponent(pregunta)}`
-  ];
+import { PROXY_URL, FUENTES } from "./config.js";
 
-  for (let fuente of fuentes) {
+async function fetchHTML(query) {
+  for (const fuente of FUENTES) {
+    const encodedURL = encodeURIComponent(fuente + query);
     try {
-      const res = await fetch(`/proxy?url=${encodeURIComponent(fuente)}`);
-      const text = await res.text();
-      if (text && text.length > 100) return text;
-    } catch (e) {
-      console.warn("Proxy falló. Intentando acceso directo...");
+      const response = await fetch(PROXY_URL + encodedURL);
+      if (!response.ok) throw new Error("Proxy falló");
+      const html = await response.text();
+      const data = parseInfo(html);
+      if (data) return data;
+    } catch {
+      // Proxy falló, intenta sin proxy
+      try {
+        const res = await fetch(fuente + query);
+        const text = await res.text();
+        const data = parseInfo(text);
+        if (data) return data;
+      } catch {
+        continue;
+      }
     }
   }
-
   return null;
 }
 
-function limpiarTexto(html) {
-  const temp = document.createElement("div");
-  temp.innerHTML = html;
-  return temp.textContent || temp.innerText || "";
+function parseInfo(html) {
+  const regex = /(\d+[\.,]?\d*)\s*(USD|EUR|soles|dólares|%)?/i;
+  const match = html.match(regex);
+  return match ? `Valor actual: ${match[1]} ${match[2] || ""}` : null;
 }
 
-function generarSimulacionHistorial(valor) {
-  if (!valor || isNaN(valor)) return null;
-  const base = parseFloat(valor);
-  const datos = [];
-  for (let i = 6; i >= 0; i--) {
-    let variacion = (Math.random() - 0.5) * 10;
-    let dia = `Día ${7 - i}`;
-    let y = Math.round((base + variacion) * 100) / 100;
-    datos.push({ x: dia, y });
-  }
-  return datos;
-}
-
-function obtenerValorActual(texto) {
-  const regex = /\d+[.,]?\d*/g;
-  const encontrados = texto.match(regex);
-  if (!encontrados) return null;
-  let valor = parseFloat(encontrados[0].replace(",", "."));
-  return isNaN(valor) ? null : valor;
-}
-
-export { fetchHTML, limpiarTexto, generarSimulacionHistorial, obtenerValorActual };
+export { fetchHTML };
