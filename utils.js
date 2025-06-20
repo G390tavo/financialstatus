@@ -1,35 +1,69 @@
 // utils.js
+const proxyURL = "https://financial-proxy.onrender.com/?url=";
 
-import { PROXY_URL, FUENTES } from "./config.js";
-
-async function fetchHTML(query) {
-  for (const fuente of FUENTES) {
-    const encodedURL = encodeURIComponent(fuente + query);
+async function fetchHTML(url) {
+  try {
+    const response = await fetch(proxyURL + encodeURIComponent(url));
+    if (!response.ok) throw new Error("Proxy falló");
+    return await response.text();
+  } catch (proxyError) {
+    console.warn("Proxy falló. Intentando acceso directo...");
     try {
-      const response = await fetch(PROXY_URL + encodedURL);
-      if (!response.ok) throw new Error("Proxy falló");
-      const html = await response.text();
-      const data = parseInfo(html);
-      if (data) return data;
-    } catch {
-      // Proxy falló, intenta sin proxy
-      try {
-        const res = await fetch(fuente + query);
-        const text = await res.text();
-        const data = parseInfo(text);
-        if (data) return data;
-      } catch {
-        continue;
-      }
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Acceso directo falló");
+      return await response.text();
+    } catch (directError) {
+      console.error("Ambos métodos fallaron", directError);
+      return null;
     }
   }
-  return null;
 }
 
-function parseInfo(html) {
-  const regex = /(\d+[\.,]?\d*)\s*(USD|EUR|soles|dólares|%)?/i;
-  const match = html.match(regex);
-  return match ? `Valor actual: ${match[1]} ${match[2] || ""}` : null;
+function parseValue(text) {
+  const match = text.match(/[\d,.]+/);
+  return match ? parseFloat(match[0].replace(",", "")) : null;
 }
 
-export { fetchHTML };
+function obtenerValorDesdeHTML(html, selector) {
+  const temp = document.createElement("div");
+  temp.innerHTML = html;
+  const el = temp.querySelector(selector);
+  return el ? el.textContent.trim() : null;
+}
+
+function crearGrafico(canvas, datos) {
+  const maxIndex = datos.historial.findIndex(
+    v => v === Math.max(...datos.historial)
+  );
+  new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: datos.fechas,
+      datasets: [{
+        label: "Historial",
+        data: datos.historial,
+        borderColor: "#39FF14",
+        backgroundColor: "rgba(57, 255, 20, 0.1)",
+        pointBackgroundColor: datos.historial.map((_, i) => i === maxIndex ? "#39FF14" : "#ffffff"),
+        pointRadius: datos.historial.map((_, i) => i === maxIndex ? 6 : 3),
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: ctx => `Fecha: ${ctx[0].label}`,
+            label: ctx => `Valor: ${ctx.formattedValue}`
+          }
+        },
+        legend: { display: false }
+      },
+      scales: {
+        x: { ticks: { color: "#39FF14" } },
+        y: { ticks: { color: "#39FF14" } }
+      }
+    }
+  });
+}
