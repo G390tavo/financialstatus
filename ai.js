@@ -1,49 +1,56 @@
 // ai.js
-const preguntasIA = [
+
+import { fetchHTML, limpiarTexto } from "./utils.js";
+
+const preguntas = [
   "¿Tendencia actual del dólar?",
-  "¿Qué criptomoneda ha subido más hoy?",
-  "¿Cómo afecta la inflación a la economía?",
-  "¿Qué empresa lidera el mercado hoy?"
+  "¿Conviene invertir en Bitcoin hoy?",
+  "¿Cómo ha variado la inflación últimamente?",
+  "¿Qué predicen los analistas sobre Apple?"
 ];
 
-const fuentesIA = [
-  query => `https://www.google.com/search?q=${encodeURIComponent(query)}`,
-  query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
-  query => `https://duckduckgo.com/?q=${encodeURIComponent(query)}`
-];
+const select = document.getElementById("pregunta-ia");
+const respuesta = document.getElementById("respuesta-ia");
+const cargando = document.getElementById("ia-cargando");
 
-document.addEventListener("DOMContentLoaded", () => {
-  const select = document.getElementById("pregunta-ia");
-  const respuestaDiv = document.getElementById("respuesta-ia");
-  const loader = document.getElementById("ia-cargando");
+preguntas.forEach(p => {
+  const option = document.createElement("option");
+  option.value = p;
+  option.textContent = p;
+  select.appendChild(option);
+});
 
-  preguntasIA.forEach(preg => {
-    const option = document.createElement("option");
-    option.value = preg;
-    option.textContent = preg;
-    select.appendChild(option);
-  });
+select.addEventListener("change", async () => {
+  const pregunta = select.value;
+  if (!pregunta) return;
 
-  select.addEventListener("change", async () => {
-    const pregunta = select.value;
-    if (!pregunta) return;
+  cargando.style.display = "block";
+  respuesta.textContent = "";
 
-    loader.style.display = "block";
-    respuestaDiv.textContent = "";
-    const intentos = fuentesIA.map(f => fetchHTML(f(pregunta)));
+  const fuentes = [
+    `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`,
+    `https://www.bing.com/search?q=${encodeURIComponent(pregunta)}`,
+    `https://duckduckgo.com/?q=${encodeURIComponent(pregunta)}`
+  ];
 
-    try {
-      const html = await Promise.any(intentos);
-      if (!html) throw new Error("Sin respuesta");
+  try {
+    const resultados = await Promise.all(
+      fuentes.map(async url => {
+        const html = await fetchHTML(url);
+        const texto = limpiarTexto(html.slice(0, 3000));
+        return texto;
+      })
+    );
 
-      const div = document.createElement("div");
-      div.innerHTML = html;
-      let resultado = div.querySelector("h3, span, p");
-      respuestaDiv.textContent = resultado ? resultado.textContent : "Respuesta no encontrada.";
-    } catch (err) {
-      respuestaDiv.textContent = "No se pudo obtener respuesta. Intenta nuevamente.";
-    } finally {
-      loader.style.display = "none";
-    }
-  });
+    const resumen = resultados
+      .map(t => t.slice(0, 500))
+      .join("\n\n---\n\n")
+      .slice(0, 1200);
+
+    respuesta.textContent = resumen || "No se pudo encontrar información útil.";
+  } catch {
+    respuesta.textContent = "No se pudo obtener respuesta en este momento.";
+  }
+
+  cargando.style.display = "none";
 });
