@@ -1,69 +1,49 @@
 // ai.js
-
-import { fetchHTML } from "./utils.js";
-import { TIEMPO_RESPALDO } from "./config.js";
-
-const preguntasPredefinidas = [
+const preguntasIA = [
   "¿Tendencia actual del dólar?",
-  "¿Precio del oro?",
-  "¿Cómo está el mercado de criptomonedas?",
-  "¿Ha subido Apple esta semana?",
-  "¿Cuál es la criptomoneda con mayor crecimiento reciente?"
+  "¿Qué criptomoneda ha subido más hoy?",
+  "¿Cómo afecta la inflación a la economía?",
+  "¿Qué empresa lidera el mercado hoy?"
 ];
 
-const selector = document.getElementById("pregunta-ia");
-const respuestaContenedor = document.getElementById("respuesta-ia");
-const cargando = document.getElementById("ia-cargando");
+const fuentesIA = [
+  query => `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+  query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
+  query => `https://duckduckgo.com/?q=${encodeURIComponent(query)}`
+];
 
-function inicializarIA() {
-  preguntasPredefinidas.forEach(p => {
-    const opt = document.createElement("option");
-    opt.value = p;
-    opt.textContent = p;
-    selector.appendChild(opt);
+document.addEventListener("DOMContentLoaded", () => {
+  const select = document.getElementById("pregunta-ia");
+  const respuestaDiv = document.getElementById("respuesta-ia");
+  const loader = document.getElementById("ia-cargando");
+
+  preguntasIA.forEach(preg => {
+    const option = document.createElement("option");
+    option.value = preg;
+    option.textContent = preg;
+    select.appendChild(option);
   });
 
-  selector.addEventListener("change", async () => {
-    const pregunta = selector.value;
+  select.addEventListener("change", async () => {
+    const pregunta = select.value;
     if (!pregunta) return;
-    await responderIA(pregunta);
+
+    loader.style.display = "block";
+    respuestaDiv.textContent = "";
+    const intentos = fuentesIA.map(f => fetchHTML(f(pregunta)));
+
+    try {
+      const html = await Promise.any(intentos);
+      if (!html) throw new Error("Sin respuesta");
+
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      let resultado = div.querySelector("h3, span, p");
+      respuestaDiv.textContent = resultado ? resultado.textContent : "Respuesta no encontrada.";
+    } catch (err) {
+      respuestaDiv.textContent = "No se pudo obtener respuesta. Intenta nuevamente.";
+    } finally {
+      loader.style.display = "none";
+    }
   });
-}
-
-async function responderIA(pregunta) {
-  cargando.style.display = "block";
-  respuestaContenedor.innerHTML = "";
-
-  const cache = sessionStorage.getItem(pregunta);
-  const tiempo = sessionStorage.getItem(pregunta + "_hora");
-
-  if (cache && tiempo && Date.now() - parseInt(tiempo) < TIEMPO_RESPALDO) {
-    mostrarRespuesta(pregunta, cache, true);
-    cargando.style.display = "none";
-    return;
-  }
-
-  try {
-    const contenido = await fetchHTML(pregunta);
-    if (!contenido) throw new Error("No se pudo interpretar respuesta.");
-
-    sessionStorage.setItem(pregunta, contenido);
-    sessionStorage.setItem(pregunta + "_hora", Date.now().toString());
-
-    mostrarRespuesta(pregunta, contenido);
-  } catch (error) {
-    mostrarRespuesta(pregunta, "No se pudo obtener información. Intenta más tarde o revisa tu conexión.");
-  }
-
-  cargando.style.display = "none";
-}
-
-function mostrarRespuesta(pregunta, contenido, cache = false) {
-  respuestaContenedor.innerHTML = `
-    <strong>${pregunta}</strong><br/>
-    ${cache ? "<em>(datos guardados)</em><br/>" : ""}
-    ${contenido}
-  `;
-}
-
-export { inicializarIA };
+});
