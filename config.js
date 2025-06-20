@@ -1,14 +1,8 @@
 // config.js
-
-const PROXY_URL = "http://localhost:3000/?url=";
-
-const FUENTES = [
-  "https://www.google.com/search?q=",
-  "https://www.bing.com/search?q=",
-  "https://duckduckgo.com/?q="
+export const ACTUALIZACION_INTERVALO = 5 * 60 * 1000; // 5 minutos
+export const PROXY = "https://financial-proxy.onrender.com/?url=";
+export const FUENTES_BUSQUEDA = [
+  query => `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+  query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
+  query => `https://duckduckgo.com/?q=${encodeURIComponent(query)}`
 ];
-
-// Tiempo en milisegundos para actualizar respaldo (5 minutos)
-const TIEMPO_RESPALDO = 5 * 60 * 1000;
-
-export { PROXY_URL, FUENTES, TIEMPO_RESPALDO };
