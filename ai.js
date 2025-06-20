@@ -1,56 +1,49 @@
-// ai.js
+// === AI.JS ===
+// IA básica con preguntas predefinidas y respuestas reales desde la web
 
-import { fetchHTML, limpiarTexto } from "./utils.js";
+const selectPreguntas = document.getElementById("preguntasIA");
+const respuestaIA = document.getElementById("respuestaIA");
 
-const preguntas = [
-  "¿Tendencia actual del dólar?",
-  "¿Conviene invertir en Bitcoin hoy?",
-  "¿Cómo ha variado la inflación últimamente?",
-  "¿Qué predicen los analistas sobre Apple?"
+const preguntasPredefinidas = [
+  { pregunta: "¿Cuánto cuesta el dólar en Perú?", query: "precio del dólar en Perú" },
+  { pregunta: "¿Cuánto cuesta el euro en Perú?", query: "precio del euro en Perú" },
+  { pregunta: "¿Cuál es el precio del bitcoin?", query: "precio del bitcoin" },
+  { pregunta: "¿Cuál es el precio del ethereum?", query: "precio de ethereum" },
+  { pregunta: "¿Cuánto vale Google en bolsa?", ticker: "GOOGL:NASDAQ" },
+  { pregunta: "¿Cuánto vale Apple en bolsa?", ticker: "AAPL:NASDAQ" },
+  { pregunta: "¿Cómo ha variado la inflación últimamente?", query: "¿Cómo ha variado la inflación últimamente?" }
 ];
 
-const select = document.getElementById("pregunta-ia");
-const respuesta = document.getElementById("respuesta-ia");
-const cargando = document.getElementById("ia-cargando");
-
-preguntas.forEach(p => {
+// Mostrar preguntas en el selector
+preguntasPredefinidas.forEach((p, i) => {
   const option = document.createElement("option");
-  option.value = p;
-  option.textContent = p;
-  select.appendChild(option);
+  option.value = i;
+  option.textContent = p.pregunta;
+  selectPreguntas.appendChild(option);
 });
 
-select.addEventListener("change", async () => {
-  const pregunta = select.value;
-  if (!pregunta) return;
+// Escuchar selección
+selectPreguntas.addEventListener("change", async (e) => {
+  const seleccion = preguntasPredefinidas[e.target.value];
+  respuestaIA.textContent = "Cargando respuesta...";
 
-  cargando.style.display = "block";
-  respuesta.textContent = "";
+  if (!seleccion) return;
 
-  const fuentes = [
-    `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`,
-    `https://www.bing.com/search?q=${encodeURIComponent(pregunta)}`,
-    `https://duckduckgo.com/?q=${encodeURIComponent(pregunta)}`
-  ];
-
-  try {
-    const resultados = await Promise.all(
-      fuentes.map(async url => {
-        const html = await fetchHTML(url);
-        const texto = limpiarTexto(html.slice(0, 3000));
-        return texto;
-      })
-    );
-
-    const resumen = resultados
-      .map(t => t.slice(0, 500))
-      .join("\n\n---\n\n")
-      .slice(0, 1200);
-
-    respuesta.textContent = resumen || "No se pudo encontrar información útil.";
-  } catch {
-    respuesta.textContent = "No se pudo obtener respuesta en este momento.";
+  if (seleccion.query) {
+    const valor = await obtenerValorDesdeGoogle(seleccion.query);
+    if (valor) {
+      respuestaIA.textContent = `El valor actual es aproximadamente ${valor} soles.`;
+    } else {
+      respuestaIA.textContent = "No se pudo obtener el valor actual.";
+    }
+  } else if (seleccion.ticker) {
+    const valor = await obtenerValorEmpresa(seleccion.ticker);
+    if (valor) {
+      respuestaIA.textContent = `El valor actual de la acción es aproximadamente $${valor}.`;
+    } else {
+      respuestaIA.textContent = "No se pudo obtener el valor actual de la empresa.";
+    }
+  } else {
+    respuestaIA.textContent = "Consulta no válida.";
   }
-
-  cargando.style.display = "none";
 });
