@@ -4,11 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    rel="stylesheet"
-  />
   <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 </head>
 <body class="dark">
 
@@ -16,7 +13,7 @@
   <button id="abrir-menu" aria-label="Abrir menú">☰</button>
 
   <!-- Menú lateral -->
-  <aside id="menu-lateral" role="navigation" aria-label="Menú lateral">
+  <aside id="menu-lateral" role="navigation">
     <button id="cerrar-menu" aria-label="Cerrar menú">✖</button>
     <h2>FinancialStatus</h2>
     <nav>
@@ -28,40 +25,40 @@
     </nav>
   </aside>
 
-  <!-- Botón para cambiar modo claro/oscuro -->
+  <!-- Botón para cambiar modo -->
   <button id="modo-toggle" class="modo-boton" aria-label="Cambiar modo">Modo claro</button>
 
   <main>
-    <section id="inicio" class="seccion activa" tabindex="0">
+    <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>En futuras versiones se mostrarán noticias económicas y análisis del mercado.</p>
+      <p>Aquí pronto verás noticias económicas y novedades del mercado.</p>
     </section>
 
-    <section id="monedas" class="seccion" tabindex="0">
+    <section id="monedas" class="seccion">
       <h2>Monedas Internacionales</h2>
       <div id="lista-monedas" class="contenedor-tarjetas"></div>
     </section>
 
-    <section id="criptos" class="seccion" tabindex="0">
+    <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
       <div id="lista-criptos" class="contenedor-tarjetas"></div>
     </section>
 
-    <section id="empresas" class="seccion" tabindex="0">
+    <section id="empresas" class="seccion">
       <h2>Empresas</h2>
       <div id="lista-empresas" class="contenedor-tarjetas"></div>
     </section>
 
-    <section id="ia" class="seccion" tabindex="0">
+    <section id="ia" class="seccion">
       <h2>Inteligencia Artificial</h2>
       <div id="ia-introduccion">
-        <p>Hola, soy tu asistente financiero. Puedes seleccionar una pregunta útil:</p>
-        <select id="pregunta-ia" aria-label="Seleccionar pregunta de IA">
+        <p>Hola, soy tu IA financiera. Selecciona una pregunta:</p>
+        <select id="pregunta-ia">
           <option value="">Selecciona una pregunta</option>
         </select>
       </div>
       <div id="ia-cargando" style="display:none;">Cargando datos...</div>
-      <div id="respuesta-ia" role="region" aria-live="polite"></div>
+      <div id="respuesta-ia"></div>
     </section>
   </main>
 
