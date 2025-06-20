@@ -1,64 +1,69 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const selectPregunta = document.getElementById("pregunta-ia");
-  const contenedorRespuesta = document.getElementById("respuesta-ia");
-  const cargandoIA = document.getElementById("ia-cargando");
+// ai.js
 
-  preguntasIA.forEach(preg => {
+import { fetchHTML } from "./utils.js";
+import { TIEMPO_RESPALDO } from "./config.js";
+
+const preguntasPredefinidas = [
+  "¿Tendencia actual del dólar?",
+  "¿Precio del oro?",
+  "¿Cómo está el mercado de criptomonedas?",
+  "¿Ha subido Apple esta semana?",
+  "¿Cuál es la criptomoneda con mayor crecimiento reciente?"
+];
+
+const selector = document.getElementById("pregunta-ia");
+const respuestaContenedor = document.getElementById("respuesta-ia");
+const cargando = document.getElementById("ia-cargando");
+
+function inicializarIA() {
+  preguntasPredefinidas.forEach(p => {
     const opt = document.createElement("option");
-    opt.value = preg;
-    opt.textContent = preg;
-    selectPregunta.appendChild(opt);
+    opt.value = p;
+    opt.textContent = p;
+    selector.appendChild(opt);
   });
 
-  selectPregunta.addEventListener("change", async () => {
-    const pregunta = selectPregunta.value;
+  selector.addEventListener("change", async () => {
+    const pregunta = selector.value;
     if (!pregunta) return;
-
-    cargandoIA.style.display = "block";
-    contenedorRespuesta.innerHTML = "";
-
-    const fuentes = [
-      `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`,
-      `https://www.bing.com/search?q=${encodeURIComponent(pregunta)}`,
-      `https://duckduckgo.com/?q=${encodeURIComponent(pregunta)}`
-    ];
-
-    let html = null;
-    for (const fuente of fuentes) {
-      html = await fetchHTML(fuente);
-      if (html) break;
-    }
-
-    cargandoIA.style.display = "none";
-
-    if (!html) {
-      contenedorRespuesta.innerHTML = `<p style="color:red;">No se pudo obtener datos en tiempo real.</p>`;
-      return;
-    }
-
-    const valor = extraerValorDesdeTexto(html);
-    const historial = generarHistorial(valor);
-
-    let contenido = `<p><strong>Valor actual:</strong> ${valor ?? 'No encontrado'}</p>`;
-
-    if (historial.length > 0) {
-      contenido += `<div class="zona-grafico">${generarGraficoHTML(historial, pregunta)}</div>`;
-    } else {
-      contenido += `<p style="color:#888;font-style:italic;">NO SE ENCONTRARON RESULTADOS</p>`;
-    }
-
-    contenedorRespuesta.innerHTML = contenido;
+    await responderIA(pregunta);
   });
-});
+}
 
-function generarGraficoHTML(datos, titulo) {
-  const puntos = datos.map(d => `<div title="${d.x}: ${d.y}" class="punto" style="left:${datos.indexOf(d)*40}px;bottom:${d.y}px;"></div>`).join("");
-  return `
-    <div>
-      <strong style="color:#39FF14">${titulo}</strong>
-      <div style="position:relative;height:150px;margin-top:10px;background:#111;border:1px solid #39FF14;border-radius:8px;">
-        ${puntos}
-      </div>
-    </div>
+async function responderIA(pregunta) {
+  cargando.style.display = "block";
+  respuestaContenedor.innerHTML = "";
+
+  const cache = sessionStorage.getItem(pregunta);
+  const tiempo = sessionStorage.getItem(pregunta + "_hora");
+
+  if (cache && tiempo && Date.now() - parseInt(tiempo) < TIEMPO_RESPALDO) {
+    mostrarRespuesta(pregunta, cache, true);
+    cargando.style.display = "none";
+    return;
+  }
+
+  try {
+    const contenido = await fetchHTML(pregunta);
+    if (!contenido) throw new Error("No se pudo interpretar respuesta.");
+
+    sessionStorage.setItem(pregunta, contenido);
+    sessionStorage.setItem(pregunta + "_hora", Date.now().toString());
+
+    mostrarRespuesta(pregunta, contenido);
+  } catch (error) {
+    mostrarRespuesta(pregunta, "No se pudo obtener información. Intenta más tarde o revisa tu conexión.");
+  }
+
+  cargando.style.display = "none";
+}
+
+function mostrarRespuesta(pregunta, contenido, cache = false) {
+  respuestaContenedor.innerHTML = `
+    <strong>${pregunta}</strong><br/>
+    ${cache ? "<em>(datos guardados)</em><br/>" : ""}
+    ${contenido}
   `;
 }
+
+export { inicializarIA };
