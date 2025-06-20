@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="dark">
 
@@ -13,7 +13,7 @@
   <button id="abrir-menu" aria-label="Abrir menú">☰</button>
 
   <!-- Menú lateral -->
-  <aside id="menu-lateral" role="navigation">
+  <aside id="menu-lateral" role="navigation" aria-label="Menú lateral">
     <button id="cerrar-menu" aria-label="Cerrar menú">✖</button>
     <h2>FinancialStatus</h2>
     <nav>
@@ -25,46 +25,46 @@
     </nav>
   </aside>
 
-  <!-- Botón para cambiar modo -->
+  <!-- Botón modo claro/oscuro -->
   <button id="modo-toggle" class="modo-boton" aria-label="Cambiar modo">Modo claro</button>
 
   <main>
-    <section id="inicio" class="seccion activa">
+    <section id="inicio" class="seccion activa" tabindex="0">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Aquí pronto verás noticias económicas y novedades del mercado.</p>
+      <p>En futuras versiones se mostrarán noticias económicas y análisis del mercado.</p>
     </section>
 
-    <section id="monedas" class="seccion">
+    <section id="monedas" class="seccion" tabindex="0">
       <h2>Monedas Internacionales</h2>
       <div id="lista-monedas" class="contenedor-tarjetas"></div>
     </section>
 
-    <section id="criptos" class="seccion">
+    <section id="criptos" class="seccion" tabindex="0">
       <h2>Criptomonedas</h2>
       <div id="lista-criptos" class="contenedor-tarjetas"></div>
     </section>
 
-    <section id="empresas" class="seccion">
+    <section id="empresas" class="seccion" tabindex="0">
       <h2>Empresas</h2>
       <div id="lista-empresas" class="contenedor-tarjetas"></div>
     </section>
 
-    <section id="ia" class="seccion">
+    <section id="ia" class="seccion" tabindex="0">
       <h2>Inteligencia Artificial</h2>
       <div id="ia-introduccion">
-        <p>Hola, soy tu IA financiera. Selecciona una pregunta:</p>
-        <select id="pregunta-ia">
+        <p>Hola, soy tu asistente financiero. Puedes seleccionar una pregunta útil:</p>
+        <select id="pregunta-ia" aria-label="Seleccionar pregunta de IA">
           <option value="">Selecciona una pregunta</option>
         </select>
       </div>
       <div id="ia-cargando" style="display:none;">Cargando datos...</div>
-      <div id="respuesta-ia"></div>
+      <div id="respuesta-ia" role="region" aria-live="polite"></div>
     </section>
   </main>
 
-  <script src="config.js"></script>
-  <script src="utils.js"></script>
-  <script src="ai.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="config.js"></script>
+  <script type="module" src="utils.js"></script>
+  <script type="module" src="ai.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
