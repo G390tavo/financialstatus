@@ -1,68 +1,64 @@
-// ai.js
+document.addEventListener("DOMContentLoaded", () => {
+  const selectPregunta = document.getElementById("pregunta-ia");
+  const contenedorRespuesta = document.getElementById("respuesta-ia");
+  const cargandoIA = document.getElementById("ia-cargando");
 
-import { preguntasIA } from './config.js';
-import { fetchHTML, extraerNumero, generarHistorial } from './utils.js';
-
-document.addEventListener('DOMContentLoaded', () => {
-  const selector = document.getElementById('pregunta-ia');
-  const respuesta = document.getElementById('respuesta-ia');
-  const cargando = document.getElementById('ia-cargando');
-
-  // Llenar dropdown
-  preguntasIA.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p;
-    opt.textContent = p;
-    selector.appendChild(opt);
+  preguntasIA.forEach(preg => {
+    const opt = document.createElement("option");
+    opt.value = preg;
+    opt.textContent = preg;
+    selectPregunta.appendChild(opt);
   });
 
-  selector.addEventListener('change', async () => {
-    const pregunta = selector.value;
+  selectPregunta.addEventListener("change", async () => {
+    const pregunta = selectPregunta.value;
     if (!pregunta) return;
-    cargando.style.display = 'block';
-    respuesta.innerHTML = '';
 
-    const doc = await fetchHTML(pregunta);
-    cargando.style.display = 'none';
+    cargandoIA.style.display = "block";
+    contenedorRespuesta.innerHTML = "";
 
-    if (!doc) {
-      respuesta.innerHTML = '<p>No se pudo obtener datos en tiempo real.</p>';
+    const fuentes = [
+      `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`,
+      `https://www.bing.com/search?q=${encodeURIComponent(pregunta)}`,
+      `https://duckduckgo.com/?q=${encodeURIComponent(pregunta)}`
+    ];
+
+    let html = null;
+    for (const fuente of fuentes) {
+      html = await fetchHTML(fuente);
+      if (html) break;
+    }
+
+    cargandoIA.style.display = "none";
+
+    if (!html) {
+      contenedorRespuesta.innerHTML = `<p style="color:red;">No se pudo obtener datos en tiempo real.</p>`;
       return;
     }
 
-    const bodyText = doc.body.innerText;
-    const valor = extraerNumero(bodyText);
-
-    if (!valor) {
-      respuesta.innerHTML = '<p>No se pudo interpretar respuesta.</p>';
-      return;
-    }
-
-    // Generar historial y mostrar gráfico
+    const valor = extraerValorDesdeTexto(html);
     const historial = generarHistorial(valor);
-    mostrarGraficoEnIA(pregunta, historial, valor);
+
+    let contenido = `<p><strong>Valor actual:</strong> ${valor ?? 'No encontrado'}</p>`;
+
+    if (historial.length > 0) {
+      contenido += `<div class="zona-grafico">${generarGraficoHTML(historial, pregunta)}</div>`;
+    } else {
+      contenido += `<p style="color:#888;font-style:italic;">NO SE ENCONTRARON RESULTADOS</p>`;
+    }
+
+    contenedorRespuesta.innerHTML = contenido;
   });
 });
 
-// Inserta gráfico en sección de IA
-function mostrarGraficoEnIA(titulo, datos, valor) {
-  const contenedor = document.getElementById('respuesta-ia');
-  const max = datos.reduce((a, b) => (a.y > b.y ? a : b), datos[0]);
-
-  const div = document.createElement('div');
-  div.innerHTML = `
-    <h4>Gráfico: ${titulo}</h4>
-    <p>Valor actual: ${valor}</p>
-    <div class="zona-grafico">
-      ${datos.length
-        ? `<p>Máximo: ${max.y} (${max.x})</p><canvas id="grafico-ia" height="150"></canvas>`
-        : `<div class="sin-resultados">NO SE ENCONTRARON RESULTADOS</div>`}
+function generarGraficoHTML(datos, titulo) {
+  const puntos = datos.map(d => `<div title="${d.x}: ${d.y}" class="punto" style="left:${datos.indexOf(d)*40}px;bottom:${d.y}px;"></div>`).join("");
+  return `
+    <div>
+      <strong style="color:#39FF14">${titulo}</strong>
+      <div style="position:relative;height:150px;margin-top:10px;background:#111;border:1px solid #39FF14;border-radius:8px;">
+        ${puntos}
+      </div>
     </div>
   `;
-  contenedor.innerHTML = '';
-  contenedor.appendChild(div);
-
-  if (datos.length) {
-    dibujarLinea('grafico-ia', datos);
-  }
 }
