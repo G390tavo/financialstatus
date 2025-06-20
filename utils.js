@@ -1,56 +1,51 @@
-// Esta función realiza un fetch HTML usando proxy local
-async function fetchHTML(url) {
-  try {
-    const proxyUrl = `http://localhost:3000/?url=${encodeURIComponent(url)}`;
-    const response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error("Error al cargar desde proxy.");
-    const text = await response.text();
-    return text;
-  } catch (proxyError) {
-    console.warn("Proxy falló. Intentando acceso directo...");
+// utils.js
 
+async function fetchHTML(pregunta) {
+  const fuentes = [
+    `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`,
+    `https://www.bing.com/search?q=${encodeURIComponent(pregunta)}`,
+    `https://duckduckgo.com/?q=${encodeURIComponent(pregunta)}`,
+    `https://es.finance.yahoo.com/lookup?s=${encodeURIComponent(pregunta)}`
+  ];
+
+  for (let fuente of fuentes) {
     try {
-      const response = await fetch(url, {
-        mode: "no-cors"
-      });
-      const text = await response.text();
-      return text;
-    } catch (directError) {
-      console.error("Fallo total al obtener HTML:", directError);
-      return null;
+      const res = await fetch(`/proxy?url=${encodeURIComponent(fuente)}`);
+      const text = await res.text();
+      if (text && text.length > 100) return text;
+    } catch (e) {
+      console.warn("Proxy falló. Intentando acceso directo...");
     }
   }
-}
 
-// Extraer número desde texto con separadores
-function extraerValorDesdeTexto(texto) {
-  if (!texto) return null;
-
-  const match = texto.replace(/,/g, '.').match(/-?\d+(\.\d+)?/g);
-  if (match) return parseFloat(match[0]);
   return null;
 }
 
-// Simular historial para gráficos (valores aleatorios alrededor del actual)
-function generarHistorial(valorActual) {
-  if (!valorActual || isNaN(valorActual)) return [];
+function limpiarTexto(html) {
+  const temp = document.createElement("div");
+  temp.innerHTML = html;
+  return temp.textContent || temp.innerText || "";
+}
 
-  const historial = [];
-  const base = valorActual;
-
+function generarSimulacionHistorial(valor) {
+  if (!valor || isNaN(valor)) return null;
+  const base = parseFloat(valor);
+  const datos = [];
   for (let i = 6; i >= 0; i--) {
-    const variacion = (Math.random() - 0.5) * 10;
-    const y = Math.max(0, Math.round((base + variacion) * 100) / 100);
-    historial.push({ x: `Día ${7 - i}`, y });
+    let variacion = (Math.random() - 0.5) * 10;
+    let dia = `Día ${7 - i}`;
+    let y = Math.round((base + variacion) * 100) / 100;
+    datos.push({ x: dia, y });
   }
-
-  return historial;
+  return datos;
 }
 
-// Mostrar mensaje si no hay historial
-function mostrarSinHistorial(idContenedor) {
-  const zona = document.getElementById(idContenedor);
-  if (zona) {
-    zona.innerHTML = `<p style="color:#888;font-style:italic;">NO SE ENCONTRARON RESULTADOS</p>`;
-  }
+function obtenerValorActual(texto) {
+  const regex = /\d+[.,]?\d*/g;
+  const encontrados = texto.match(regex);
+  if (!encontrados) return null;
+  let valor = parseFloat(encontrados[0].replace(",", "."));
+  return isNaN(valor) ? null : valor;
 }
+
+export { fetchHTML, limpiarTexto, generarSimulacionHistorial, obtenerValorActual };
