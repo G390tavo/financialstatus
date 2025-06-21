@@ -8,7 +8,7 @@
 }
 
 body {
-  background-color: #000000; /* negro absoluto */
+  background-color: #000000;
   color: #ffffff;
   padding-left: 220px;
   min-height: 100vh;
@@ -27,7 +27,7 @@ body.light {
   right: 10px;
   z-index: 1001;
   padding: 8px 12px;
-  background-color: #39FF14; /* verde neón */
+  background-color: #39FF14;
   color: #000000;
   border: none;
   border-radius: 6px;
@@ -42,7 +42,7 @@ body.light .modo-boton {
 }
 
 /* === MENÚ LATERAL === */
-#menu-lateral {
+#menuLateral {
   position: fixed;
   top: 0;
   left: 0;
@@ -56,13 +56,13 @@ body.light .modo-boton {
   box-shadow: 2px 0 8px rgba(0, 255, 20, 0.6);
 }
 
-#menu-lateral h2 {
+#menuLateral h2 {
   color: #39FF14;
   margin-bottom: 20px;
   font-weight: 900;
 }
 
-#menu-lateral nav button {
+#menuLateral nav button {
   background: none;
   color: #fff;
   border: none;
@@ -76,30 +76,30 @@ body.light .modo-boton {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#menu-lateral nav button:hover,
-#menu-lateral nav button:focus {
+#menuLateral nav button:hover,
+#menuLateral nav button:focus {
   background-color: #39FF14;
   color: #000000;
   outline: none;
 }
 
-body.light #menu-lateral {
+body.light #menuLateral {
   background-color: #eeeeee;
   box-shadow: 2px 0 8px rgba(57, 255, 20, 0.3);
 }
 
-body.light #menu-lateral nav button {
+body.light #menuLateral nav button {
   color: #000000;
 }
 
-body.light #menu-lateral nav button:hover,
-body.light #menu-lateral nav button:focus {
+body.light #menuLateral nav button:hover,
+body.light #menuLateral nav button:focus {
   background-color: #39FF14;
   color: #000000;
 }
 
 /* === BOTONES ABRIR / CERRAR MENÚ === */
-#cerrar-menu {
+#cerrarMenu {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -114,13 +114,13 @@ body.light #menu-lateral nav button:focus {
   transition: background-color 0.3s ease;
 }
 
-#cerrar-menu:hover,
-#cerrar-menu:focus {
+#cerrarMenu:hover,
+#cerrarMenu:focus {
   background: #c0392b;
   outline: none;
 }
 
-#abrir-menu {
+#abrirMenu {
   position: fixed;
   top: 10px;
   left: 10px;
@@ -136,13 +136,13 @@ body.light #menu-lateral nav button:focus {
   box-shadow: 0 0 8px #39FF14;
 }
 
-body.light #abrir-menu {
+body.light #abrirMenu {
   background-color: #39FF14;
   color: #000000;
 }
 
-#abrir-menu:hover,
-#abrir-menu:focus {
+#abrirMenu:hover,
+#abrirMenu:focus {
   background-color: #2ad911;
   outline: none;
 }
@@ -162,7 +162,7 @@ main {
   display: block;
 }
 
-/* === TARJETAS (ESTILO BINANCE) === */
+/* === TARJETAS === */
 .contenedor-tarjetas {
   display: flex;
   flex-direction: column;
@@ -206,11 +206,6 @@ body.light .tarjeta:focus {
   gap: 10px;
 }
 
-.tarjeta h3 i {
-  color: #39FF14;
-  font-size: 1.5em;
-}
-
 .tarjeta .valor {
   font-size: 1.9em;
   font-weight: 900;
@@ -244,7 +239,7 @@ body.light .tarjeta .descripcion {
   color: #404040;
 }
 
-/* === PANEL DE GRÁFICO (dentro de la tarjeta) === */
+/* === PANEL DE GRÁFICO === */
 .panel-grafico {
   margin-top: 15px;
   background-color: #000000;
@@ -281,7 +276,7 @@ body.light .panel-grafico {
   outline: none;
 }
 
-/* === TOOLTIP DEL PUNTO MÁXIMO === */
+/* === TOOLTIP === */
 .tooltip {
   position: absolute;
   background-color: #39FF14;
@@ -301,7 +296,7 @@ body.light .panel-grafico {
   margin-top: 30px;
 }
 
-#pregunta-ia {
+#preguntasIA {
   margin-top: 12px;
   padding: 8px;
   font-size: 1em;
@@ -309,7 +304,7 @@ body.light .panel-grafico {
   width: 100%;
 }
 
-#respuesta-ia {
+#respuestaIA {
   margin-top: 20px;
   padding: 15px;
   background-color: #111111;
@@ -323,13 +318,12 @@ body.light .panel-grafico {
   overflow-wrap: break-word;
 }
 
-body.light #respuesta-ia {
+body.light #respuestaIA {
   background-color: #f0f0f0;
   color: #004400;
   box-shadow: 0 0 8px #39FF14;
 }
 
-/* Cargando IA */
 #ia-cargando {
   margin-top: 15px;
   color: #39FF14;
@@ -340,8 +334,8 @@ body.light #respuesta-ia {
 
 /* === ANIMACIONES === */
 @keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* === RESPONSIVE === */
@@ -350,11 +344,11 @@ body.light #respuesta-ia {
     padding-left: 0;
   }
 
-  #menu-lateral {
+  #menuLateral {
     display: none;
   }
 
-  #abrir-menu {
+  #abrirMenu {
     display: block;
   }
 }
