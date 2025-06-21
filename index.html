@@ -1,55 +1,75 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Menú lateral -->
-  <aside id="menuLateral" class="menu">
-    <button id="cerrarMenu">Cerrar</button>
-    <button class="boton-menu" data-seccion="inicio">Inicio</button>
-    <button class="boton-menu" data-seccion="monedas">Monedas</button>
-    <button class="boton-menu" data-seccion="criptos">Criptomonedas</button>
-    <button class="boton-menu" data-seccion="empresas">Empresas</button>
-    <button class="boton-menu" data-seccion="ia">IA</button>
-    <button id="modoOscuro">🌙</button>
+
+  <!-- BOTÓN ABRIR MENÚ -->
+  <button id="abrirMenu" style="display: none;">☰ Menú</button>
+
+  <!-- MENÚ LATERAL -->
+  <aside id="menuLateral">
+    <button id="cerrarMenu">✖</button>
+    <h2>FinancialStatus</h2>
+    <nav>
+      <button onclick="cambiarSeccion('inicio')">Inicio</button>
+      <button onclick="cambiarSeccion('monedas')">Monedas</button>
+      <button onclick="cambiarSeccion('criptos')">Criptomonedas</button>
+      <button onclick="cambiarSeccion('empresas')">Empresas</button>
+      <button onclick="cambiarSeccion('ia')">IA</button>
+    </nav>
   </aside>
 
-  <!-- Botón para abrir menú -->
-  <button id="abrirMenu" style="display:none;">☰</button>
+  <!-- BOTÓN MODO OSCURO -->
+  <button class="modo-boton" id="modoToggle">Modo Oscuro</button>
 
-  <!-- Secciones -->
+  <!-- SECCIONES -->
   <main>
-    <section id="inicio">
-      <h2>Inicio</h2>
-      <canvas id="grafico"></canvas>
+    <!-- INICIO -->
+    <section id="inicio" class="seccion activa">
+      <h1>Bienvenido a FinancialStatus</h1>
+      <p>Explora los precios actuales del mercado financiero.</p>
     </section>
 
-    <section id="monedas" style="display:none;">
-      <h2>Monedas</h2>
+    <!-- MONEDAS -->
+    <section id="monedas" class="seccion">
+      <h2>Monedas Internacionales</h2>
+      <div class="contenedor-tarjetas" id="contenedorMonedas"></div>
     </section>
 
-    <section id="criptos" style="display:none;">
+    <!-- CRIPTOMONEDAS -->
+    <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
+      <div class="contenedor-tarjetas" id="contenedorCriptos"></div>
     </section>
 
-    <section id="empresas" style="display:none;">
+    <!-- EMPRESAS -->
+    <section id="empresas" class="seccion">
       <h2>Empresas</h2>
+      <div class="contenedor-tarjetas" id="contenedorEmpresas"></div>
     </section>
 
-    <section id="ia" style="display:none;">
+    <!-- IA -->
+    <section id="ia" class="seccion">
       <h2>Pregúntale a la IA</h2>
       <select id="preguntasIA">
-        <option selected disabled>Selecciona una pregunta</option>
+        <option value="">Selecciona una pregunta</option>
+        <option value="¿Qué es la inflación?">¿Qué es la inflación?</option>
+        <option value="¿Qué factores afectan el valor del dólar?">¿Qué factores afectan el valor del dólar?</option>
+        <option value="¿Qué es una criptomoneda?">¿Qué es una criptomoneda?</option>
+        <option value="¿Qué pasa si sube la tasa de interés?">¿Qué pasa si sube la tasa de interés?</option>
+        <option value="¿Qué empresas lideran el mercado bursátil?">¿Qué empresas lideran el mercado bursátil?</option>
       </select>
-      <p id="respuestaIA">Aquí verás la respuesta.</p>
+      <div id="ia-cargando" style="display: none;">Cargando respuesta...</div>
+      <div id="respuestaIA"></div>
     </section>
   </main>
 
-  <!-- Scripts -->
+  <!-- SCRIPTS -->
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
