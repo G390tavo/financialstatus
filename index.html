@@ -1,50 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="menu-lateral">
+
+  <button id="abrir-menu">☰</button>
+
+  <aside id="menu-lateral">
     <h2>FinancialStatus</h2>
-    <button id="cerrar-menu">X</button>
+    <button id="cerrar-menu">✖</button>
     <nav>
       <button onclick="cambiarSeccion('inicio')">Inicio</button>
       <button onclick="cargarMonedas(); cambiarSeccion('monedas')">Monedas</button>
-      <button onclick="cargarCriptos(); cambiarSeccion('criptos')">Criptos</button>
+      <button onclick="cargarCriptos(); cambiarSeccion('criptos')">Criptomonedas</button>
       <button onclick="cargarEmpresas(); cambiarSeccion('empresas')">Empresas</button>
-      <button onclick="cambiarSeccion('ia')">IA</button>
+      <button onclick="cambiarSeccion('ia')">Pregúntale a la IA</button>
     </nav>
-  </div>
-  <button id="abrir-menu">☰</button>
-  <button class="modo-boton" onclick="toggleModo()">🌙</button>
+  </aside>
 
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
+      <p>Explora datos económicos reales, gráficos en vivo y una IA que responde tus dudas.</p>
     </section>
+
     <section id="monedas" class="seccion">
-      <h1>Monedas</h1>
+      <h2>Monedas Internacionales</h2>
       <div id="contenedor-monedas" class="contenedor-tarjetas"></div>
     </section>
+
     <section id="criptos" class="seccion">
-      <h1>Criptomonedas</h1>
+      <h2>Criptomonedas</h2>
       <div id="contenedor-criptos" class="contenedor-tarjetas"></div>
     </section>
+
     <section id="empresas" class="seccion">
-      <h1>Empresas</h1>
+      <h2>Empresas</h2>
       <div id="contenedor-empresas" class="contenedor-tarjetas"></div>
     </section>
+
     <section id="ia" class="seccion">
-      <h1>Asistente IA</h1>
-      <input type="text" id="pregunta-ia" placeholder="Pregúntame algo...">
+      <h2>Pregúntale a la IA</h2>
+      <div id="preguntas-rapidas">
+        <button onclick="ejecutarIA('¿Qué es la inflación?')">¿Qué es la inflación?</button>
+        <button onclick="ejecutarIA('¿Qué factores afectan el precio del dólar?')">Factores del dólar</button>
+        <button onclick="ejecutarIA('¿Qué significa una recesión económica?')">Recesión económica</button>
+        <button onclick="ejecutarIA('¿Qué es el bitcoin?')">¿Qué es el Bitcoin?</button>
+      </div>
+
+      <input type="text" id="pregunta-ia" placeholder="O escribe tu pregunta...">
+      <button onclick="ejecutarIADesdeInput()">Preguntar</button>
+
+      <div id="ia-cargando" style="display:none">Buscando respuesta...</div>
       <div id="respuesta-ia"></div>
-      <div id="ia-cargando" style="display: none;">Cargando respuesta...</div>
     </section>
   </main>
 
+  <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
   <script src="script.js"></script>
