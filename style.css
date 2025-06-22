@@ -20,7 +20,7 @@ body.light {
   color: #000000;
 }
 
-/* === BOTÓN MODO CLARO/OSCURO === */
+/* BOTÓN MODO CLARO/OSCURO */
 .modo-boton {
   position: fixed;
   top: 10px;
@@ -36,13 +36,8 @@ body.light {
   box-shadow: 0 0 8px #39FF14;
 }
 
-body.light .modo-boton {
-  background-color: #39FF14;
-  color: #000000;
-}
-
-/* === MENÚ LATERAL === */
-#menuLateral {
+/* MENÚ LATERAL */
+#menu-lateral {
   position: fixed;
   top: 0;
   left: 0;
@@ -56,13 +51,13 @@ body.light .modo-boton {
   box-shadow: 2px 0 8px rgba(0, 255, 20, 0.6);
 }
 
-#menuLateral h2 {
+#menu-lateral h2 {
   color: #39FF14;
   margin-bottom: 20px;
   font-weight: 900;
 }
 
-#menuLateral nav button {
+#menu-lateral nav button {
   background: none;
   color: #fff;
   border: none;
@@ -73,33 +68,15 @@ body.light .modo-boton {
   border-radius: 5px;
   font-weight: 600;
   font-size: 1rem;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#menuLateral nav button:hover,
-#menuLateral nav button:focus {
-  background-color: #39FF14;
-  color: #000000;
-  outline: none;
-}
-
-body.light #menuLateral {
-  background-color: #eeeeee;
-  box-shadow: 2px 0 8px rgba(57, 255, 20, 0.3);
-}
-
-body.light #menuLateral nav button {
-  color: #000000;
-}
-
-body.light #menuLateral nav button:hover,
-body.light #menuLateral nav button:focus {
+#menu-lateral nav button:hover {
   background-color: #39FF14;
   color: #000000;
 }
 
-/* === BOTONES ABRIR / CERRAR MENÚ === */
-#cerrarMenu {
+/* BOTONES ABRIR / CERRAR MENÚ */
+#cerrar-menu {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -111,16 +88,9 @@ body.light #menuLateral nav button:focus {
   padding: 6px 10px;
   font-weight: bold;
   z-index: 1002;
-  transition: background-color 0.3s ease;
 }
 
-#cerrarMenu:hover,
-#cerrarMenu:focus {
-  background: #c0392b;
-  outline: none;
-}
-
-#abrirMenu {
+#abrir-menu {
   position: fixed;
   top: 10px;
   left: 10px;
@@ -136,18 +106,7 @@ body.light #menuLateral nav button:focus {
   box-shadow: 0 0 8px #39FF14;
 }
 
-body.light #abrirMenu {
-  background-color: #39FF14;
-  color: #000000;
-}
-
-#abrirMenu:hover,
-#abrirMenu:focus {
-  background-color: #2ad911;
-  outline: none;
-}
-
-/* === SECCIONES === */
+/* SECCIONES */
 main {
   padding: 20px;
   max-width: 1000px;
@@ -162,7 +121,7 @@ main {
   display: block;
 }
 
-/* === TARJETAS === */
+/* TARJETAS */
 .contenedor-tarjetas {
   display: flex;
   flex-direction: column;
@@ -176,48 +135,24 @@ main {
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,255,20,0.6);
   border-left: 5px solid #39FF14;
-  position: relative;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-body.light .tarjeta {
-  background-color: #f9f9f9;
-  border-left: 5px solid #39FF14;
-  color: #000000;
-}
-
-.tarjeta:hover,
-.tarjeta:focus {
-  background-color: #222222;
-}
-
-body.light .tarjeta:hover,
-body.light .tarjeta:focus {
-  background-color: #d1ffd1;
 }
 
 .tarjeta h3 {
   margin-bottom: 6px;
   font-size: 1.4em;
   font-weight: 900;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
-.tarjeta .valor {
+.valor {
   font-size: 1.9em;
   font-weight: 900;
   margin-bottom: 8px;
 }
 
-.tarjeta .variacion {
-  display: flex;
-  align-items: center;
-  font-weight: 900;
+.variacion {
+  font-weight: bold;
   font-size: 1.1em;
-  gap: 8px;
 }
 
 .variacion .up {
@@ -228,18 +163,13 @@ body.light .tarjeta:focus {
   color: #e74c3c;
 }
 
-.tarjeta .descripcion {
+.descripcion {
   margin-top: 8px;
   font-style: italic;
-  font-size: 1em;
   color: #b0b0b0;
 }
 
-body.light .tarjeta .descripcion {
-  color: #404040;
-}
-
-/* === PANEL DE GRÁFICO === */
+/* PANEL DE GRÁFICO */
 .panel-grafico {
   margin-top: 15px;
   background-color: #000000;
@@ -250,33 +180,7 @@ body.light .tarjeta .descripcion {
   position: relative;
 }
 
-body.light .panel-grafico {
-  background-color: #ffffff;
-  border: 2px solid #39FF14;
-}
-
-.panel-grafico .cerrar-panel {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  background: #e74c3c;
-  border: none;
-  color: #fff;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.1em;
-  transition: background-color 0.3s ease;
-}
-
-.panel-grafico .cerrar-panel:hover,
-.panel-grafico .cerrar-panel:focus {
-  background-color: #c0392b;
-  outline: none;
-}
-
-/* === TOOLTIP === */
+/* TOOLTIP */
 .tooltip {
   position: absolute;
   background-color: #39FF14;
@@ -285,70 +189,51 @@ body.light .panel-grafico {
   border-radius: 6px;
   font-weight: 700;
   font-size: 0.9em;
-  pointer-events: none;
-  white-space: nowrap;
   box-shadow: 0 0 6px #39FF14;
   z-index: 10;
 }
 
-/* === IA === */
-#ia {
-  margin-top: 30px;
+/* IA */
+#preguntas-rapidas {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-#preguntasIA {
-  margin-top: 12px;
-  padding: 8px;
-  font-size: 1em;
-  border-radius: 6px;
+#pregunta-ia {
   width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
 }
 
-#respuestaIA {
-  margin-top: 20px;
-  padding: 15px;
+#respuesta-ia {
   background-color: #111111;
+  padding: 15px;
   border-radius: 10px;
-  min-height: 60px;
-  font-size: 1.1em;
-  line-height: 1.4;
+  box-shadow: 0 0 8px #39FF14;
   color: #d0ffd0;
   font-weight: 700;
-  box-shadow: 0 0 8px #39FF14;
-  overflow-wrap: break-word;
 }
 
-body.light #respuestaIA {
-  background-color: #f0f0f0;
-  color: #004400;
-  box-shadow: 0 0 8px #39FF14;
-}
-
-#ia-cargando {
-  margin-top: 15px;
-  color: #39FF14;
-  font-style: italic;
-  font-weight: 700;
-  font-size: 1.1em;
-}
-
-/* === ANIMACIONES === */
+/* ANIMACIONES */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* === RESPONSIVE === */
+/* RESPONSIVE */
 @media (max-width: 768px) {
   body {
     padding-left: 0;
   }
 
-  #menuLateral {
+  #menu-lateral {
     display: none;
   }
 
-  #abrirMenu {
+  #abrir-menu {
     display: block;
   }
 }
