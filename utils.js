@@ -3,18 +3,10 @@ async function fetchHTML(url) {
 
   try {
     const response = await fetch(proxy);
-    if (!response.ok) throw new Error("Respuesta no válida del proxy");
+    if (!response.ok) throw new Error("Proxy no respondió");
     return await response.text();
-  } catch (e) {
-    console.warn("Proxy falló. Intentando acceso directo...");
-    try {
-      const direct = await fetch(url);
-      if (!direct.ok) throw new Error("Respuesta no válida directa");
-      return await direct.text();
-    } catch (err) {
-      console.error("Error al obtener HTML:", err);
-      return null;
-    }
+  } catch {
+    return null;
   }
 }
 
@@ -42,9 +34,7 @@ function crearGrafico(canvas, datos) {
     },
     options: {
       responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
+      plugins: { legend: { display: false } },
       scales: {
         x: { display: false },
         y: { ticks: { color: "#39FF14" } }
@@ -53,6 +43,17 @@ function crearGrafico(canvas, datos) {
   });
 }
 
+function generarHistorialSimulado(valorBase) {
+  const historial = [];
+  for (let i = 0; i < 10; i++) {
+    const variacion = (Math.random() - 0.5) * 0.1;
+    valorBase *= 1 + variacion;
+    historial.push(parseFloat(valorBase.toFixed(2)));
+  }
+  return historial;
+}
+
 window.fetchHTML = fetchHTML;
 window.extraerPrecioGoogle = extraerPrecioGoogle;
 window.crearGrafico = crearGrafico;
+window.generarHistorialSimulado = generarHistorialSimulado;
