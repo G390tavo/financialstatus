@@ -1,27 +1,52 @@
-function ejecutarIA() {
-  const input = document.getElementById("pregunta-ia");
-  const respuesta = document.getElementById("respuesta-ia");
-  const cargando = document.getElementById("ia-cargando");
+// ai.js
 
-  if (!input || !respuesta) return;
+document.addEventListener("DOMContentLoaded", () => {
+  const bloqueIA = document.getElementById("ia");
+  const respuestaIA = document.getElementById("respuesta-ia");
+  const cargandoIA = document.getElementById("ia-cargando");
 
-  const pregunta = input.value.toLowerCase().trim();
-  respuesta.innerHTML = "";
-  cargando.style.display = "block";
+  if (!bloqueIA || !respuestaIA) return;
 
-  setTimeout(() => {
-    cargando.style.display = "none";
+  const contenedorPreguntas = document.createElement("div");
+  contenedorPreguntas.style.display = "flex";
+  contenedorPreguntas.style.flexDirection = "column";
+  contenedorPreguntas.style.gap = "10px";
 
-    if (pregunta.includes("dólar") || pregunta.includes("usd")) {
-      respuesta.innerHTML = "El dólar se encuentra actualmente en S/. 3.80 según Google.";
-    } else if (pregunta.includes("bitcoin")) {
-      respuesta.innerHTML = "El precio de Bitcoin ronda los $65,000 según búsquedas recientes.";
-    } else if (pregunta.includes("empresa") || pregunta.includes("apple")) {
-      respuesta.innerHTML = "Apple cotiza en NASDAQ bajo el símbolo AAPL con un valor estimado de $213.";
-    } else if (pregunta.includes("cómo funciona")) {
-      respuesta.innerHTML = "Esta aplicación usa web scraping a través de un proxy para evitar restricciones CORS.";
-    } else {
-      respuesta.innerHTML = "Lo siento, aún estoy aprendiendo. Prueba con otra pregunta relacionada a finanzas.";
-    }
-  }, 800);
-}
+  PREGUNTAS_IA.forEach(pregunta => {
+    const btn = document.createElement("button");
+    btn.textContent = pregunta;
+    btn.style.padding = "10px";
+    btn.style.borderRadius = "6px";
+    btn.style.cursor = "pointer";
+    btn.style.backgroundColor = "#39FF14";
+    btn.style.color = "#000";
+    btn.style.fontWeight = "bold";
+    btn.style.border = "none";
+    btn.onclick = () => ejecutarIA(pregunta);
+    contenedorPreguntas.appendChild(btn);
+  });
+
+  bloqueIA.insertBefore(contenedorPreguntas, cargandoIA);
+
+  function ejecutarIA(pregunta) {
+    respuestaIA.innerHTML = "";
+    cargandoIA.style.display = "block";
+    cargandoIA.innerText = `Buscando: ${pregunta}`;
+
+    fetch(`https://financial-proxy.onrender.com?url=${encodeURIComponent("https://www.google.com/search?q=" + pregunta)}`)
+      .then(res => res.text())
+      .then(html => {
+        const texto = limpiarTexto(html);
+        const fragmento = texto.split('. ').slice(0, 3).join('. ') + '.';
+        respuestaIA.innerText = fragmento || "No se encontró información.";
+      })
+      .catch(() => {
+        respuestaIA.innerText = "Error al conectar con la web. Verifica tu conexión o el proxy.";
+      })
+      .finally(() => {
+        cargandoIA.style.display = "none";
+      });
+  }
+
+  ejecutarIA(PREGUNTAS_IA[0]); // Ejecuta automáticamente la primera pregunta
+});
