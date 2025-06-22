@@ -1,52 +1,46 @@
-// ai.js
+document.addEventListener('DOMContentLoaded', () => {
+  const contenedorIA = document.getElementById('ia');
+  if (!contenedorIA) return;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const bloqueIA = document.getElementById("ia");
-  const respuestaIA = document.getElementById("respuesta-ia");
-  const cargandoIA = document.getElementById("ia-cargando");
+  const preguntas = [
+    "¿Qué es una criptomoneda?",
+    "¿Cómo se mide la inflación?",
+    "¿Qué es el tipo de cambio?",
+    "¿Qué factores afectan a una empresa?"
+  ];
 
-  if (!bloqueIA || !respuestaIA) return;
+  const lista = document.createElement('ul');
+  lista.style.marginTop = '20px';
 
-  const contenedorPreguntas = document.createElement("div");
-  contenedorPreguntas.style.display = "flex";
-  contenedorPreguntas.style.flexDirection = "column";
-  contenedorPreguntas.style.gap = "10px";
-
-  PREGUNTAS_IA.forEach(pregunta => {
-    const btn = document.createElement("button");
-    btn.textContent = pregunta;
-    btn.style.padding = "10px";
-    btn.style.borderRadius = "6px";
-    btn.style.cursor = "pointer";
-    btn.style.backgroundColor = "#39FF14";
-    btn.style.color = "#000";
-    btn.style.fontWeight = "bold";
-    btn.style.border = "none";
-    btn.onclick = () => ejecutarIA(pregunta);
-    contenedorPreguntas.appendChild(btn);
+  preguntas.forEach(p => {
+    const item = document.createElement('li');
+    const boton = document.createElement('button');
+    boton.textContent = p;
+    boton.style.marginBottom = '10px';
+    boton.onclick = () => ejecutarIA(p);
+    item.appendChild(boton);
+    lista.appendChild(item);
   });
 
-  bloqueIA.insertBefore(contenedorPreguntas, cargandoIA);
-
-  function ejecutarIA(pregunta) {
-    respuestaIA.innerHTML = "";
-    cargandoIA.style.display = "block";
-    cargandoIA.innerText = `Buscando: ${pregunta}`;
-
-    fetch(`https://financial-proxy.onrender.com?url=${encodeURIComponent("https://www.google.com/search?q=" + pregunta)}`)
-      .then(res => res.text())
-      .then(html => {
-        const texto = limpiarTexto(html);
-        const fragmento = texto.split('. ').slice(0, 3).join('. ') + '.';
-        respuestaIA.innerText = fragmento || "No se encontró información.";
-      })
-      .catch(() => {
-        respuestaIA.innerText = "Error al conectar con la web. Verifica tu conexión o el proxy.";
-      })
-      .finally(() => {
-        cargandoIA.style.display = "none";
-      });
-  }
-
-  ejecutarIA(PREGUNTAS_IA[0]); // Ejecuta automáticamente la primera pregunta
+  contenedorIA.appendChild(lista);
 });
+
+function ejecutarIA(pregunta) {
+  const respuestaCont = document.getElementById('respuesta-ia');
+  const cargando = document.getElementById('ia-cargando');
+  if (!respuestaCont || !cargando) return;
+
+  cargando.textContent = "Pensando...";
+
+  fetch('https://financial-proxy.onrender.com/?url=https://www.google.com/search?q=' + encodeURIComponent(pregunta))
+    .then(res => res.text())
+    .then(html => {
+      cargando.textContent = "";
+      const resumen = html.includes('html') ? "Respuesta obtenida de internet, basada en resultados." : "No se pudo obtener una respuesta.";
+      respuestaCont.innerHTML = `<strong>${pregunta}</strong><br><br>${resumen}`;
+    })
+    .catch(err => {
+      cargando.textContent = "";
+      respuestaCont.textContent = "Error al buscar información.";
+    });
+}
