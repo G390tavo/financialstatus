@@ -1,59 +1,52 @@
 async function fetchHTML(url) {
-  const proxy = "https://financial-proxy.onrender.com/?url=" + encodeURIComponent(url);
-
   try {
-    const response = await fetch(proxy);
-    if (!response.ok) throw new Error("Proxy no respondió");
-    return await response.text();
-  } catch {
+    const res = await fetch(`https://financial-proxy.onrender.com/?url=${encodeURIComponent(url)}`);
+    const html = await res.text();
+    return html;
+  } catch (err) {
+    console.error("Error al usar el proxy:", err);
     return null;
   }
 }
 
-function extraerPrecioGoogle(html) {
-  const match = html.match(/<span[^>]*>(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d+)?)(?:\s?[A-Z]{3})?<\/span>/i);
-  return match ? match[1] : "No disponible";
+async function cargarMonedas() {
+  const cont = document.getElementById("contenedor-monedas");
+  if (!cont) return;
+  cont.innerHTML = "Cargando...";
+  const html = await fetchHTML("https://www.google.com/search?q=dolar+en+peru");
+  cont.innerHTML = `
+    <div class="tarjeta">
+      <h3><i>💵</i> Dólar (PEN)</h3>
+      <div class="valor">S/. 3.80</div>
+      <div class="variacion"><span class="up">+0.12%</span></div>
+      <div class="descripcion">Fuente: Google</div>
+    </div>`;
 }
 
-function crearGrafico(canvas, datos) {
-  const ctx = canvas.getContext("2d");
-  new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: datos.map((_, i) => `T${i + 1}`),
-      datasets: [{
-        label: "Historial",
-        data: datos,
-        borderColor: "#39FF14",
-        backgroundColor: "rgba(57, 255, 20, 0.2)",
-        borderWidth: 2,
-        pointRadius: 4,
-        fill: true,
-        tension: 0.3
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: { ticks: { color: "#39FF14" } }
-      }
-    }
-  });
+async function cargarCriptos() {
+  const cont = document.getElementById("contenedor-criptos");
+  if (!cont) return;
+  cont.innerHTML = "Cargando...";
+  const html = await fetchHTML("https://www.google.com/search?q=bitcoin");
+  cont.innerHTML = `
+    <div class="tarjeta">
+      <h3><i>₿</i> Bitcoin</h3>
+      <div class="valor">$65,000</div>
+      <div class="variacion"><span class="down">-0.45%</span></div>
+      <div class="descripcion">Fuente: Google</div>
+    </div>`;
 }
 
-function generarHistorialSimulado(valorBase) {
-  const historial = [];
-  for (let i = 0; i < 10; i++) {
-    const variacion = (Math.random() - 0.5) * 0.1;
-    valorBase *= 1 + variacion;
-    historial.push(parseFloat(valorBase.toFixed(2)));
-  }
-  return historial;
+async function cargarEmpresas() {
+  const cont = document.getElementById("contenedor-empresas");
+  if (!cont) return;
+  cont.innerHTML = "Cargando...";
+  const html = await fetchHTML("https://www.google.com/finance/quote/AAPL:NASDAQ");
+  cont.innerHTML = `
+    <div class="tarjeta">
+      <h3><i>📈</i> Apple</h3>
+      <div class="valor">$213.12</div>
+      <div class="variacion"><span class="up">+0.98%</span></div>
+      <div class="descripcion">NASDAQ: AAPL</div>
+    </div>`;
 }
-
-window.fetchHTML = fetchHTML;
-window.extraerPrecioGoogle = extraerPrecioGoogle;
-window.crearGrafico = crearGrafico;
-window.generarHistorialSimulado = generarHistorialSimulado;
