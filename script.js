@@ -1,62 +1,81 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   mostrarSeccion("inicio");
-  cargarMonedas(); // Función que ahora sí existe
+  cargarMonedas();
+  cargarCriptos();
+  cargarEmpresas();
+  ejecutarIA();
 
-  document.getElementById("btn-monedas").addEventListener("click", () => {
-    mostrarSeccion("monedas");
-  });
+  document.getElementById("btn-monedas").onclick = () => mostrarSeccion("monedas");
+  document.getElementById("btn-criptos").onclick = () => mostrarSeccion("criptos");
+  document.getElementById("btn-empresas").onclick = () => mostrarSeccion("empresas");
+  document.getElementById("btn-inicio").onclick = () => mostrarSeccion("inicio");
 
-  document.getElementById("btn-criptos").addEventListener("click", () => {
-    mostrarSeccion("criptos");
-  });
+  document.getElementById("modo-boton").onclick = toggleModo;
+  document.getElementById("abrir-menu").onclick = () => {
+    document.getElementById("menu-lateral").style.display = "flex";
+    document.getElementById("abrir-menu").style.display = "none";
+  };
+  document.getElementById("cerrar-menu").onclick = () => {
+    document.getElementById("menu-lateral").style.display = "none";
+    document.getElementById("abrir-menu").style.display = "block";
+  };
 
-  document.getElementById("btn-empresas").addEventListener("click", () => {
-    mostrarSeccion("empresas");
-  });
-
-  document.getElementById("btn-inicio").addEventListener("click", () => {
-    mostrarSeccion("inicio");
+  document.getElementById("pregunta-ia").addEventListener("keydown", e => {
+    if (e.key === "Enter") responderIA();
   });
 });
 
 function mostrarSeccion(id) {
-  document.querySelectorAll(".seccion").forEach(sec => {
-    sec.classList.remove("activa");
-  });
+  document.querySelectorAll(".seccion").forEach(sec => sec.classList.remove("activa"));
   document.getElementById(id).classList.add("activa");
+}
 
-  document.getElementById("menu-lateral").style.display = "none";
-  document.getElementById("abrir-menu").style.display = "block";
+function toggleModo() {
+  document.body.classList.toggle("light");
 }
 
 async function cargarMonedas() {
   const contenedor = document.getElementById("contenedor-monedas");
   contenedor.innerHTML = "Cargando...";
+  const tarjetas = await generarTarjetas(fuentes.monedas);
+  contenedor.innerHTML = "";
+  tarjetas.forEach(t => contenedor.appendChild(t));
+}
 
-  const tarjetas = await Promise.all(window.fuentes.monedas.map(async (moneda) => {
-    const html = await fetchHTML(moneda.url);
+async function cargarCriptos() {
+  const contenedor = document.getElementById("contenedor-criptos");
+  contenedor.innerHTML = "Cargando...";
+  const tarjetas = await generarTarjetas(fuentes.criptos);
+  contenedor.innerHTML = "";
+  tarjetas.forEach(t => contenedor.appendChild(t));
+}
+
+async function cargarEmpresas() {
+  const contenedor = document.getElementById("contenedor-empresas");
+  contenedor.innerHTML = "Cargando...";
+  const tarjetas = await generarTarjetas(fuentes.empresas);
+  contenedor.innerHTML = "";
+  tarjetas.forEach(t => contenedor.appendChild(t));
+}
+
+async function generarTarjetas(lista) {
+  return await Promise.all(lista.map(async (item) => {
+    const html = await fetchHTML(item.url);
     const valor = html ? extraerPrecioGoogle(html) : "Error";
 
     const tarjeta = document.createElement("div");
     tarjeta.className = "tarjeta";
     tarjeta.innerHTML = `
-      <h3>${moneda.nombre}</h3>
+      <h3>${item.nombre}</h3>
       <div class="valor">${valor}</div>
       <div class="descripcion">Último valor encontrado</div>
     `;
-
-    tarjeta.onclick = () => {
-      mostrarGrafico(tarjeta, valor);
-    };
-
+    tarjeta.onclick = () => mostrarGrafico(tarjeta, valor);
     return tarjeta;
   }));
-
-  contenedor.innerHTML = "";
-  tarjetas.forEach(t => contenedor.appendChild(t));
 }
 
-function mostrarGrafico(tarjeta, valorActual) {
+function mostrarGrafico(tarjeta, valorTexto) {
   const panel = document.createElement("div");
   panel.className = "panel-grafico";
 
@@ -64,23 +83,42 @@ function mostrarGrafico(tarjeta, valorActual) {
   panel.appendChild(canvas);
 
   const cerrar = document.createElement("button");
-  cerrar.textContent = "Cerrar";
   cerrar.className = "cerrar-panel";
+  cerrar.textContent = "Cerrar";
   cerrar.onclick = () => panel.remove();
   panel.appendChild(cerrar);
 
   tarjeta.appendChild(panel);
 
-  const historial = generarHistorialSimulado(Number(valorActual.replace(",", ".")));
-  crearGrafico(canvas, historial);
+  const valorNum = parseFloat(valorTexto.replace(",", "."));
+  const datos = generarHistorialSimulado(valorNum);
+  crearGrafico(canvas, datos);
 }
 
-function generarHistorialSimulado(valorBase) {
-  const historial = [];
-  for (let i = 0; i < 10; i++) {
-    const variacion = (Math.random() - 0.5) * 0.1;
-    valorBase *= 1 + variacion;
-    historial.push(parseFloat(valorBase.toFixed(2)));
-  }
-  return historial;
+function ejecutarIA() {
+  const entrada = document.getElementById("pregunta-ia");
+  entrada.value = "¿Qué hace esta aplicación?";
+  responderIA();
+}
+
+function responderIA() {
+  const pregunta = document.getElementById("pregunta-ia").value.toLowerCase();
+  const respuesta = document.getElementById("respuesta-ia");
+  const cargando = document.getElementById("ia-cargando");
+  cargando.textContent = "Cargando respuesta...";
+
+  setTimeout(() => {
+    let texto = "No entiendo la pregunta.";
+
+    if (pregunta.includes("qué hace")) {
+      texto = "Esta aplicación te muestra precios de monedas, criptomonedas y empresas, obtenidos desde internet en tiempo real, además de gráficos automáticos.";
+    } else if (pregunta.includes("cómo funciona")) {
+      texto = "Usamos un proxy para evitar bloqueos de CORS y extraemos los datos directamente desde Google y otras fuentes.";
+    } else if (pregunta.includes("quién la creó")) {
+      texto = "Fue creada por G390tavo con ayuda de inteligencia artificial.";
+    }
+
+    respuesta.textContent = texto;
+    cargando.textContent = "";
+  }, 1000);
 }
