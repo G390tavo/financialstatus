@@ -1,65 +1,58 @@
-// === UTILS.JS ===
-// Funciones para obtener datos reales y generar historial simulado
-
-// Proxy seguro
-const PROXY = "https://financial-proxy.onrender.com/?url=";
-
-// Obtener HTML real (intenta con proxy, luego directo)
 async function fetchHTML(url) {
+  const proxy = "https://financial-proxy.onrender.com/?url=" + encodeURIComponent(url);
+
   try {
-    const proxyRes = await fetch(PROXY + encodeURIComponent(url));
-    if (!proxyRes.ok) throw new Error("Proxy falló");
-    const text = await proxyRes.text();
-    return text;
-  } catch (err) {
+    const response = await fetch(proxy);
+    if (!response.ok) throw new Error("Respuesta no válida del proxy");
+    return await response.text();
+  } catch (e) {
     console.warn("Proxy falló. Intentando acceso directo...");
     try {
-      const directRes = await fetch(url);
-      if (!directRes.ok) throw new Error("Directo falló");
-      const text = await directRes.text();
-      return text;
-    } catch (e) {
-      console.error("Ambos métodos fallaron:", e);
+      const direct = await fetch(url);
+      if (!direct.ok) throw new Error("Respuesta no válida directa");
+      return await direct.text();
+    } catch (err) {
+      console.error("Error al obtener HTML:", err);
       return null;
     }
   }
 }
 
-// Obtener valor desde Google
-async function obtenerValorDesdeGoogle(query) {
-  const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-  const html = await fetchHTML(url);
-  if (!html) return null;
-
-  const match = html.match(/(?:S\/|\$|€|USD|US\$)?\s?([\d.,]+)(?:\s?soles?|dólares?|euros?)/i);
-  return match ? match[1].replace(",", "") : null;
+function extraerPrecioGoogle(html) {
+  const match = html.match(/<span[^>]*>(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d+)?)(?:\s?[A-Z]{3})?<\/span>/i);
+  return match ? match[1] : "No disponible";
 }
 
-// Obtener valor de empresa desde Google Finance
-async function obtenerValorEmpresa(ticker) {
-  const url = `https://www.google.com/finance/quote/${ticker}`;
-  const html = await fetchHTML(url);
-  if (!html) return null;
-
-  const match = html.match(/>(\$[\d,.]+)</);
-  return match ? match[1].replace("$", "") : null;
+function crearGrafico(canvas, datos) {
+  const ctx = canvas.getContext("2d");
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: datos.map((_, i) => `T${i + 1}`),
+      datasets: [{
+        label: "Historial",
+        data: datos,
+        borderColor: "#39FF14",
+        backgroundColor: "rgba(57, 255, 20, 0.2)",
+        borderWidth: 2,
+        pointRadius: 4,
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { display: false },
+        y: { ticks: { color: "#39FF14" } }
+      }
+    }
+  });
 }
 
-// Simula historial con datos cercanos
-function generarHistorialSimulado(valorActual) {
-  const historial = [];
-  const base = parseFloat(valorActual.replace(",", "."));
-
-  for (let i = 6; i >= 0; i--) {
-    const variacion = (Math.random() - 0.5) * 0.1 * base;
-    const valor = (base + variacion).toFixed(2);
-    const fecha = new Date();
-    fecha.setDate(fecha.getDate() - i);
-    historial.push({
-      fecha: fecha.toISOString().split("T")[0],
-      valor: parseFloat(valor)
-    });
-  }
-
-  return historial;
-}
+window.fetchHTML = fetchHTML;
+window.extraerPrecioGoogle = extraerPrecioGoogle;
+window.crearGrafico = crearGrafico;
