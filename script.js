@@ -1,112 +1,151 @@
-// === FUNCIONES PRINCIPALES ===
-
+// === CAMBIAR ENTRE SECCIONES ===
 function cambiarSeccion(id) {
   const secciones = document.querySelectorAll('.seccion');
-  secciones.forEach(sec => sec.classList.remove('activa'));
-  document.getElementById(id).classList.add('activa');
+  secciones.forEach(seccion => {
+    seccion.classList.remove('activa');
+  });
+  const activa = document.getElementById(id);
+  if (activa) activa.classList.add('activa');
 }
 
-// === CARGA DE MONEDAS ===
-function cargarMonedas() {
-  const contenedor = document.getElementById('monedas');
-  if (!contenedor) return;
-  contenedor.innerHTML = '<p>Cargando monedas...</p>';
+// === FUNCIONES DE CARGA DE DATOS ===
 
-  // Simulado
-  setTimeout(() => {
-    contenedor.innerHTML = `
-      <div class="tarjeta" onclick="mostrarGrafico('USD')">
-        <h3><i>💵</i>Dólar (USD)</h3>
-        <div class="valor">3.78</div>
-        <div class="variacion"><span class="up">+0.03</span></div>
-        <div class="descripcion">Valor actual frente al sol peruano.</div>
-      </div>
-    `;
-  }, 1000);
+function cargarMonedas() {
+  const contenedor = document.getElementById("contenedor-monedas");
+  if (!contenedor) return;
+  contenedor.innerHTML = "Cargando monedas...";
+  fetch("https://financial-proxy.onrender.com/?url=https://www.x-rates.com/table/?from=USD&amount=1")
+    .then(res => res.text())
+    .then(html => {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      const filas = div.querySelectorAll(".ratesTable tbody tr");
+      contenedor.innerHTML = "";
+      filas.forEach(fila => {
+        const cols = fila.querySelectorAll("td");
+        if (cols.length >= 2) {
+          const nombre = fila.querySelector("a")?.textContent.trim();
+          const valor = cols[1].textContent.trim();
+          const tarjeta = crearTarjeta(nombre, valor);
+          contenedor.appendChild(tarjeta);
+        }
+      });
+    })
+    .catch(err => {
+      contenedor.innerHTML = "Error al cargar monedas.";
+      console.error(err);
+    });
 }
 
 function cargarCriptos() {
-  const contenedor = document.getElementById('criptos');
+  const contenedor = document.getElementById("contenedor-criptos");
   if (!contenedor) return;
-  contenedor.innerHTML = '<p>Cargando criptomonedas...</p>';
-
-  setTimeout(() => {
-    contenedor.innerHTML = `
-      <div class="tarjeta" onclick="mostrarGrafico('BTC')">
-        <h3><i>₿</i>Bitcoin (BTC)</h3>
-        <div class="valor">$67,200</div>
-        <div class="variacion"><span class="down">-0.6%</span></div>
-        <div class="descripcion">Valor estimado en USD.</div>
-      </div>
-    `;
-  }, 1000);
+  contenedor.innerHTML = "Cargando criptomonedas...";
+  fetch("https://financial-proxy.onrender.com/?url=https://www.coingecko.com/en")
+    .then(res => res.text())
+    .then(html => {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      const filas = div.querySelectorAll("table tbody tr");
+      contenedor.innerHTML = "";
+      filas.forEach(fila => {
+        const nombre = fila.querySelector(".tw-hidden")?.textContent.trim();
+        const valor = fila.querySelector(".td-price")?.textContent.trim();
+        if (nombre && valor) {
+          const tarjeta = crearTarjeta(nombre, valor);
+          contenedor.appendChild(tarjeta);
+        }
+      });
+    })
+    .catch(err => {
+      contenedor.innerHTML = "Error al cargar criptomonedas.";
+      console.error(err);
+    });
 }
 
 function cargarEmpresas() {
-  const contenedor = document.getElementById('empresas');
+  const contenedor = document.getElementById("contenedor-empresas");
   if (!contenedor) return;
-  contenedor.innerHTML = '<p>Cargando empresas...</p>';
-
-  setTimeout(() => {
-    contenedor.innerHTML = `
-      <div class="tarjeta" onclick="mostrarGrafico('Apple')">
-        <h3><i>🍎</i>Apple Inc.</h3>
-        <div class="valor">$195.35</div>
-        <div class="variacion"><span class="up">+1.2%</span></div>
-        <div class="descripcion">Acciones AAPL en la bolsa de NY.</div>
-      </div>
-    `;
-  }, 1000);
+  contenedor.innerHTML = "Cargando empresas...";
+  fetch("https://financial-proxy.onrender.com/?url=https://www.investing.com/equities/top-stock-gainers")
+    .then(res => res.text())
+    .then(html => {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      const filas = div.querySelectorAll("table tbody tr");
+      contenedor.innerHTML = "";
+      filas.forEach(fila => {
+        const nombre = fila.querySelector("td a")?.textContent.trim();
+        const valor = fila.querySelector("td:nth-child(3)")?.textContent.trim();
+        if (nombre && valor) {
+          const tarjeta = crearTarjeta(nombre, valor);
+          contenedor.appendChild(tarjeta);
+        }
+      });
+    })
+    .catch(err => {
+      contenedor.innerHTML = "Error al cargar empresas.";
+      console.error(err);
+    });
 }
 
-// === MOSTRAR GRÁFICO ===
-function mostrarGrafico(nombre) {
-  const panel = document.createElement('div');
-  panel.className = 'panel-grafico';
-  panel.innerHTML = `
-    <button class="cerrar-panel" onclick="this.parentNode.remove()">Cerrar</button>
-    <h4>Gráfico: ${nombre}</h4>
-    <canvas id="grafico-${nombre}" width="300" height="150" style="margin-top:10px;"></canvas>
+// === CREAR TARJETAS DE INFORMACIÓN ===
+
+function crearTarjeta(nombre, valor) {
+  const div = document.createElement("div");
+  div.className = "tarjeta";
+  div.innerHTML = `
+    <h3><i class="fas fa-chart-line"></i> ${nombre}</h3>
+    <div class="valor">${valor}</div>
+    <div class="descripcion">Haz clic para ver más detalles</div>
   `;
-  const tarjeta = event.currentTarget;
-  tarjeta.appendChild(panel);
-
-  // Simular puntos con canvas
-  const canvas = panel.querySelector('canvas');
-  const ctx = canvas.getContext('2d');
-  ctx.beginPath();
-  ctx.moveTo(0, 120);
-  ctx.lineTo(50, 100);
-  ctx.lineTo(100, 90);
-  ctx.lineTo(150, 70);
-  ctx.lineTo(200, 80);
-  ctx.lineTo(250, 60);
-  ctx.strokeStyle = '#39FF14';
-  ctx.lineWidth = 2;
-  ctx.stroke();
+  div.addEventListener("click", () => {
+    mostrarGrafico(nombre, valor);
+  });
+  return div;
 }
 
-// === MODO OSCURO/CLARO ===
-function toggleModo() {
-  document.body.classList.toggle('light');
-  const boton = document.getElementById('modo-boton');
-  boton.textContent = document.body.classList.contains('light') ? 'Modo Oscuro' : 'Modo Claro';
+// === MOSTRAR PANEL CON GRÁFICO (simulado) ===
+
+function mostrarGrafico(nombre, valor) {
+  const panel = document.createElement("div");
+  panel.className = "panel-grafico";
+  panel.innerHTML = `
+    <button class="cerrar-panel">Cerrar</button>
+    <h3>${nombre}</h3>
+    <canvas width="300" height="120" style="background:#fff;margin-top:10px;"></canvas>
+    <p>Valor actual: ${valor}</p>
+  `;
+  panel.querySelector(".cerrar-panel").addEventListener("click", () => {
+    panel.remove();
+  });
+  document.body.appendChild(panel);
 }
 
-// === MENÚ LATERAL ===
-function cerrarMenu() {
-  document.getElementById('menu-lateral').style.display = 'none';
-  document.getElementById('abrir-menu').style.display = 'block';
-}
-function abrirMenu() {
-  document.getElementById('menu-lateral').style.display = 'flex';
-  document.getElementById('abrir-menu').style.display = 'none';
-}
+// === MENÚ LATERAL ABRIR/CERRAR ===
 
-// === INICIO AUTOMÁTICO ===
-document.addEventListener('DOMContentLoaded', () => {
-  cambiarSeccion('inicio');
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("abrir-menu").addEventListener("click", () => {
+    document.getElementById("menu-lateral").style.display = "flex";
+  });
+
+  document.getElementById("cerrar-menu").addEventListener("click", () => {
+    document.getElementById("menu-lateral").style.display = "none";
+  });
+
+  // Activar sección por defecto
+  cambiarSeccion("inicio");
+
+  // Cargar al inicio
   cargarMonedas();
-  cargarCriptos();
-  cargarEmpresas();
+});
+
+// === MODO OSCURO / CLARO ===
+
+document.addEventListener("DOMContentLoaded", () => {
+  const botonModo = document.querySelector(".modo-boton");
+  if (!botonModo) return;
+  botonModo.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+  });
 });
