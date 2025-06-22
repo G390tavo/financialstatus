@@ -1,4 +1,16 @@
-// config.js
+const fuentes = {
+  monedas: [
+    { nombre: "Dólar (PEN)", url: "https://www.google.com/search?q=precio+del+dólar+en+perú" },
+    { nombre: "Euro (PEN)", url: "https://www.google.com/search?q=precio+del+euro+en+perú" }
+  ],
+  criptos: [
+    { nombre: "Bitcoin", url: "https://www.google.com/search?q=precio+del+bitcoin" },
+    { nombre: "Ethereum", url: "https://www.google.com/search?q=precio+de+ethereum" }
+  ],
+  empresas: [
+    { nombre: "Google", url: "https://www.google.com/finance/quote/GOOGL:NASDAQ" },
+    { nombre: "Apple", url: "https://www.google.com/finance/quote/AAPL:NASDAQ" }
+  ]
+};
 
-export const APP_VERSION = "1.0";
-export const TIEMPO_CACHE_MS = 5 * 60 * 1000; // 5 minutos
+window.fuentes = fuentes;
