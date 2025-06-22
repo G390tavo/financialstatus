@@ -1,65 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-
-  <!-- BOTÓN MODO CLARO/OSCURO -->
-  <button id="modo-boton" class="modo-boton" onclick="toggleModo()">Modo Claro</button>
-
-  <!-- BOTÓN ABRIR MENÚ -->
-  <button id="abrir-menu" onclick="abrirMenu()">☰</button>
-
-  <!-- MENÚ LATERAL -->
-  <aside id="menu-lateral">
-    <button id="cerrar-menu" onclick="cerrarMenu()">X</button>
+<body class="dark">
+  <button id="abrir-menu" aria-label="Abrir menú">☰</button>
+  <aside id="menu-lateral" role="navigation">
+    <button id="cerrar-menu" aria-label="Cerrar menú">✖</button>
     <h2>FinancialStatus</h2>
     <nav>
-      <button onclick="cambiarSeccion('inicio')">🏠 Inicio</button>
-      <button onclick="cambiarSeccion('monedas')">💵 Monedas</button>
-      <button onclick="cambiarSeccion('criptos')">₿ Criptomonedas</button>
-      <button onclick="cambiarSeccion('empresas')">🏢 Empresas</button>
-      <button onclick="cambiarSeccion('ia')">🤖 Pregúntale a la IA</button>
+      <button onclick="cambiarSeccion('inicio')">Inicio</button>
+      <button onclick="cambiarSeccion('monedas')">Monedas</button>
+      <button onclick="cambiarSeccion('criptos')">Criptomonedas</button>
+      <button onclick="cambiarSeccion('empresas')">Empresas</button>
+      <button onclick="cambiarSeccion('ia')">IA</button>
     </nav>
   </aside>
 
-  <!-- SECCIONES -->
+  <button id="modo-toggle" class="modo-boton" aria-label="Cambiar modo">Modo claro</button>
+
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Tu plataforma para monitorear el estado financiero del mundo en tiempo real.</p>
+      <p>En futuras versiones se mostrarán noticias económicas y análisis del mercado.</p>
     </section>
 
     <section id="monedas" class="seccion">
       <h2>Monedas Internacionales</h2>
-      <div class="contenedor-tarjetas" id="monedas"></div>
+      <div id="contenedor-monedas" class="contenedor-tarjetas"></div>
     </section>
 
     <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <div class="contenedor-tarjetas" id="criptos"></div>
+      <div id="contenedor-criptos" class="contenedor-tarjetas"></div>
     </section>
 
     <section id="empresas" class="seccion">
-      <h2>Empresas Globales</h2>
-      <div class="contenedor-tarjetas" id="empresas"></div>
+      <h2>Empresas</h2>
+      <div id="contenedor-empresas" class="contenedor-tarjetas"></div>
     </section>
 
     <section id="ia" class="seccion">
-      <h2>🤖 Pregúntale a la IA</h2>
-      <div id="ia">
-        <div id="ia-cargando"></div>
-        <div id="respuesta-ia"></div>
+      <h2>Inteligencia Artificial</h2>
+      <div id="ia-introduccion">
+        <p>Hola, soy tu asistente financiero. Elige una pregunta:</p>
+        <select id="pregunta-ia" aria-label="Seleccionar pregunta de IA"></select>
       </div>
+      <div id="ia-cargando" style="display:none;">🔄 Cargando datos...</div>
+      <div id="respuesta-ia" role="region" aria-live="polite"></div>
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
   <script src="ai.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
