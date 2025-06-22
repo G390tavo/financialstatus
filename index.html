@@ -1,58 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <button id="modo-boton" class="modo-boton">Modo</button>
-  <button id="abrir-menu">☰ Menú</button>
-
-  <aside id="menu-lateral">
-    <button id="cerrar-menu">X</button>
+  <div id="menu-lateral">
     <h2>FinancialStatus</h2>
+    <button id="cerrar-menu">X</button>
     <nav>
-      <button onclick="mostrarSeccion('inicio')">Inicio</button>
-      <button onclick="mostrarSeccion('monedas')">Monedas</button>
-      <button onclick="mostrarSeccion('criptos')">Criptos</button>
-      <button onclick="mostrarSeccion('empresas')">Empresas</button>
-      <button onclick="mostrarSeccion('ia')">IA</button>
+      <button onclick="cambiarSeccion('inicio')">Inicio</button>
+      <button onclick="cargarMonedas(); cambiarSeccion('monedas')">Monedas</button>
+      <button onclick="cargarCriptos(); cambiarSeccion('criptos')">Criptos</button>
+      <button onclick="cargarEmpresas(); cambiarSeccion('empresas')">Empresas</button>
+      <button onclick="cambiarSeccion('ia')">IA</button>
     </nav>
-  </aside>
+  </div>
+  <button id="abrir-menu">☰</button>
+  <button class="modo-boton" onclick="toggleModo()">🌙</button>
 
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Aquí verás información financiera en tiempo real.</p>
     </section>
-
     <section id="monedas" class="seccion">
-      <h2>Monedas</h2>
+      <h1>Monedas</h1>
       <div id="contenedor-monedas" class="contenedor-tarjetas"></div>
     </section>
-
     <section id="criptos" class="seccion">
-      <h2>Criptomonedas</h2>
+      <h1>Criptomonedas</h1>
       <div id="contenedor-criptos" class="contenedor-tarjetas"></div>
     </section>
-
     <section id="empresas" class="seccion">
-      <h2>Empresas</h2>
+      <h1>Empresas</h1>
       <div id="contenedor-empresas" class="contenedor-tarjetas"></div>
     </section>
-
     <section id="ia" class="seccion">
-      <h2>Asistente IA</h2>
-      <input id="pregunta-ia" placeholder="Haz una pregunta...">
-      <div id="ia-cargando"></div>
+      <h1>Asistente IA</h1>
+      <input type="text" id="pregunta-ia" placeholder="Pregúntame algo...">
       <div id="respuesta-ia"></div>
+      <div id="ia-cargando" style="display: none;">Cargando respuesta...</div>
     </section>
   </main>
 
-  <script src="config.js"></script>
   <script src="utils.js"></script>
+  <script src="ai.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
