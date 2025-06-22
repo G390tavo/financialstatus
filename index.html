@@ -1,68 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- Botón modo oscuro/claro -->
+  <button class="modo-boton" id="modo-toggle">Modo claro</button>
+
+  <!-- Botón abrir menú en móviles -->
   <button id="abrir-menu">☰</button>
 
+  <!-- Menú lateral -->
   <aside id="menu-lateral">
+    <button id="cerrar-menu">X</button>
     <h2>FinancialStatus</h2>
-    <button id="cerrar-menu">✖</button>
     <nav>
       <button onclick="cambiarSeccion('inicio')">Inicio</button>
       <button onclick="cargarMonedas(); cambiarSeccion('monedas')">Monedas</button>
       <button onclick="cargarCriptos(); cambiarSeccion('criptos')">Criptomonedas</button>
       <button onclick="cargarEmpresas(); cambiarSeccion('empresas')">Empresas</button>
-      <button onclick="cambiarSeccion('ia')">Pregúntale a la IA</button>
+      <button onclick="cambiarSeccion('ia')">IA</button>
     </nav>
   </aside>
 
+  <!-- Contenido principal -->
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Explora datos económicos reales, gráficos en vivo y una IA que responde tus dudas.</p>
+      <p>Explora información en tiempo real sobre monedas, criptos, empresas y más.</p>
     </section>
 
     <section id="monedas" class="seccion">
-      <h2>Monedas Internacionales</h2>
-      <div id="contenedor-monedas" class="contenedor-tarjetas"></div>
+      <h1>Monedas</h1>
+      <div class="contenedor-tarjetas" id="contenedor-monedas"></div>
     </section>
 
     <section id="criptos" class="seccion">
-      <h2>Criptomonedas</h2>
-      <div id="contenedor-criptos" class="contenedor-tarjetas"></div>
+      <h1>Criptomonedas</h1>
+      <div class="contenedor-tarjetas" id="contenedor-criptos"></div>
     </section>
 
     <section id="empresas" class="seccion">
-      <h2>Empresas</h2>
-      <div id="contenedor-empresas" class="contenedor-tarjetas"></div>
+      <h1>Empresas</h1>
+      <div class="contenedor-tarjetas" id="contenedor-empresas"></div>
     </section>
 
     <section id="ia" class="seccion">
-      <h2>Pregúntale a la IA</h2>
-      <div id="preguntas-rapidas">
-        <button onclick="ejecutarIA('¿Qué es la inflación?')">¿Qué es la inflación?</button>
-        <button onclick="ejecutarIA('¿Qué factores afectan el precio del dólar?')">Factores del dólar</button>
-        <button onclick="ejecutarIA('¿Qué significa una recesión económica?')">Recesión económica</button>
-        <button onclick="ejecutarIA('¿Qué es el bitcoin?')">¿Qué es el Bitcoin?</button>
+      <h1>IA Financiera</h1>
+      <div id="bloque-ia">
+        <div id="preguntas-predefinidas">
+          <button onclick="ejecutarIA('¿Qué es una criptomoneda?')">¿Qué es una criptomoneda?</button>
+          <button onclick="ejecutarIA('¿Cómo funciona el mercado de divisas?')">¿Cómo funciona el mercado de divisas?</button>
+          <button onclick="ejecutarIA('Explica qué es una acción de empresa.')">¿Qué es una acción?</button>
+        </div>
+        <div id="ia-cargando" style="display:none;">Cargando respuesta...</div>
+        <div id="respuesta-ia"></div>
       </div>
-
-      <input type="text" id="pregunta-ia" placeholder="O escribe tu pregunta...">
-      <button onclick="ejecutarIADesdeInput()">Preguntar</button>
-
-      <div id="ia-cargando" style="display:none">Buscando respuesta...</div>
-      <div id="respuesta-ia"></div>
     </section>
   </main>
 
+  <!-- Scripts -->
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
   <script src="script.js"></script>
+
+  <!-- Script para botón modo claro/oscuro -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btnModo = document.getElementById("modo-toggle");
+
+      // Cargar modo desde localStorage
+      if (localStorage.getItem("modo") === "claro") {
+        document.body.classList.add("light");
+        btnModo.textContent = "Modo oscuro";
+      } else {
+        btnModo.textContent = "Modo claro";
+      }
+
+      btnModo.addEventListener("click", () => {
+        document.body.classList.toggle("light");
+        const esClaro = document.body.classList.contains("light");
+        btnModo.textContent = esClaro ? "Modo oscuro" : "Modo claro";
+        localStorage.setItem("modo", esClaro ? "claro" : "oscuro");
+      });
+    });
+  </script>
+
 </body>
 </html>
