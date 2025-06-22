@@ -1,16 +1,27 @@
-const fuentes = {
+// config.js
+
+const API_PROXY = "https://financial-proxy.onrender.com?url=";
+
+// URLs reales (puedes agregar más fuentes si deseas)
+const FUENTES = {
   monedas: [
-    { nombre: "Dólar (PEN)", url: "https://www.google.com/search?q=precio+del+dólar+en+perú" },
-    { nombre: "Euro (PEN)", url: "https://www.google.com/search?q=precio+del+euro+en+perú" }
+    "https://www.x-rates.com/table/?from=USD&amount=1",
+    "https://www.iban.com/exchange-rates"
   ],
   criptos: [
-    { nombre: "Bitcoin", url: "https://www.google.com/search?q=precio+del+bitcoin" },
-    { nombre: "Ethereum", url: "https://www.google.com/search?q=precio+de+ethereum" }
+    "https://www.coindesk.com/",
+    "https://coinmarketcap.com/"
   ],
   empresas: [
-    { nombre: "Google", url: "https://www.google.com/finance/quote/GOOGL:NASDAQ" },
-    { nombre: "Apple", url: "https://www.google.com/finance/quote/AAPL:NASDAQ" }
+    "https://www.investing.com/equities/",
+    "https://www.bloomberg.com/markets/stocks"
   ]
 };
 
-window.fuentes = fuentes;
+const PREGUNTAS_IA = [
+  "¿Qué es el tipo de cambio?",
+  "¿Cómo funciona el mercado de criptomonedas?",
+  "¿Qué empresa tiene mayor crecimiento hoy?",
+  "Explica la inflación en palabras simples.",
+  "¿Cómo leer una gráfica financiera?"
+];
