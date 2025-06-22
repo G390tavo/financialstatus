@@ -1,34 +1,38 @@
+// script.js
+
 document.addEventListener("DOMContentLoaded", () => {
-  cambiarSeccion("inicio");
+  const botones = document.querySelectorAll("#menu-lateral nav button");
+  const secciones = document.querySelectorAll(".seccion");
+  const abrirMenu = document.getElementById("abrir-menu");
+  const cerrarMenu = document.getElementById("cerrar-menu");
+  const menuLateral = document.getElementById("menu-lateral");
 
-  document.getElementById("pregunta-ia").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") ejecutarIA();
-  });
-
-  document.getElementById("cerrar-menu").addEventListener("click", () => {
-    document.getElementById("menu-lateral").style.display = "none";
-    document.getElementById("abrir-menu").style.display = "block";
-    document.body.style.paddingLeft = "0";
-  });
-
-  document.getElementById("abrir-menu").addEventListener("click", () => {
-    document.getElementById("menu-lateral").style.display = "flex";
-    document.getElementById("abrir-menu").style.display = "none";
-    document.body.style.paddingLeft = "220px";
-  });
-});
-
-function cambiarSeccion(id) {
-  document.querySelectorAll(".seccion").forEach(sec => sec.classList.remove("activa"));
-  document.getElementById(id).classList.add("activa");
-
-  if (window.innerWidth < 768) {
-    document.getElementById("menu-lateral").style.display = "none";
-    document.getElementById("abrir-menu").style.display = "block";
-    document.body.style.paddingLeft = "0";
+  function cambiarSeccion(id) {
+    secciones.forEach(s => s.classList.remove("activa"));
+    const activa = document.getElementById(id);
+    if (activa) activa.classList.add("activa");
   }
-}
 
-function toggleModo() {
-  document.body.classList.toggle("light");
-}
+  botones.forEach(b => {
+    b.addEventListener("click", () => {
+      const id = b.dataset.seccion;
+      cambiarSeccion(id);
+    });
+  });
+
+  abrirMenu.addEventListener("click", () => {
+    menuLateral.style.display = "flex";
+  });
+
+  cerrarMenu.addEventListener("click", () => {
+    menuLateral.style.display = "none";
+  });
+
+  document.querySelector(".modo-boton")?.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+  });
+
+  cargarMonedas();
+  cargarCriptos();
+  cargarEmpresas();
+});
