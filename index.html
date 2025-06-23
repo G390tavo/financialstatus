@@ -5,47 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <button class="modo-boton" onclick="toggleModo()">Modo Claro</button>
-  <button id="abrir-menu" onclick="document.getElementById('menu-lateral').style.display='flex'">☰</button>
+  <button class="modo-boton" onclick="alternarModo()">🌙</button>
+  <button id="abrir-menu" onclick="abrirMenu()">☰</button>
 
   <aside id="menu-lateral">
+    <button id="cerrar-menu" onclick="cerrarMenu()">✖</button>
     <h2>FinancialStatus</h2>
-    <button id="cerrar-menu" onclick="document.getElementById('menu-lateral').style.display='none'">X</button>
     <nav>
       <button onclick="cambiarSeccion('inicio')">Inicio</button>
-      <button onclick="cambiarSeccion('monedas'); cargarMonedas();">Monedas</button>
-      <button onclick="cambiarSeccion('criptos'); cargarCriptos();">Criptomonedas</button>
-      <button onclick="cambiarSeccion('empresas'); cargarEmpresas();">Empresas</button>
-      <button onclick="cambiarSeccion('ia'); iniciarIA();">IA</button>
+      <button onclick="cambiarSeccion('monedas')">Monedas</button>
+      <button onclick="cambiarSeccion('criptos')">Criptomonedas</button>
+      <button onclick="cambiarSeccion('empresas')">Empresas</button>
+      <button onclick="cambiarSeccion('ia')">IA</button>
     </nav>
   </aside>
 
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Selecciona una sección desde el menú lateral.</p>
+      <p>Consulta en tiempo real valores del mercado global y preguntas económicas frecuentes.</p>
     </section>
 
     <section id="monedas" class="seccion">
       <h1>Monedas Internacionales</h1>
-      <div id="contenedor-monedas" class="contenedor-tarjetas"></div>
+      <div class="contenedor-tarjetas" id="lista-monedas"></div>
     </section>
 
     <section id="criptos" class="seccion">
       <h1>Criptomonedas</h1>
-      <div id="contenedor-criptos" class="contenedor-tarjetas"></div>
+      <div class="contenedor-tarjetas" id="lista-criptos"></div>
     </section>
 
     <section id="empresas" class="seccion">
       <h1>Empresas</h1>
-      <div id="contenedor-empresas" class="contenedor-tarjetas"></div>
+      <div class="contenedor-tarjetas" id="lista-empresas"></div>
     </section>
 
     <section id="ia" class="seccion">
-      <h1>Pregúntale a la IA</h1>
-      <div id="ia-cargando">Cargando IA...</div>
+      <h1>Asistente Económico</h1>
+      <div id="ia-cargando">Iniciando IA...</div>
+      <div id="ia"></div>
       <div id="respuesta-ia"></div>
     </section>
   </main>
