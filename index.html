@@ -7,30 +7,25 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Botón para abrir menú en móviles -->
+  <button id="modo-claro-oscuro" class="modo-boton">Modo Claro</button>
   <button id="abrir-menu">☰</button>
 
-  <!-- Menú lateral -->
   <aside id="menu-lateral">
-    <button id="cerrar-menu">X</button>
     <h2>FinancialStatus</h2>
+    <button id="cerrar-menu">X</button>
     <nav>
       <button onclick="cambiarSeccion('inicio')">Inicio</button>
       <button onclick="cambiarSeccion('monedas')">Monedas</button>
-      <button onclick="cambiarSeccion('criptos')">Criptos</button>
-      <button onclick="cambiarSeccion('empresas')">Empresas</button>
-      <button onclick="cambiarSeccion('ia')">Pregúntale a la IA</button>
+      <button onclick="cargarCriptos(); cambiarSeccion('criptos')">Criptomonedas</button>
+      <button onclick="cargarEmpresas(); cambiarSeccion('empresas')">Empresas</button>
+      <button onclick="cambiarSeccion('ia')">IA</button>
     </nav>
   </aside>
 
-  <!-- Botón modo claro/oscuro -->
-  <button class="modo-boton" id="modo-toggle">Modo Claro</button>
-
-  <!-- Contenido principal -->
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Selecciona una sección del menú para comenzar.</p>
+      <p>Explora la información económica real en tiempo real con ayuda de IA y gráficos interactivos.</p>
     </section>
 
     <section id="monedas" class="seccion">
@@ -49,21 +44,20 @@
     </section>
 
     <section id="ia" class="seccion">
-      <h2>Pregúntale a la IA</h2>
-      <p>Selecciona una pregunta para aprender sobre Economía:</p>
-      <select id="pregunta-ia">
-        <option value="">Selecciona una pregunta</option>
-        <option value="¿Qué es la inflación?">¿Qué es la inflación?</option>
-        <option value="¿Qué es el PBI?">¿Qué es el PBI?</option>
-        <option value="¿Por qué sube el dólar?">¿Por qué sube el dólar?</option>
-        <option value="¿Qué es una criptomoneda?">¿Qué es una criptomoneda?</option>
-      </select>
-      <div id="ia-cargando" style="display: none;">Cargando respuesta...</div>
+      <h2>Asistente IA Financiero</h2>
+      <p>Haz clic en una de las preguntas o formula una tú mismo:</p>
+      <div id="preguntas-sugeridas">
+        <button class="pregunta">¿Qué es la inflación?</button>
+        <button class="pregunta">¿Cómo funciona el mercado de valores?</button>
+        <button class="pregunta">¿Qué es una criptomoneda?</button>
+      </div>
+      <input type="text" id="pregunta-ia" placeholder="Escribe tu pregunta aquí..." />
+      <button onclick="ejecutarIA()">Preguntar</button>
+      <div id="ia-cargando" style="display:none;">Cargando respuesta...</div>
       <div id="respuesta-ia"></div>
     </section>
   </main>
 
-  <!-- Scripts -->
   <script src="utils.js"></script>
   <script src="script.js"></script>
   <script src="ai.js"></script>
