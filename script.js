@@ -1,113 +1,111 @@
 document.addEventListener("DOMContentLoaded", () => {
-  cambiarSeccion("inicio");
+  // Activar sección de inicio por defecto
+  cambiarSeccion('inicio');
   cargarMonedas();
-  cargarCriptos();
-  cargarEmpresas();
   initIA();
+
+  // Activar modo claro/oscuro
+  const btnModo = document.getElementById("modo-claro-oscuro");
+  btnModo.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+    btnModo.textContent = document.body.classList.contains("light") ? "Modo Oscuro" : "Modo Claro";
+  });
+
+  // Menú lateral
+  document.getElementById("cerrar-menu").addEventListener("click", () => {
+    document.getElementById("menu-lateral").style.display = "none";
+    document.getElementById("abrir-menu").style.display = "block";
+  });
+
+  document.getElementById("abrir-menu").addEventListener("click", () => {
+    document.getElementById("menu-lateral").style.display = "flex";
+    document.getElementById("abrir-menu").style.display = "none";
+  });
 });
 
 function cambiarSeccion(id) {
-  document.querySelectorAll(".seccion").forEach(seccion =>
-    seccion.classList.remove("activa")
-  );
-  document.getElementById(id).classList.add("activa");
+  document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activa"));
+  const target = document.getElementById(id);
+  if (target) target.classList.add("activa");
 }
 
-function alternarModo() {
-  document.body.classList.toggle("light");
-}
-
-function abrirMenu() {
-  document.getElementById("menu-lateral").style.display = "flex";
-  document.getElementById("abrir-menu").style.display = "none";
-}
-
-function cerrarMenu() {
-  document.getElementById("menu-lateral").style.display = "none";
-  document.getElementById("abrir-menu").style.display = "block";
-}
-
-// MONEDAS
+// ======================== MONEDAS ========================
 async function cargarMonedas() {
-  const contenedor = document.getElementById("lista-monedas");
+  const contenedor = document.getElementById("contenedor-monedas");
+  if (!contenedor) return;
   contenedor.innerHTML = "Cargando monedas...";
-  const doc = await obtenerHTML("https://www.x-rates.com/table/?from=USD&amount=1");
-  if (!doc) return contenedor.innerHTML = "Error al obtener datos.";
 
-  const filas = doc.querySelectorAll("table.tablesorter.ratesTable tbody tr");
-  contenedor.innerHTML = "";
-  filas.forEach(fila => {
-    const tds = fila.querySelectorAll("td");
-    const nombre = fila.querySelector("a")?.textContent.trim();
-    const valor = tds[0]?.textContent.trim();
-    if (nombre && valor) {
-      const div = document.createElement("div");
-      div.className = "tarjeta";
-      div.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
-      contenedor.appendChild(div);
-    }
-  });
+  try {
+    const res = await fetch("/proxy?url=https://www.x-rates.com/table/?from=USD&amount=1");
+    const html = await res.text();
+    const datos = extraerTextoDesdeHTML(html, 'table.ratesTable tbody tr');
+
+    contenedor.innerHTML = "";
+    datos.slice(0, 5).forEach(dato => {
+      const nombre = dato.querySelector("td:nth-child(1)").innerText.trim();
+      const valor = dato.querySelector("td:nth-child(2)").innerText.trim();
+
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "tarjeta";
+      tarjeta.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+      contenedor.appendChild(tarjeta);
+    });
+  } catch (e) {
+    contenedor.innerHTML = "Error al cargar monedas.";
+    console.error(e);
+  }
 }
 
-// CRIPTOS
+// ======================== CRIPTOMONEDAS ========================
 async function cargarCriptos() {
-  const contenedor = document.getElementById("lista-criptos");
+  const contenedor = document.getElementById("contenedor-criptos");
+  if (!contenedor) return;
   contenedor.innerHTML = "Cargando criptomonedas...";
-  const doc = await obtenerHTML("https://www.google.com/finance/markets/cryptocurrencies");
-  if (!doc) return contenedor.innerHTML = "Error al obtener criptos.";
 
-  const tarjetas = doc.querySelectorAll('div[jscontroller] [data-symbol]');
-  contenedor.innerHTML = "";
+  try {
+    const res = await fetch("/proxy?url=https://www.coingecko.com/es");
+    const html = await res.text();
+    const datos = extraerTextoDesdeHTML(html, 'table.table tbody tr');
 
-  tarjetas.forEach(tarjeta => {
-    const nombre = tarjeta.querySelector("div span")?.textContent;
-    const valor = tarjeta.querySelector("[data-last-price]")?.textContent;
-    if (nombre && valor) {
-      const div = document.createElement("div");
-      div.className = "tarjeta";
-      div.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
-      contenedor.appendChild(div);
-    }
-  });
+    contenedor.innerHTML = "";
+    datos.slice(0, 5).forEach(dato => {
+      const nombre = dato.querySelector(".tw-hidden").innerText.trim();
+      const valor = dato.querySelector(".td-price").innerText.trim();
+
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "tarjeta";
+      tarjeta.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+      contenedor.appendChild(tarjeta);
+    });
+  } catch (e) {
+    contenedor.innerHTML = "Error al cargar criptomonedas.";
+    console.error(e);
+  }
 }
 
-// EMPRESAS
+// ======================== EMPRESAS ========================
 async function cargarEmpresas() {
-  const contenedor = document.getElementById("lista-empresas");
+  const contenedor = document.getElementById("contenedor-empresas");
+  if (!contenedor) return;
   contenedor.innerHTML = "Cargando empresas...";
-  const doc = await obtenerHTML("https://www.google.com/finance/markets/most-active");
-  if (!doc) return contenedor.innerHTML = "Error al obtener empresas.";
 
-  const tarjetas = doc.querySelectorAll('div[jscontroller] [data-symbol]');
-  contenedor.innerHTML = "";
+  try {
+    const res = await fetch("/proxy?url=https://www.investing.com/equities/");
+    const html = await res.text();
+    const datos = extraerTextoDesdeHTML(html, 'table tbody tr');
 
-  tarjetas.forEach(tarjeta => {
-    const nombre = tarjeta.querySelector("div span")?.textContent;
-    const valor = tarjeta.querySelector("[data-last-price]")?.textContent;
-    if (nombre && valor) {
-      const div = document.createElement("div");
-      div.className = "tarjeta";
-      div.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
-      div.addEventListener("click", () => mostrarPanelGrafico(nombre));
-      contenedor.appendChild(div);
-    }
-  });
-}
+    contenedor.innerHTML = "";
+    datos.slice(0, 5).forEach(dato => {
+      const nombre = dato.querySelector("td:nth-child(2)").innerText.trim();
+      const valor = dato.querySelector("td:nth-child(3)").innerText.trim();
 
-function mostrarPanelGrafico(nombre) {
-  const panel = document.createElement("div");
-  panel.className = "panel-grafico";
-  panel.innerHTML = `
-    <button class="cerrar-panel" onclick="this.parentElement.remove()">Cerrar</button>
-    <canvas></canvas>
-  `;
-  const canvas = panel.querySelector("canvas");
-  document.querySelector("main").appendChild(panel);
-
-  // Genera valores simulados temporalmente
-  const datos = Array.from({ length: 20 }, () =>
-    Math.floor(100 + Math.random() * 100)
-  );
-  const etiquetas = datos.map((_, i) => `P${i + 1}`);
-  mostrarGrafico(canvas, datos, etiquetas);
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "tarjeta";
+      tarjeta.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+      contenedor.appendChild(tarjeta);
+    });
+  } catch (e) {
+    contenedor.innerHTML = "Error al cargar empresas.";
+    console.error(e);
+  }
 }
