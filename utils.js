@@ -1,17 +1,18 @@
-// utils.js - Funciones para obtener y limpiar datos con fetch vía proxy
+const PROXY_URL = 'https://financial-proxy.onrender.com/?url=';
 
-// Función genérica para hacer fetch a través del proxy
-function obtenerHTML(url, callback) {
-  fetch('https://financial-proxy.onrender.com?url=' + encodeURIComponent(url))
-    .then(res => res.text())
-    .then(html => callback(html))
-    .catch(err => console.error('Error al obtener HTML:', err));
+async function obtenerHTML(url) {
+  try {
+    const res = await fetch(PROXY_URL + encodeURIComponent(url));
+    return await res.text();
+  } catch (err) {
+    console.error("Error al obtener HTML:", err);
+    return '';
+  }
 }
 
-// Función para limpiar texto HTML
 function extraerTextoDesdeHTML(html, selector) {
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = html;
-  const elemento = tempDiv.querySelector(selector);
-  return elemento ? elemento.innerText.trim() : 'Dato no disponible';
+  const dom = document.createElement('div');
+  dom.innerHTML = html;
+  const el = dom.querySelector(selector);
+  return el ? el.textContent.trim() : null;
 }
