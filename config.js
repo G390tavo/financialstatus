@@ -1,2 +1,2 @@
-// config.js - Configuraciones generales del proxy
-const URL_PROXY = 'https://financial-proxy.onrender.com/?url=';
+// Configuración global
+const PROXY_URL = "https://financial-proxy.onrender.com/?url=";
