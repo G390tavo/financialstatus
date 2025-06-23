@@ -1,121 +1,67 @@
-// script.js - Lógica de navegación, carga, gráficos y modo
-
-document.addEventListener('DOMContentLoaded', () => {
-  cambiarSeccion('inicio');
-  habilitarMenuMovil();
-  document.getElementById('modo-toggle').addEventListener('click', alternarModo);
+document.addEventListener("DOMContentLoaded", () => {
   cargarMonedas();
-  cargarCriptos();
-  cargarEmpresas();
-  initIA();
+  cambiarSeccion('inicio');
 });
 
-function cambiarSeccion(seccion) {
-  document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
-  document.getElementById(seccion).classList.add('activa');
-  cerrarPanelesActivos();
-  if (window.innerWidth <= 768) toggleMenu(false);
+function cambiarSeccion(id) {
+  document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
+  document.getElementById(id).classList.add('activa');
 }
 
-function habilitarMenuMovil() {
-  document.getElementById('abrir-menu').addEventListener('click', () => toggleMenu(true));
-  document.getElementById('cerrar-menu').addEventListener('click', () => toggleMenu(false));
-}
-function toggleMenu(abierto) {
-  document.getElementById('menu-lateral').style.display = abierto ? 'flex' : 'none';
-  document.getElementById('abrir-menu').style.display = abierto ? 'none' : 'block';
-}
-
-function alternarModo() {
+function toggleModo() {
   document.body.classList.toggle('light');
-  this.innerText = document.body.classList.contains('light') ? 'Modo oscuro' : 'Modo claro';
 }
 
-// Cerrar paneles gráficos abiertos
-function cerrarPanelesActivos() {
-  document.querySelectorAll('.panel-grafico').forEach(p => p.remove());
+// Cargar monedas (ej. USD, PEN, EUR)
+async function cargarMonedas() {
+  const contenedor = document.getElementById('contenedor-monedas');
+  contenedor.innerHTML = 'Cargando...';
+  const urls = [
+    { nombre: 'Dólar Americano', url: 'https://www.x-rates.com/calculator/?from=USD&to=PEN&amount=1' },
+    { nombre: 'Euro', url: 'https://www.x-rates.com/calculator/?from=EUR&to=PEN&amount=1' }
+  ];
+
+  const tarjetas = await Promise.all(urls.map(async ({ nombre, url }) => {
+    const html = await obtenerHTML(url);
+    const tasa = extraerTextoDesdeHTML(html, 'span.ccOutputTrail');
+    return `<div class="tarjeta"><h3>${nombre}</h3><div class="valor">${tasa || 'No disponible'}</div></div>`;
+  }));
+
+  contenedor.innerHTML = tarjetas.join('');
 }
 
-// Crear tarjeta base con panel al clic
-function crearTarjeta(tipo, label, valor, descripcion, fetchURL) {
-  const t = document.createElement('div');
-  t.className = 'tarjeta';
-  t.innerHTML = `<h3><i class="fas fa-chart-line"></i>${label}</h3><div class="valor">${valor}</div><div class="descripcion">${descripcion}</div>`;
-  t.onclick = () => {
-    cerrarPanelesActivos();
-    mostrarGrafico(t, fetchURL);
-  };
-  return t;
+// Cargar criptos
+async function cargarCriptos() {
+  const contenedor = document.getElementById('contenedor-criptos');
+  contenedor.innerHTML = 'Cargando...';
+  const urls = [
+    { nombre: 'Bitcoin', url: 'https://www.google.com/search?q=bitcoin+price' },
+    { nombre: 'Ethereum', url: 'https://www.google.com/search?q=ethereum+price' }
+  ];
+
+  const tarjetas = await Promise.all(urls.map(async ({ nombre, url }) => {
+    const html = await obtenerHTML(url);
+    const precio = extraerTextoDesdeHTML(html, 'span.DFlfde');
+    return `<div class="tarjeta"><h3>${nombre}</h3><div class="valor">${precio || 'No disponible'}</div></div>`;
+  }));
+
+  contenedor.innerHTML = tarjetas.join('');
 }
 
-function mostrarGrafico(tarjeta, fetchURL) {
-  const panel = document.createElement('div');
-  panel.className = 'panel-grafico';
-  panel.innerHTML = `<button class="cerrar-panel">✖</button><div class="canvas-contenedor"><canvas></canvas></div><div class="tooltip" style="display:none;"></div>`;
-  tarjeta.appendChild(panel);
-  
-  panel.querySelector('.cerrar-panel').onclick = () => panel.remove();
-  generarGrafico(panel.querySelector('canvas'), fetchURL, panel.querySelector('.tooltip'));
-}
+// Cargar empresas
+async function cargarEmpresas() {
+  const contenedor = document.getElementById('contenedor-empresas');
+  contenedor.innerHTML = 'Cargando...';
+  const urls = [
+    { nombre: 'Apple', url: 'https://www.google.com/finance/quote/AAPL:NASDAQ' },
+    { nombre: 'Microsoft', url: 'https://www.google.com/finance/quote/MSFT:NASDAQ' }
+  ];
 
-// Simular gráfico con datos reales actuales + historial ficticio
-function generarGrafico(canvas, fetchURL, tooltipEl) {
-  obtenerHTML(fetchURL, html => {
-    const valorActual = extraerTextoDesdeHTML(html, /[\\d,\\.]+/);
-    const datos = Array.from({length: 7}, (_,i) => ({x: i+1, y: parseFloat(valorActual.replace(/,/g,'')) * (1 + (Math.random()-0.5)/10)}));
-    new Chart(canvas, {
-      type: 'line',
-      data: {labels: datos.map(d=>`Día ${d.x}`), datasets:[{data: datos.map(d=>d.y), borderColor:'#39FF14', pointBackgroundColor:'#fff', fill:false}]},
-      options: {
-        responsive:true,
-        plugins:{tooltip:{enabled:false}, legend:{display:false}},
-        scales:{x:{display:true}, y:{display:true}}
-      }
-    });
-    // tooltip máximo
-    const max = datos.reduce((a,b)=>a.y>b.y?a:b);
-    setTimeout(()=> {
-      const coords = canvas.getBoundingClientRect();
-      tooltipEl.style.top = `${max.x/7*coords.height}px`;
-      tooltipEl.style.left = `${coords.width*0.9}px`;
-      tooltipEl.innerText = `Máx: ${max.y.toFixed(2)}`;
-      tooltipEl.style.display = 'block';
-    },500);
-  }, () => {
-    const area = document.createElement('p');
-    area.innerText = 'NO SE ENCONTRARON RESULTADOS';
-    area.style.color = '#f00';
-    canvas.parentElement.parentElement.appendChild(area);
-  });
-}
+  const tarjetas = await Promise.all(urls.map(async ({ nombre, url }) => {
+    const html = await obtenerHTML(url);
+    const precio = extraerTextoDesdeHTML(html, '.YMlKec.fxKbKc');
+    return `<div class="tarjeta"><h3>${nombre}</h3><div class="valor">${precio || 'No disponible'}</div></div>`;
+  }));
 
-// Cargas de tarjetas
-function cargarMonedas() {
-  const c = document.getElementById('contenedor-monedas'); c.innerHTML = '';
-  obtenerHTML('https://www.x-rates.com/table/?from=PEN&amount=1', html => {
-    const filas = document.createElement('div'); filas.innerHTML = html;
-    filas.querySelectorAll('table.tablesorter.ratesTable tbody tr').forEach(f => {
-      c.appendChild(crearTarjeta('mon',f.children[0].innerText, f.children[1].innerText,'Valor vs Sol','https://www.x-rates.com/table/?from=' + f.children[0].innerText));
-    });
-  });
-}
-
-function cargarCriptos() {
-  const c = document.getElementById('contenedor-criptos'); c.innerHTML = '';
-  obtenerHTML('https://coinmarketcap.com/', html => {
-    const doc = document.createElement('div'); doc.innerHTML = html;
-    doc.querySelectorAll('table tbody tr').forEach((r,i)=>{
-      if (i>=5) return;
-      const sym = r.querySelector('.coin-item-symbol')?.innerText;
-      const val = r.querySelector('td:nth-child(4)')?.innerText;
-      if (sym && val) c.appendChild(crearTarjeta('crypto',sym,val,'USD','https://coinmarketcap.com/currencies/' + sym.toLowerCase() + '/'));
-    });
-  });
-}
-
-function cargarEmpresas() {
-  const c = document.getElementById('contenedor-empresas'); c.innerHTML = '';
-  ['AAPL','GOOG','AMZN','MSFT','TSLA'].forEach(sym => {
-    c.appendChild(crearTarjeta('empresa', sym, '...', 'Precio actual','https://finance.yahoo.com/quote/' + sym));
-  });
+  contenedor.innerHTML = tarjetas.join('');
 }
