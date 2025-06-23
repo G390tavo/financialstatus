@@ -1,50 +1,30 @@
-const proxy = "https://financial-proxy.onrender.com/?url=";
-
-async function obtenerHTML(url) {
+// Función para extraer elementos desde un HTML con un selector válido
+function extraerTextoDesdeHTML(html, selector) {
   try {
-    const res = await fetch(proxy + encodeURIComponent(url));
-    const texto = await res.text();
     const parser = new DOMParser();
-    return parser.parseFromString(texto, "text/html");
-  } catch (e) {
-    console.error("Error al obtener HTML:", e);
-    return null;
+    const doc = parser.parseFromString(html, "text/html");
+    const elementos = Array.from(doc.querySelectorAll(selector));
+    return elementos;
+  } catch (error) {
+    console.error("Error al parsear HTML:", error);
+    return [];
   }
 }
 
-function limpiarTexto(texto) {
-  return texto?.replace(/\s+/g, " ").trim();
+// Función para hacer una petición con proxy a una URL y obtener texto HTML
+async function obtenerHTML(url) {
+  try {
+    const proxy = "https://financial-proxy.onrender.com/?url=";
+    const respuesta = await fetch(proxy + encodeURIComponent(url));
+    const html = await respuesta.text();
+    return html;
+  } catch (error) {
+    console.error("Error al obtener HTML:", error);
+    return "";
+  }
 }
 
-function mostrarGrafico(canvas, datos, etiquetas) {
-  new Chart(canvas, {
-    type: "line",
-    data: {
-      labels: etiquetas,
-      datasets: [{
-        label: "Valor",
-        data: datos,
-        borderColor: "#39FF14",
-        backgroundColor: "rgba(57,255,20,0.2)",
-        tension: 0.3,
-        pointRadius: 3,
-        pointHoverRadius: 6,
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: ctx => `Valor: ${ctx.formattedValue}`
-          }
-        },
-        legend: { display: false }
-      },
-      scales: {
-        x: { display: false },
-        y: { ticks: { color: "#39FF14" } }
-      }
-    }
-  });
+// Función para limpiar texto y obtener solo el número (si es necesario)
+function limpiarTexto(texto) {
+  return texto.replace(/[^0-9.,\-]/g, "").trim();
 }
