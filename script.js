@@ -1,111 +1,147 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Activar sección de inicio por defecto
-  cambiarSeccion('inicio');
   cargarMonedas();
+  cargarCriptos();
+  cargarEmpresas();
   initIA();
-
-  // Activar modo claro/oscuro
-  const btnModo = document.getElementById("modo-claro-oscuro");
-  btnModo.addEventListener("click", () => {
-    document.body.classList.toggle("light");
-    btnModo.textContent = document.body.classList.contains("light") ? "Modo Oscuro" : "Modo Claro";
-  });
-
-  // Menú lateral
-  document.getElementById("cerrar-menu").addEventListener("click", () => {
-    document.getElementById("menu-lateral").style.display = "none";
-    document.getElementById("abrir-menu").style.display = "block";
-  });
-
-  document.getElementById("abrir-menu").addEventListener("click", () => {
-    document.getElementById("menu-lateral").style.display = "flex";
-    document.getElementById("abrir-menu").style.display = "none";
-  });
 });
 
-function cambiarSeccion(id) {
-  document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activa"));
-  const target = document.getElementById(id);
-  if (target) target.classList.add("activa");
-}
-
-// ======================== MONEDAS ========================
 async function cargarMonedas() {
-  const contenedor = document.getElementById("contenedor-monedas");
+  const contenedor = document.getElementById("monedas-lista");
   if (!contenedor) return;
-  contenedor.innerHTML = "Cargando monedas...";
 
-  try {
-    const res = await fetch("/proxy?url=https://www.x-rates.com/table/?from=USD&amount=1");
-    const html = await res.text();
-    const datos = extraerTextoDesdeHTML(html, 'table.ratesTable tbody tr');
+  contenedor.innerHTML = "<p>Cargando monedas...</p>";
 
-    contenedor.innerHTML = "";
-    datos.slice(0, 5).forEach(dato => {
-      const nombre = dato.querySelector("td:nth-child(1)").innerText.trim();
-      const valor = dato.querySelector("td:nth-child(2)").innerText.trim();
+  const monedas = [
+    { nombre: "USD a PEN", url: "https://www.x-rates.com/calculator/?from=USD&to=PEN&amount=1", selector: ".ccOutputTrail" },
+    { nombre: "EUR a USD", url: "https://www.x-rates.com/calculator/?from=EUR&to=USD&amount=1", selector: ".ccOutputTrail" }
+  ];
 
-      const tarjeta = document.createElement("div");
-      tarjeta.className = "tarjeta";
-      tarjeta.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+  contenedor.innerHTML = "";
+
+  for (const moneda of monedas) {
+    const valor = await obtenerValorDesdeHTML(moneda.url, moneda.selector);
+    if (valor) {
+      const tarjeta = crearTarjeta(moneda.nombre, valor, "moneda");
       contenedor.appendChild(tarjeta);
-    });
-  } catch (e) {
-    contenedor.innerHTML = "Error al cargar monedas.";
-    console.error(e);
+    } else {
+      contenedor.innerHTML += `<p>No se pudo obtener ${moneda.nombre}</p>`;
+    }
   }
 }
 
-// ======================== CRIPTOMONEDAS ========================
 async function cargarCriptos() {
-  const contenedor = document.getElementById("contenedor-criptos");
+  const contenedor = document.getElementById("criptos-lista");
   if (!contenedor) return;
-  contenedor.innerHTML = "Cargando criptomonedas...";
 
-  try {
-    const res = await fetch("/proxy?url=https://www.coingecko.com/es");
-    const html = await res.text();
-    const datos = extraerTextoDesdeHTML(html, 'table.table tbody tr');
+  contenedor.innerHTML = "<p>Cargando criptomonedas...</p>";
 
-    contenedor.innerHTML = "";
-    datos.slice(0, 5).forEach(dato => {
-      const nombre = dato.querySelector(".tw-hidden").innerText.trim();
-      const valor = dato.querySelector(".td-price").innerText.trim();
+  const criptos = [
+    { nombre: "Bitcoin", url: "https://www.coingecko.com/es/monedas/bitcoin", selector: ".tw-text-3xl" },
+    { nombre: "Ethereum", url: "https://www.coingecko.com/es/monedas/ethereum", selector: ".tw-text-3xl" }
+  ];
 
-      const tarjeta = document.createElement("div");
-      tarjeta.className = "tarjeta";
-      tarjeta.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+  contenedor.innerHTML = "";
+
+  for (const cripto of criptos) {
+    const valor = await obtenerValorDesdeHTML(cripto.url, cripto.selector);
+    if (valor) {
+      const tarjeta = crearTarjeta(cripto.nombre, valor, "cripto");
       contenedor.appendChild(tarjeta);
-    });
-  } catch (e) {
-    contenedor.innerHTML = "Error al cargar criptomonedas.";
-    console.error(e);
+    } else {
+      contenedor.innerHTML += `<p>No se pudo obtener ${cripto.nombre}</p>`;
+    }
   }
 }
 
-// ======================== EMPRESAS ========================
 async function cargarEmpresas() {
-  const contenedor = document.getElementById("contenedor-empresas");
+  const contenedor = document.getElementById("empresas-lista");
   if (!contenedor) return;
-  contenedor.innerHTML = "Cargando empresas...";
 
-  try {
-    const res = await fetch("/proxy?url=https://www.investing.com/equities/");
-    const html = await res.text();
-    const datos = extraerTextoDesdeHTML(html, 'table tbody tr');
+  contenedor.innerHTML = "<p>Cargando empresas...</p>";
 
-    contenedor.innerHTML = "";
-    datos.slice(0, 5).forEach(dato => {
-      const nombre = dato.querySelector("td:nth-child(2)").innerText.trim();
-      const valor = dato.querySelector("td:nth-child(3)").innerText.trim();
+  const empresas = [
+    { nombre: "Apple", url: "https://www.google.com/finance/quote/AAPL:NASDAQ", selector: ".YMlKec.fxKbKc" },
+    { nombre: "Tesla", url: "https://www.google.com/finance/quote/TSLA:NASDAQ", selector: ".YMlKec.fxKbKc" }
+  ];
 
-      const tarjeta = document.createElement("div");
-      tarjeta.className = "tarjeta";
-      tarjeta.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+  contenedor.innerHTML = "";
+
+  for (const empresa of empresas) {
+    const valor = await obtenerValorDesdeHTML(empresa.url, empresa.selector);
+    if (valor) {
+      const tarjeta = crearTarjeta(empresa.nombre, valor, "empresa");
       contenedor.appendChild(tarjeta);
-    });
-  } catch (e) {
-    contenedor.innerHTML = "Error al cargar empresas.";
-    console.error(e);
+    } else {
+      contenedor.innerHTML += `<p>No se pudo obtener ${empresa.nombre}</p>`;
+    }
   }
+}
+
+// === TARJETA VISUAL CON GRÁFICO ===
+function crearTarjeta(nombre, valor, tipo) {
+  const tarjeta = document.createElement("div");
+  tarjeta.className = "tarjeta";
+  tarjeta.innerHTML = `
+    <h3>${nombre}</h3>
+    <p class="valor">$${valor}</p>
+    <div class="panel-grafico" style="display:none;">
+      <canvas></canvas>
+      <button class="cerrar-panel">Cerrar</button>
+    </div>
+  `;
+
+  tarjeta.addEventListener("click", () => {
+    const panel = tarjeta.querySelector(".panel-grafico");
+    panel.style.display = "block";
+
+    const canvas = panel.querySelector("canvas");
+    const ctx = canvas.getContext("2d");
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["1D", "2D", "3D", "4D", "5D"],
+        datasets: [{
+          label: nombre,
+          data: generarHistorialSimulado(valor),
+          borderColor: "#39FF14",
+          backgroundColor: "rgba(57, 255, 20, 0.2)",
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: { enabled: true }
+        },
+        scales: {
+          y: {
+            ticks: { color: "#39FF14" },
+            beginAtZero: false
+          },
+          x: {
+            ticks: { color: "#39FF14" }
+          }
+        }
+      }
+    });
+
+    panel.querySelector(".cerrar-panel").addEventListener("click", (e) => {
+      e.stopPropagation();
+      panel.style.display = "none";
+    });
+  });
+
+  return tarjeta;
+}
+
+// Historial aleatorio basado en valor real
+function generarHistorialSimulado(valorActual) {
+  const valor = parseFloat(valorActual.replace(",", ""));
+  if (isNaN(valor)) return [1, 2, 3, 4, 5];
+
+  return Array.from({ length: 5 }, (_, i) =>
+    parseFloat((valor * (1 + (Math.random() - 0.5) / 10)).toFixed(2))
+  );
 }
