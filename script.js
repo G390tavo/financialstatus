@@ -1,67 +1,113 @@
 document.addEventListener("DOMContentLoaded", () => {
+  cambiarSeccion("inicio");
   cargarMonedas();
-  cambiarSeccion('inicio');
+  cargarCriptos();
+  cargarEmpresas();
+  initIA();
 });
 
 function cambiarSeccion(id) {
-  document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
-  document.getElementById(id).classList.add('activa');
+  document.querySelectorAll(".seccion").forEach(seccion =>
+    seccion.classList.remove("activa")
+  );
+  document.getElementById(id).classList.add("activa");
 }
 
-function toggleModo() {
-  document.body.classList.toggle('light');
+function alternarModo() {
+  document.body.classList.toggle("light");
 }
 
-// Cargar monedas (ej. USD, PEN, EUR)
+function abrirMenu() {
+  document.getElementById("menu-lateral").style.display = "flex";
+  document.getElementById("abrir-menu").style.display = "none";
+}
+
+function cerrarMenu() {
+  document.getElementById("menu-lateral").style.display = "none";
+  document.getElementById("abrir-menu").style.display = "block";
+}
+
+// MONEDAS
 async function cargarMonedas() {
-  const contenedor = document.getElementById('contenedor-monedas');
-  contenedor.innerHTML = 'Cargando...';
-  const urls = [
-    { nombre: 'Dólar Americano', url: 'https://www.x-rates.com/calculator/?from=USD&to=PEN&amount=1' },
-    { nombre: 'Euro', url: 'https://www.x-rates.com/calculator/?from=EUR&to=PEN&amount=1' }
-  ];
+  const contenedor = document.getElementById("lista-monedas");
+  contenedor.innerHTML = "Cargando monedas...";
+  const doc = await obtenerHTML("https://www.x-rates.com/table/?from=USD&amount=1");
+  if (!doc) return contenedor.innerHTML = "Error al obtener datos.";
 
-  const tarjetas = await Promise.all(urls.map(async ({ nombre, url }) => {
-    const html = await obtenerHTML(url);
-    const tasa = extraerTextoDesdeHTML(html, 'span.ccOutputTrail');
-    return `<div class="tarjeta"><h3>${nombre}</h3><div class="valor">${tasa || 'No disponible'}</div></div>`;
-  }));
-
-  contenedor.innerHTML = tarjetas.join('');
+  const filas = doc.querySelectorAll("table.tablesorter.ratesTable tbody tr");
+  contenedor.innerHTML = "";
+  filas.forEach(fila => {
+    const tds = fila.querySelectorAll("td");
+    const nombre = fila.querySelector("a")?.textContent.trim();
+    const valor = tds[0]?.textContent.trim();
+    if (nombre && valor) {
+      const div = document.createElement("div");
+      div.className = "tarjeta";
+      div.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+      contenedor.appendChild(div);
+    }
+  });
 }
 
-// Cargar criptos
+// CRIPTOS
 async function cargarCriptos() {
-  const contenedor = document.getElementById('contenedor-criptos');
-  contenedor.innerHTML = 'Cargando...';
-  const urls = [
-    { nombre: 'Bitcoin', url: 'https://www.google.com/search?q=bitcoin+price' },
-    { nombre: 'Ethereum', url: 'https://www.google.com/search?q=ethereum+price' }
-  ];
+  const contenedor = document.getElementById("lista-criptos");
+  contenedor.innerHTML = "Cargando criptomonedas...";
+  const doc = await obtenerHTML("https://www.google.com/finance/markets/cryptocurrencies");
+  if (!doc) return contenedor.innerHTML = "Error al obtener criptos.";
 
-  const tarjetas = await Promise.all(urls.map(async ({ nombre, url }) => {
-    const html = await obtenerHTML(url);
-    const precio = extraerTextoDesdeHTML(html, 'span.DFlfde');
-    return `<div class="tarjeta"><h3>${nombre}</h3><div class="valor">${precio || 'No disponible'}</div></div>`;
-  }));
+  const tarjetas = doc.querySelectorAll('div[jscontroller] [data-symbol]');
+  contenedor.innerHTML = "";
 
-  contenedor.innerHTML = tarjetas.join('');
+  tarjetas.forEach(tarjeta => {
+    const nombre = tarjeta.querySelector("div span")?.textContent;
+    const valor = tarjeta.querySelector("[data-last-price]")?.textContent;
+    if (nombre && valor) {
+      const div = document.createElement("div");
+      div.className = "tarjeta";
+      div.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+      contenedor.appendChild(div);
+    }
+  });
 }
 
-// Cargar empresas
+// EMPRESAS
 async function cargarEmpresas() {
-  const contenedor = document.getElementById('contenedor-empresas');
-  contenedor.innerHTML = 'Cargando...';
-  const urls = [
-    { nombre: 'Apple', url: 'https://www.google.com/finance/quote/AAPL:NASDAQ' },
-    { nombre: 'Microsoft', url: 'https://www.google.com/finance/quote/MSFT:NASDAQ' }
-  ];
+  const contenedor = document.getElementById("lista-empresas");
+  contenedor.innerHTML = "Cargando empresas...";
+  const doc = await obtenerHTML("https://www.google.com/finance/markets/most-active");
+  if (!doc) return contenedor.innerHTML = "Error al obtener empresas.";
 
-  const tarjetas = await Promise.all(urls.map(async ({ nombre, url }) => {
-    const html = await obtenerHTML(url);
-    const precio = extraerTextoDesdeHTML(html, '.YMlKec.fxKbKc');
-    return `<div class="tarjeta"><h3>${nombre}</h3><div class="valor">${precio || 'No disponible'}</div></div>`;
-  }));
+  const tarjetas = doc.querySelectorAll('div[jscontroller] [data-symbol]');
+  contenedor.innerHTML = "";
 
-  contenedor.innerHTML = tarjetas.join('');
+  tarjetas.forEach(tarjeta => {
+    const nombre = tarjeta.querySelector("div span")?.textContent;
+    const valor = tarjeta.querySelector("[data-last-price]")?.textContent;
+    if (nombre && valor) {
+      const div = document.createElement("div");
+      div.className = "tarjeta";
+      div.innerHTML = `<h3>${nombre}</h3><div class="valor">${valor}</div>`;
+      div.addEventListener("click", () => mostrarPanelGrafico(nombre));
+      contenedor.appendChild(div);
+    }
+  });
+}
+
+function mostrarPanelGrafico(nombre) {
+  const panel = document.createElement("div");
+  panel.className = "panel-grafico";
+  panel.innerHTML = `
+    <button class="cerrar-panel" onclick="this.parentElement.remove()">Cerrar</button>
+    <canvas></canvas>
+  `;
+  const canvas = panel.querySelector("canvas");
+  document.querySelector("main").appendChild(panel);
+
+  // Genera valores simulados temporalmente
+  const datos = Array.from({ length: 20 }, () =>
+    Math.floor(100 + Math.random() * 100)
+  );
+  const etiquetas = datos.map((_, i) => `P${i + 1}`);
+  mostrarGrafico(canvas, datos, etiquetas);
 }
