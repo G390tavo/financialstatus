@@ -1,77 +1,163 @@
 document.addEventListener("DOMContentLoaded", () => {
-  cargarMonedas();
-  cargarCriptos();
-  cargarEmpresas();
-  initIA();
+  cambiarSeccion("inicio"); // Mostrar inicio al cargar
+
+  const modoBoton = document.querySelector(".modo-boton");
+  if (modoBoton) {
+    modoBoton.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+    });
+  }
+
+  const cerrarMenu = document.getElementById("cerrar-menu");
+  const abrirMenu = document.getElementById("abrir-menu");
+  const menuLateral = document.getElementById("menu-lateral");
+
+  if (cerrarMenu && abrirMenu && menuLateral) {
+    cerrarMenu.addEventListener("click", () => {
+      menuLateral.style.display = "none";
+      abrirMenu.style.display = "block";
+    });
+
+    abrirMenu.addEventListener("click", () => {
+      menuLateral.style.display = "flex";
+      abrirMenu.style.display = "none";
+    });
+  }
+
+  // Ejecutar IA al inicio si está definida
+  if (typeof initIA === "function") {
+    initIA();
+  }
 });
 
-function cambiarSeccion(id) {
-  document.querySelectorAll(".seccion").forEach(sec => sec.classList.remove("activa"));
-  const nueva = document.getElementById(id);
-  if (nueva) nueva.classList.add("activa");
+// ================== CAMBIO DE SECCIONES ==================
+function cambiarSeccion(seccionId) {
+  const secciones = document.querySelectorAll(".seccion");
+  secciones.forEach(seccion => {
+    seccion.classList.remove("activa");
+  });
+
+  const activa = document.getElementById(seccionId);
+  if (activa) {
+    activa.classList.add("activa");
+  }
+
+  if (seccionId === "monedas") cargarMonedas();
+  if (seccionId === "criptos") cargarCriptos();
+  if (seccionId === "empresas") cargarEmpresas();
 }
 
+// ================== CARGA DE MONEDAS ==================
 async function cargarMonedas() {
-  const contenedor = document.getElementById("monedas");
+  const contenedor = document.getElementById("contenedor-monedas");
   if (!contenedor) return;
-  contenedor.innerHTML = "Cargando...";
-  const monedas = ["PEN", "EUR", "GBP", "JPY"];
-  let html = "";
 
-  for (let moneda of monedas) {
-    const valor = await obtenerDatosMoneda(moneda);
-    html += `
-      <div class="tarjeta" onclick="mostrarGrafico('${moneda}', 'moneda')">
-        <h3>${moneda}</h3>
-        <div class="valor">${valor} USD</div>
-        <div class="descripcion">Moneda internacional</div>
-      </div>
-    `;
+  contenedor.innerHTML = "Cargando monedas...";
+
+  try {
+    const html = await obtenerHTML("https://www.x-rates.com/calculator/?from=USD&to=PEN&amount=1");
+    const texto = extraerTextoDesdeHTML(html, ".ccOutputTrail");
+    contenedor.innerHTML = `
+      <div class="tarjeta" onclick="mostrarGrafico('USD/PEN', [3.65, 3.68, 3.70, 3.69, 3.66])">
+        <h3>USD a PEN</h3>
+        <div class="valor">${texto}</div>
+        <div class="variacion"><span class="up">+0.02%</span></div>
+        <div class="descripcion">Tasa de cambio del dólar al sol</div>
+      </div>`;
+  } catch (e) {
+    contenedor.innerHTML = "Error al cargar monedas.";
+    console.error(e);
   }
-  contenedor.innerHTML = html;
 }
 
+// ================== CARGA DE CRIPTOS ==================
 async function cargarCriptos() {
-  const contenedor = document.getElementById("criptos");
+  const contenedor = document.getElementById("contenedor-criptos");
   if (!contenedor) return;
-  contenedor.innerHTML = "Cargando...";
-  const criptos = ["bitcoin", "ethereum", "solana", "ripple"];
-  let html = "";
 
-  for (let cripto of criptos) {
-    const valor = await obtenerDatosCrypto(cripto);
-    html += `
-      <div class="tarjeta" onclick="mostrarGrafico('${cripto}', 'cripto')">
-        <h3>${cripto.toUpperCase()}</h3>
-        <div class="valor">${valor} USD</div>
-        <div class="descripcion">Criptomoneda popular</div>
-      </div>
-    `;
+  contenedor.innerHTML = "Cargando criptomonedas...";
+
+  try {
+    const html = await obtenerHTML("https://www.coingecko.com/es");
+    const texto = extraerTextoDesdeHTML(html, "tbody tr:nth-child(1) td:nth-child(4)");
+    contenedor.innerHTML = `
+      <div class="tarjeta" onclick="mostrarGrafico('Bitcoin', [69000, 68500, 68800, 69200, 69500])">
+        <h3>Bitcoin</h3>
+        <div class="valor">${texto}</div>
+        <div class="variacion"><span class="up">+1.4%</span></div>
+        <div class="descripcion">Precio actual de BTC</div>
+      </div>`;
+  } catch (e) {
+    contenedor.innerHTML = "Error al cargar criptomonedas.";
+    console.error(e);
   }
-  contenedor.innerHTML = html;
 }
 
+// ================== CARGA DE EMPRESAS ==================
 async function cargarEmpresas() {
-  const contenedor = document.getElementById("empresas");
+  const contenedor = document.getElementById("contenedor-empresas");
   if (!contenedor) return;
-  contenedor.innerHTML = "Cargando...";
-  const empresas = ["AAPL", "GOOGL", "MSFT", "AMZN"];
-  let html = "";
 
-  for (let empresa of empresas) {
-    const valor = await obtenerDatosEmpresa(empresa);
-    html += `
-      <div class="tarjeta" onclick="mostrarGrafico('${empresa}', 'empresa')">
-        <h3>${empresa}</h3>
-        <div class="valor">${valor} USD</div>
-        <div class="descripcion">Empresa del mercado americano</div>
-      </div>
-    `;
+  contenedor.innerHTML = "Cargando empresas...";
+
+  try {
+    const html = await obtenerHTML("https://www.investing.com/equities/");
+    const texto = extraerTextoDesdeHTML(html, "table tbody tr:nth-child(1) td:nth-child(2)");
+    contenedor.innerHTML = `
+      <div class="tarjeta" onclick="mostrarGrafico('Apple Inc.', [180, 182, 185, 187, 186])">
+        <h3>Apple Inc.</h3>
+        <div class="valor">${texto}</div>
+        <div class="variacion"><span class="down">-0.5%</span></div>
+        <div class="descripcion">Precio actual de acciones de Apple</div>
+      </div>`;
+  } catch (e) {
+    contenedor.innerHTML = "Error al cargar empresas.";
+    console.error(e);
   }
-  contenedor.innerHTML = html;
 }
 
-function mostrarGrafico(nombre, tipo) {
-  // Lógica de gráfico con Chart.js (en el próximo archivo)
-  alert(`Aquí iría el gráfico de ${nombre} (${tipo})`);
+// ================== MOSTRAR GRÁFICO ==================
+function mostrarGrafico(titulo, datos) {
+  const panel = document.createElement("div");
+  panel.className = "panel-grafico";
+  panel.innerHTML = `
+    <button class="cerrar-panel" onclick="this.parentElement.remove()">X</button>
+    <canvas id="graficoCanvas" width="400" height="200"></canvas>
+  `;
+
+  const seccionActiva = document.querySelector(".seccion.activa");
+  if (seccionActiva) {
+    seccionActiva.appendChild(panel);
+    setTimeout(() => {
+      const ctx = document.getElementById("graficoCanvas").getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["Lun", "Mar", "Mié", "Jue", "Vie"],
+          datasets: [{
+            label: titulo,
+            data: datos,
+            borderColor: "#39FF14",
+            backgroundColor: "rgba(57, 255, 20, 0.2)",
+            pointBackgroundColor: "#39FF14",
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              enabled: true
+            }
+          },
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          }
+        }
+      });
+    }, 100);
+  }
 }
