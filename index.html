@@ -2,58 +2,58 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
   <button id="abrir-menu">☰</button>
   <aside id="menu-lateral">
+    <button id="cerrar-menu">✖</button>
     <h2>FinancialStatus</h2>
-    <button id="cerrar-menu">X</button>
     <nav>
-      <button onclick="cambiarSeccion('inicio')">Inicio</button>
-      <button onclick="cambiarSeccion('monedas')">Monedas</button>
-      <button onclick="cambiarSeccion('criptos')">Criptomonedas</button>
-      <button onclick="cambiarSeccion('empresas')">Empresas</button>
-      <button onclick="cambiarSeccion('ia')">IA Financiera</button>
+      <button id="btn-inicio">Inicio</button>
+      <button id="btn-monedas">Monedas</button>
+      <button id="btn-criptos">Criptomonedas</button>
+      <button id="btn-empresas">Empresas</button>
+      <button id="btn-ia">Asistente IA</button>
     </nav>
   </aside>
 
+  <button class="modo-boton" onclick="document.body.classList.toggle('light')">Modo Claro/Oscuro</button>
+
   <main>
     <section id="inicio" class="seccion activa">
-      <h1>Bienvenido a FinancialStatus</h1>
-      <p>Explora datos financieros reales en tiempo real.</p>
+      <h2>Bienvenido</h2>
+      <p>Usa el menú para explorar monedas, criptos, empresas o el asistente.</p>
     </section>
 
     <section id="monedas" class="seccion">
       <h2>Monedas</h2>
-      <div id="contenedor-monedas" class="contenedor-tarjetas"></div>
+      <div class="contenedor-tarjetas"></div>
     </section>
 
     <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <div id="contenedor-criptos" class="contenedor-tarjetas"></div>
+      <div class="contenedor-tarjetas"></div>
     </section>
 
     <section id="empresas" class="seccion">
       <h2>Empresas</h2>
-      <div id="contenedor-empresas" class="contenedor-tarjetas"></div>
+      <div class="contenedor-tarjetas"></div>
     </section>
 
     <section id="ia" class="seccion">
-      <h2>IA Financiera</h2>
-      <div id="respuesta-ia">Selecciona una pregunta para obtener una respuesta.</div>
-      <div class="contenedor-tarjetas" id="opciones-ia"></div>
+      <h2>Asistente IA</h2>
+      <input type="text" id="pregunta-ia" placeholder="Escribe o elige una pregunta..." />
+      <button id="btn-ejecutar-ia">Preguntar</button>
+      <div id="respuesta-ia">Selecciona una pregunta para comenzar.</div>
+      <div id="ia-cargando" style="display:none;">Cargando respuesta...</div>
     </section>
   </main>
 
-  <button class="modo-boton">Modo Claro/Oscuro</button>
-
   <script src="utils.js"></script>
-  <script src="ai.js"></script>
   <script src="script.js"></script>
+  <script src="ai.js"></script>
 </body>
 </html>
