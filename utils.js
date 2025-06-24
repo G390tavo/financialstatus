@@ -1,24 +1,30 @@
-// Obtener HTML desde una URL usando fetch directamente
 async function obtenerHTML(url) {
   try {
-    const response = await fetch(url);
-    const text = await response.text();
+    const respuesta = await fetch(url);
+    if (!respuesta.ok) throw new Error("No se pudo cargar la página.");
+    const texto = await respuesta.text();
     const parser = new DOMParser();
-    return parser.parseFromString(text, "text/html");
+    return parser.parseFromString(texto, "text/html");
   } catch (error) {
     console.error("Error al obtener HTML:", error);
     return null;
   }
 }
 
-// Extraer texto limpio desde un selector CSS (clase, tag, etc)
-function extraerTextoDesdeHTML(doc, selector) {
-  if (!doc) return "No disponible";
-  try {
-    const el = doc.querySelector(selector);
-    return el ? el.textContent.trim() : "No encontrado";
-  } catch (e) {
-    console.error("Error en selector:", selector, e);
-    return "Error";
-  }
+function crearTarjeta(nombre, valor, variacion, descripcion, onClick) {
+  const tarjeta = document.createElement("div");
+  tarjeta.className = "tarjeta";
+  tarjeta.innerHTML = `
+    <h3>${nombre}</h3>
+    <div class="valor">${valor}</div>
+    <div class="variacion">${variacion}</div>
+    <div class="descripcion">${descripcion}</div>
+  `;
+  tarjeta.addEventListener("click", onClick);
+  return tarjeta;
+}
+
+function limpiarContenedor(selector) {
+  const contenedor = document.querySelector(selector);
+  if (contenedor) contenedor.innerHTML = "";
 }
