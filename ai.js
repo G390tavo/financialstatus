@@ -1,15 +1,10 @@
 // ai.js
-import { fuentes, obtenerDesdeFuentes } from './utils.js';
 
 const preguntas = {
   "¿Cuál es la tendencia del dólar?": "monedas",
   "¿Qué criptomonedas están subiendo?": "criptos",
   "¿Qué empresas están en baja esta semana?": "empresas"
 };
-
-const respuestaIA = document.getElementById("respuesta-ia");
-const preguntaSelect = document.getElementById("pregunta-ia");
-const loading = document.getElementById("ia-cargando");
 
 function interpretar(html, tipo) {
   const parser = new DOMParser();
@@ -34,21 +29,24 @@ function interpretar(html, tipo) {
   return resultado || "No se pudo interpretar el contenido correctamente.";
 }
 
-async function procesarPregunta() {
-  const pregunta = preguntaSelect.value;
+function procesarPregunta() {
+  const pregunta = document.getElementById("pregunta-ia").value;
   const tipo = preguntas[pregunta];
+  const respuestaIA = document.getElementById("respuesta-ia");
+  const loading = document.getElementById("ia-cargando");
+
   respuestaIA.textContent = "";
   loading.style.display = "block";
 
-  try {
-    const html = await obtenerDesdeFuentes(fuentes[tipo]);
-    const respuesta = interpretar(html, tipo);
-    respuestaIA.textContent = respuesta;
-  } catch (e) {
-    respuestaIA.textContent = "⚠️ No se pudo obtener respuesta. Intenta más tarde.";
-  }
-
-  loading.style.display = "none";
+  obtenerDesdeFuentes(fuentes[tipo])
+    .then(html => {
+      const resp = interpretar(html, tipo);
+      respuestaIA.textContent = resp;
+    })
+    .catch(() => {
+      respuestaIA.textContent = "⚠️ No se pudo obtener respuesta. Intenta más tarde.";
+    })
+    .finally(() => {
+      loading.style.display = "none";
+    });
 }
-
-export { preguntas, procesarPregunta };
