@@ -1,24 +1,25 @@
-import { PROXY_URL } from './config.js';
+// Archivo: utils.js
 
-export async function obtenerHTML(url) {
+async function obtenerHTML(url) {
   try {
-    const respuesta = await fetch(PROXY_URL + encodeURIComponent(url));
-    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-    return await respuesta.text();
+    const response = await fetch(PROXY_URL + encodeURIComponent(url));
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    return await response.text();
   } catch (error) {
-    throw new Error("Error al obtener HTML: " + error.message);
+    console.error("Error al obtener HTML:", error);
+    throw error;
   }
 }
 
-export async function intentarFuentes(fuentes, parsearFn) {
-  for (const fuente of fuentes) {
+async function intentarFuentes(fuentes, procesarHTML) {
+  for (const url of fuentes) {
     try {
-      const html = await obtenerHTML(fuente);
-      const datos = parsearFn(html);
-      if (datos && datos.length > 0) return datos;
-    } catch (e) {
-      console.warn("Fuente fallida:", fuente);
+      const html = await obtenerHTML(url);
+      const resultado = procesarHTML(html);
+      if (resultado) return resultado;
+    } catch (_) {
+      // Intenta la siguiente fuente
     }
   }
-  return [];
+  return null;
 }
