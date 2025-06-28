@@ -1,40 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FinancialStatus</title>
-
-  <!-- Estilos -->
-  <link rel="stylesheet" href="style.css"/>
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Scripts -->
-  <script src="config.js" defer></script>
-  <script src="utils.js" defer></script>
-  <script src="ai.js" defer></script>
-  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/a2d9d5da3c.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-  <!-- Botón modo oscuro/claro -->
+  <!-- Botón modo claro/oscuro -->
   <button class="modo-boton">Modo Claro/Oscuro</button>
 
-  <!-- Botón abrir menú (mobile) -->
-  <button id="abrir-menu">☰ Menú</button>
+  <!-- Botón abrir menú (móvil) -->
+  <button id="abrir-menu">☰</button>
 
   <!-- Menú lateral -->
   <aside id="menu-lateral">
+    <button id="cerrar-menu">✖</button>
     <h2>FinancialStatus</h2>
-    <button id="cerrar-menu">X</button>
     <nav>
-      <button data-seccion="inicio">Inicio</button>
-      <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="criptos">Criptos</button>
-      <button data-seccion="empresas">Empresas</button>
-      <button data-seccion="ia">IA</button>
+      <button data-seccion="inicio" id="btn-inicio">Inicio</button>
+      <button data-seccion="monedas" id="btn-monedas">Monedas</button>
+      <button data-seccion="criptos" id="btn-criptos">Criptomonedas</button>
+      <button data-seccion="empresas" id="btn-empresas">Empresas</button>
+      <button data-seccion="ia" id="btn-ia">IA</button>
     </nav>
   </aside>
 
@@ -43,38 +33,46 @@
     <!-- INICIO -->
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Consulta información actualizada de monedas, criptomonedas, empresas y utiliza la IA para aprender más.</p>
+      <p>Selecciona una sección desde el menú para comenzar.</p>
     </section>
 
     <!-- MONEDAS -->
     <section id="monedas" class="seccion">
-      <h2>Monedas Internacionales</h2>
-      <div id="contenedor-monedas" class="contenedor-tarjetas"></div>
+      <h1>Monedas Internacionales</h1>
+      <div class="contenedor-tarjetas"></div>
     </section>
 
-    <!-- CRIPTOMONEDAS -->
+    <!-- CRIPTOS -->
     <section id="criptos" class="seccion">
-      <h2>Criptomonedas</h2>
-      <div id="contenedor-criptos" class="contenedor-tarjetas"></div>
+      <h1>Criptomonedas</h1>
+      <div class="contenedor-tarjetas"></div>
     </section>
 
     <!-- EMPRESAS -->
     <section id="empresas" class="seccion">
-      <h2>Empresas</h2>
-      <div id="contenedor-empresas" class="contenedor-tarjetas"></div>
+      <h1>Empresas Globales</h1>
+      <div class="contenedor-tarjetas"></div>
     </section>
 
     <!-- IA -->
     <section id="ia" class="seccion">
-      <h2>Asistente Financiero</h2>
-      <p>Selecciona una pregunta para que la IA te ayude a entender conceptos económicos y financieros.</p>
-      <select id="pregunta-ia">
+      <h1>Asistente Inteligente</h1>
+      <p>Selecciona una consulta predefinida o espera a que la IA inicie automáticamente.</p>
+      <select id="pregunta-ia" onchange="ejecutarIA(this.value)">
         <option value="">Selecciona una pregunta</option>
+        <option value="¿Qué es Bitcoin?">¿Qué es Bitcoin?</option>
+        <option value="¿Cómo funciona el mercado de valores?">¿Cómo funciona el mercado de valores?</option>
+        <option value="¿Qué es el tipo de cambio?">¿Qué es el tipo de cambio?</option>
       </select>
-      <div id="ia-cargando" style="display: none;">Buscando información...</div>
+      <div id="ia-cargando" style="display:none;">🔄 Cargando respuesta...</div>
       <div id="respuesta-ia"></div>
     </section>
   </main>
 
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <script src="ai.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
