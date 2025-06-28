@@ -2,74 +2,76 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
 </head>
-<body>
-  <!-- Botón para abrir menú -->
-  <button id="abrir-menu">☰ Menú</button>
-
+<body class="dark">
   <!-- Botón modo oscuro/claro -->
-  <button class="modo-boton" id="modo-boton">Modo Claro</button>
+  <button id="modo-boton" class="modo-boton">Modo Claro</button>
+
+  <!-- Botón para abrir menú lateral en móviles -->
+  <button id="abrir-menu">☰ Menú</button>
 
   <!-- Menú lateral -->
   <aside id="menu-lateral">
     <button id="cerrar-menu">X</button>
     <h2>FinancialStatus</h2>
     <nav>
-      <button data-seccion="inicio">Inicio</button>
-      <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="criptos">Criptomonedas</button>
-      <button data-seccion="empresas">Empresas</button>
-      <button data-seccion="ia">IA</button>
+      <button id="btn-inicio">Inicio</button>
+      <button id="btn-monedas">Monedas</button>
+      <button id="btn-criptos">Criptomonedas</button>
+      <button id="btn-empresas">Empresas</button>
+      <button id="btn-ia">IA</button>
     </nav>
   </aside>
 
+  <!-- Contenido principal -->
   <main>
-    <!-- INICIO -->
+    <!-- Sección de inicio -->
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Explora información financiera real en tiempo real sobre monedas, criptomonedas y empresas.</p>
+      <p>Explora información en tiempo real sobre monedas, criptomonedas y empresas. Utiliza nuestra IA para obtener análisis y gráficos automáticamente.</p>
     </section>
 
-    <!-- MONEDAS -->
+    <!-- Sección de monedas -->
     <section id="monedas" class="seccion">
-      <h2>Monedas Internacionales</h2>
-      <div class="contenedor-tarjetas" id="monedas-contenedor"></div>
+      <h1>Monedas Internacionales</h1>
+      <div class="contenedor-tarjetas" id="contenedor-monedas"></div>
     </section>
 
-    <!-- CRIPTOMONEDAS -->
+    <!-- Sección de criptomonedas -->
     <section id="criptos" class="seccion">
-      <h2>Criptomonedas</h2>
-      <div class="contenedor-tarjetas" id="criptos-contenedor"></div>
+      <h1>Criptomonedas</h1>
+      <div class="contenedor-tarjetas" id="contenedor-criptos"></div>
     </section>
 
-    <!-- EMPRESAS -->
+    <!-- Sección de empresas -->
     <section id="empresas" class="seccion">
-      <h2>Empresas</h2>
-      <div class="contenedor-tarjetas" id="empresas-contenedor"></div>
+      <h1>Empresas</h1>
+      <div class="contenedor-tarjetas" id="contenedor-empresas"></div>
     </section>
 
-    <!-- INTELIGENCIA ARTIFICIAL -->
+    <!-- Sección de IA -->
     <section id="ia" class="seccion">
-      <h2>Asistente Financiero</h2>
-      <p>Selecciona una pregunta para recibir ayuda automatizada basada en datos reales.</p>
+      <h1>Pregúntale a la IA</h1>
+      <p>Selecciona una pregunta para obtener una respuesta automática con análisis.</p>
+
       <select id="pregunta-ia">
-        <option value="">Selecciona una pregunta...</option>
-        <option value="valor_dolar">¿Cuál es el valor actual del dólar?</option>
-        <option value="mejor_cripto">¿Cuál es la criptomoneda con mejor rendimiento hoy?</option>
-        <option value="empresa_caida">¿Qué empresa tuvo mayor caída esta semana?</option>
-        <option value="funcion_app">¿Cómo funciona esta aplicación?</option>
-        <option value="no_funciona">¿Por qué no se ve alguna información?</option>
+        <option value="">Selecciona una pregunta</option>
+        <option value="¿Qué es el dólar?">¿Qué es el dólar?</option>
+        <option value="¿Por qué sube el Bitcoin?">¿Por qué sube el Bitcoin?</option>
+        <option value="¿Qué empresa lidera el mercado financiero?">¿Qué empresa lidera el mercado financiero?</option>
+        <option value="¿Cuáles son las monedas más estables del mundo?">¿Cuáles son las monedas más estables del mundo?</option>
+        <option value="¿Cómo afecta la inflación al sol peruano?">¿Cómo afecta la inflación al sol peruano?</option>
       </select>
-      <div id="ia-cargando" style="display: none;">Cargando información...</div>
+
+      <div id="ia-cargando" style="display: none;">Cargando respuesta de la IA...</div>
       <div id="respuesta-ia"></div>
     </section>
   </main>
 
-  <!-- Scripts (orden muy importante) -->
+  <!-- Scripts -->
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
