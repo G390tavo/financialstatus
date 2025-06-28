@@ -1,133 +1,166 @@
 // script.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  mostrarSeccion("inicio");
-  cargarMonedas();
-  cargarCriptos();
-  cargarEmpresas();
+  const botones = document.querySelectorAll("#menu-lateral nav button");
+  const secciones = document.querySelectorAll(".seccion");
+  const abrirBtn = document.getElementById("abrir-menu");
+  const cerrarBtn = document.getElementById("cerrar-menu");
+  const menu = document.getElementById("menu-lateral");
+
+  // Mostrar solo la sección "inicio" al cargar
+  document.getElementById("inicio").classList.add("activa");
+
+  // Cambiar de sección
+  botones.forEach(b => {
+    b.addEventListener("click", () => {
+      secciones.forEach(s => s.classList.remove("activa"));
+      document.getElementById(b.dataset.seccion).classList.add("activa");
+
+      cerrarPaneles(); // Cierra paneles al cambiar sección
+
+      if (b.dataset.seccion === "criptos") cargarCriptos();
+      if (b.dataset.seccion === "monedas") cargarMonedas();
+      if (b.dataset.seccion === "empresas") cargarEmpresas();
+    });
+  });
+
+  // Botones abrir/cerrar menú lateral
+  abrirBtn.addEventListener("click", () => {
+    menu.style.display = "flex";
+    abrirBtn.style.display = "none";
+  });
+
+  cerrarBtn.addEventListener("click", () => {
+    menu.style.display = "none";
+    abrirBtn.style.display = "block";
+  });
+
+  // Modo claro/oscuro
+  document.querySelector(".modo-boton").addEventListener("click", () => {
+    document.body.classList.toggle("light");
+  });
 });
 
-function mostrarSeccion(id) {
-  document.querySelectorAll(".seccion").forEach(sec => sec.classList.remove("activa"));
-  const activa = document.getElementById(id);
-  if (activa) {
-    activa.classList.add("activa");
-    document.querySelectorAll(".panel-grafico").forEach(p => p.remove());
-  }
-}
-
-// ------------------ MONEDAS ------------------
-
-async function cargarMonedas() {
-  const contenedor = document.getElementById("monedas-lista");
+// Renderizar tarjetas de forma genérica
+function renderizarTarjetas(lista, contenedorID) {
+  const contenedor = document.getElementById(contenedorID);
   contenedor.innerHTML = "";
-  const url = "https://wise.com/gb/currency-converter/usd-to-pen-rate";
-  const html = await obtenerHTML(url);
 
-  if (!html) {
-    mostrarError(contenedor, "No se pudieron obtener datos de monedas.");
-    return;
-  }
+  lista.forEach(item => {
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "tarjeta";
+    tarjeta.innerHTML = `
+      <h3><i>${item.icono}</i> ${item.nombre}</h3>
+      <div class="valor">${item.valor}</div>
+      <div class="variacion ${item.cambio < 0 ? 'down' : 'up'}">
+        ${item.cambio < 0 ? "↓" : "↑"} ${item.cambio}%
+      </div>
+      <div class="descripcion">${item.descripcion}</div>
+    `;
 
-  try {
-    const valor = html.match(/data-rate="([\d.]+)"/)?.[1];
-    if (!valor) throw new Error("Patrón no encontrado");
-    const tarjeta = crearTarjeta("USD → PEN", "💵", valor, "+0.00%", "Estable esta semana");
+    tarjeta.addEventListener("click", () => togglePanel(tarjeta, item));
     contenedor.appendChild(tarjeta);
-  } catch (e) {
-    mostrarError(contenedor, "No se encontró el valor del USD.");
-  }
+  });
 }
 
-// ------------------ CRIPTOS ------------------
+// Alternar panel de gráfico
+function togglePanel(tarjeta, item) {
+  cerrarPaneles();
 
-async function cargarCriptos() {
-  const contenedor = document.getElementById("criptos-lista");
-  contenedor.innerHTML = "";
-  const url = "https://coinmarketcap.com/";
-  const html = await obtenerHTML(url);
-
-  if (!html) {
-    mostrarError(contenedor, "No se pudieron obtener datos de criptomonedas.");
-    return;
-  }
-
-  try {
-    const match = html.match(/Bitcoin.*?price.*?\$([\d.,]+)/i);
-    if (!match) throw new Error("Bitcoin no encontrado");
-    const valor = match[1];
-    const tarjeta = crearTarjeta("Bitcoin", "₿", valor, "+1.20%", "En alza esta semana");
-    contenedor.appendChild(tarjeta);
-  } catch (e) {
-    mostrarError(contenedor, "No se extrajo el valor de Bitcoin.");
-  }
-}
-
-// ------------------ EMPRESAS ------------------
-
-async function cargarEmpresas() {
-  const contenedor = document.getElementById("empresas-lista");
-  contenedor.innerHTML = "";
-  const url = "https://www.investing.com/equities/";
-  const html = await obtenerHTML(url);
-
-  if (!html) {
-    mostrarError(contenedor, "No se pudieron obtener datos de empresas.");
-    return;
-  }
-
-  try {
-    const match = html.match(/Apple.*?\$([\d.,]+)/i);
-    if (!match) throw new Error("Apple no encontrado");
-    const valor = match[1];
-    const tarjeta = crearTarjeta("Apple", "🍏", valor, "-0.35%", "Leve caída esta semana");
-    contenedor.appendChild(tarjeta);
-  } catch (e) {
-    mostrarError(contenedor, "No se encontró el valor de Apple.");
-  }
-}
-
-// ------------------ COMPONENTES REUTILIZABLES ------------------
-
-function crearTarjeta(nombre, icono, valor, variacion, descripcion) {
-  const tarjeta = document.createElement("div");
-  tarjeta.className = "tarjeta";
-
-  tarjeta.innerHTML = `
-    <h3><i>${icono}</i> ${nombre}</h3>
-    <div class="valor">$${valor}</div>
-    <div class="variacion ${variacion.includes('-') ? 'down' : 'up'}">${variacion}</div>
-    <div class="descripcion">${descripcion}</div>
-  `;
-
-  tarjeta.addEventListener("click", () => toggleGrafico(tarjeta, nombre));
-  return tarjeta;
-}
-
-function mostrarError(contenedor, mensaje) {
-  contenedor.innerHTML = `<div class="mensaje-error">⚠️ ${mensaje}</div>`;
-}
-
-// ------------------ PANEL DE GRÁFICO ------------------
-
-function toggleGrafico(tarjeta, titulo) {
-  const existente = tarjeta.querySelector(".panel-grafico");
-  if (existente) {
-    existente.remove();
-    return;
-  }
-
-  document.querySelectorAll(".panel-grafico").forEach(p => p.remove());
+  if (tarjeta.querySelector(".panel-grafico")) return;
 
   const panel = document.createElement("div");
   panel.className = "panel-grafico";
-  panel.innerHTML = `
-    <button class="cerrar-panel">X</button>
-    <h4>Historial de ${titulo}</h4>
-    <div class="mensaje-error">⚠️ Historial no disponible para este activo.</div>
-  `;
 
-  panel.querySelector(".cerrar-panel").addEventListener("click", () => panel.remove());
+  const cerrar = document.createElement("button");
+  cerrar.className = "cerrar-panel";
+  cerrar.textContent = "X";
+  cerrar.onclick = () => panel.remove();
+
+  panel.appendChild(cerrar);
+
+  // Historial o mensaje
+  if (item.historial && item.historial.length > 1) {
+    const canvas = document.createElement("canvas");
+    panel.appendChild(canvas);
+    setTimeout(() => graficar(canvas, item), 200);
+  } else {
+    const aviso = document.createElement("p");
+    aviso.textContent = "No se encontró historial disponible. Solo se muestra el valor actual.";
+    aviso.style.color = "gray";
+    panel.appendChild(aviso);
+  }
+
   tarjeta.appendChild(panel);
-  panel.scrollIntoView({ behavior: "smooth" });
+  panel.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+// Cierra todos los paneles abiertos
+function cerrarPaneles() {
+  document.querySelectorAll(".panel-grafico").forEach(p => p.remove());
+}
+
+// === Carga de criptomonedas ===
+async function cargarCriptos() {
+  const html = await obtenerHTML(FUENTES_DATOS.criptos);
+  if (!html) return mostrarError("contenedor-criptos", "No se pudo obtener criptomonedas.");
+
+  const lista = []; // Aquí deberías parsear desde el HTML real
+  // Simulación mínima: si no hay datos, no mostrar nada
+  renderizarTarjetas(lista, "contenedor-criptos");
+}
+
+// === Carga de monedas ===
+async function cargarMonedas() {
+  const html = await obtenerHTML(FUENTES_DATOS.monedas + "usd-to-pen-rate");
+  if (!html) return mostrarError("contenedor-monedas", "No se pudo obtener tasas de cambio.");
+
+  const lista = []; // Aquí también deberías parsear desde el HTML real
+  renderizarTarjetas(lista, "contenedor-monedas");
+}
+
+// === Carga de empresas ===
+async function cargarEmpresas() {
+  const html = await obtenerHTML(FUENTES_DATOS.empresas);
+  if (!html) return mostrarError("contenedor-empresas", "No se pudo obtener datos de empresas.");
+
+  const lista = []; // También se debe parsear real
+  renderizarTarjetas(lista, "contenedor-empresas");
+}
+
+// Gráfico simple tipo línea
+function graficar(canvas, item) {
+  new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: item.historial.map(h => h.fecha),
+      datasets: [{
+        label: item.nombre,
+        data: item.historial.map(h => h.valor),
+        fill: false,
+        borderColor: "#39FF14",
+        tension: 0.3,
+        pointBackgroundColor: "#39FF14"
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          enabled: true
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false
+        }
+      }
+    }
+  });
+}
+
+// Mostrar error personalizado
+function mostrarError(id, mensaje) {
+  const contenedor = document.getElementById(id);
+  contenedor.innerHTML = `<p style="color:red; font-weight:600;">${mensaje}</p>`;
 }
