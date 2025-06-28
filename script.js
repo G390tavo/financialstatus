@@ -1,143 +1,170 @@
-import { obtenerHTML, intentarFuentes } from "./utils.js";
-import { iniciarIA } from "./ai.js";
-import { config } from "./config.js";
+document.addEventListener('DOMContentLoaded', () => {
+  const secciones = document.querySelectorAll('.seccion');
+  const botonesMenu = document.querySelectorAll('#menu-lateral nav button');
+  const abrirMenu = document.getElementById('abrir-menu');
+  const cerrarMenu = document.getElementById('cerrar-menu');
+  const menuLateral = document.getElementById('menu-lateral');
+  const modoBoton = document.querySelector('.modo-boton');
 
-document.addEventListener("DOMContentLoaded", () => {
-  // BOTONES SECCIONES
-  const btnInicio = document.getElementById("btn-inicio");
-  const btnMoneda = document.getElementById("btn-moneda");
-  const btnCripto = document.getElementById("btn-cripto");
-  const btnEmpresa = document.getElementById("btn-empresa");
-  const btnIA = document.getElementById("btn-ia");
+  // Navegación entre secciones
+  botonesMenu.forEach(boton => {
+    boton.addEventListener('click', () => {
+      const idSeccion = boton.getAttribute('data-seccion');
+      const seccion = document.getElementById(idSeccion);
 
-  // SECCIONES
-  const secciones = {
-    inicio: document.getElementById("inicio"),
-    monedas: document.getElementById("monedas"),
-    criptos: document.getElementById("criptos"),
-    empresas: document.getElementById("empresas"),
-    ia: document.getElementById("ia")
-  };
+      if (!seccion) {
+        console.warn(`⚠️ La sección con ID '${idSeccion}' no existe.`);
+        return;
+      }
 
-  const mostrarSeccion = (seccionId) => {
-    Object.values(secciones).forEach(sec => sec?.classList.remove("activa"));
-    secciones[seccionId]?.classList.add("activa");
-  };
+      secciones.forEach(sec => sec.classList.remove('activa'));
+      seccion.classList.add('activa');
 
-  btnInicio?.addEventListener("click", () => mostrarSeccion("inicio"));
-  btnMoneda?.addEventListener("click", () => {
-    mostrarSeccion("monedas");
-    cargarMonedas();
+      // Cierra menú en móviles
+      if (window.innerWidth < 768) {
+        menuLateral.style.display = 'none';
+        abrirMenu.style.display = 'block';
+      }
+    });
   });
 
-  btnCripto?.addEventListener("click", () => {
-    mostrarSeccion("criptos");
-    cargarCriptos();
-  });
+  // Botón abrir/cerrar menú
+  if (abrirMenu && cerrarMenu && menuLateral) {
+    abrirMenu.addEventListener('click', () => {
+      menuLateral.style.display = 'flex';
+      abrirMenu.style.display = 'none';
+    });
 
-  btnEmpresa?.addEventListener("click", () => {
-    mostrarSeccion("empresas");
-    cargarEmpresas();
-  });
-
-  btnIA?.addEventListener("click", () => {
-    mostrarSeccion("ia");
-    iniciarIA();
-  });
-
-  mostrarSeccion("inicio"); // Mostrar sección de inicio al cargar
-  iniciarIA(); // Iniciar IA automáticamente
-  cargarMonedas(); // Cargar datos iniciales
-});
-
-// CARGAR DATOS DESDE FUENTES
-async function cargarMonedas() {
-  const contenedor = document.getElementById("contenedor-monedas");
-  contenedor.innerHTML = "Cargando monedas...";
-
-  const fuentes = config.monedas;
-  const datos = await intentarFuentes(fuentes, procesarMonedas);
-
-  if (datos.length === 0) {
-    contenedor.innerHTML = `<div class="tarjeta">No se pudo obtener datos reales de monedas.</div>`;
-    return;
+    cerrarMenu.addEventListener('click', () => {
+      menuLateral.style.display = 'none';
+      abrirMenu.style.display = 'block';
+    });
   }
 
-  contenedor.innerHTML = "";
-  datos.forEach(moneda => contenedor.appendChild(crearTarjeta(moneda)));
+  // Modo claro / oscuro
+  if (modoBoton) {
+    modoBoton.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+  }
+
+  // Cargar secciones automáticamente
+  cargarMonedas();
+  cargarCriptos();
+  cargarEmpresas();
+  iniciarIA();
+});
+
+// ============ FUNCIONES DE CARGA ============
+
+async function cargarMonedas() {
+  const tarjetas = document.querySelector('#monedas .contenedor-tarjetas');
+  tarjetas.innerHTML = '<div class="tarjeta">Cargando monedas...</div>';
+
+  try {
+    const resultados = await intentarFuentes([
+      'https://wise.com/gb/currency-converter/usd-to-pen-rate'
+    ]);
+
+    mostrarDatos('monedas', resultados);
+  } catch (error) {
+    tarjetas.innerHTML = `<div class="tarjeta">No se pudieron obtener monedas en tiempo real.</div>`;
+    console.error('Error al cargar monedas:', error);
+  }
 }
 
 async function cargarCriptos() {
-  const contenedor = document.getElementById("contenedor-criptos");
-  contenedor.innerHTML = "Cargando criptomonedas...";
+  const tarjetas = document.querySelector('#criptos .contenedor-tarjetas');
+  tarjetas.innerHTML = '<div class="tarjeta">Cargando criptomonedas...</div>';
 
-  const fuentes = config.criptos;
-  const datos = await intentarFuentes(fuentes, procesarCriptos);
+  try {
+    const resultados = await intentarFuentes([
+      'https://coinmarketcap.com/'
+    ]);
 
-  if (datos.length === 0) {
-    contenedor.innerHTML = `<div class="tarjeta">No se pudo obtener datos reales de criptomonedas.</div>`;
-    return;
+    mostrarDatos('criptos', resultados);
+  } catch (error) {
+    tarjetas.innerHTML = `<div class="tarjeta">No se pudieron obtener criptomonedas.</div>`;
+    console.error('Error al cargar criptos:', error);
   }
-
-  contenedor.innerHTML = "";
-  datos.forEach(cripto => contenedor.appendChild(crearTarjeta(cripto)));
 }
 
 async function cargarEmpresas() {
-  const contenedor = document.getElementById("contenedor-empresas");
-  contenedor.innerHTML = "Cargando empresas...";
+  const tarjetas = document.querySelector('#empresas .contenedor-tarjetas');
+  tarjetas.innerHTML = '<div class="tarjeta">Cargando empresas...</div>';
 
-  const fuentes = config.empresas;
-  const datos = await intentarFuentes(fuentes, procesarEmpresas);
+  try {
+    const resultados = await intentarFuentes([
+      'https://www.investing.com/equities/',
+      'https://www.marketwatch.com/tools/stockresearch/globalmarkets'
+    ]);
 
-  if (datos.length === 0) {
-    contenedor.innerHTML = `<div class="tarjeta">No se pudo obtener datos reales de empresas.</div>`;
+    mostrarDatos('empresas', resultados);
+  } catch (error) {
+    tarjetas.innerHTML = `<div class="tarjeta">No se pudieron obtener empresas en tiempo real.</div>`;
+    console.error('Error al cargar empresas:', error);
+  }
+}
+
+function mostrarDatos(seccion, datos) {
+  const contenedor = document.querySelector(`#${seccion} .contenedor-tarjetas`);
+  contenedor.innerHTML = '';
+
+  if (!datos || datos.length === 0) {
+    contenedor.innerHTML = '<div class="tarjeta">Sin datos disponibles.</div>';
     return;
   }
 
-  contenedor.innerHTML = "";
-  datos.forEach(empresa => contenedor.appendChild(crearTarjeta(empresa)));
+  datos.forEach(dato => {
+    const tarjeta = document.createElement('div');
+    tarjeta.className = 'tarjeta';
+    tarjeta.innerHTML = `
+      <h3><i>💲</i>${dato.nombre}</h3>
+      <div class="valor">${dato.valor}</div>
+      <div class="variacion ${dato.variacion > 0 ? 'up' : 'down'}">${dato.variacion > 0 ? '▲' : '▼'} ${dato.variacion}%</div>
+      <div class="descripcion">${dato.descripcion || 'Sin descripción'}</div>
+    `;
+
+    tarjeta.addEventListener('click', () => {
+      mostrarGrafico(dato);
+    });
+
+    contenedor.appendChild(tarjeta);
+  });
 }
 
-// FUNCIONES PARA PROCESAR HTML
-function procesarMonedas(html) {
-  // Implementación específica para extraer datos de monedas del HTML
-  return [];
+function mostrarGrafico(dato) {
+  alert(`📈 Aquí se mostraría el gráfico de: ${dato.nombre}\n(valor actual: ${dato.valor})`);
 }
 
-function procesarCriptos(html) {
-  // Implementación específica para extraer datos de criptos del HTML
-  return [];
-}
+// ============ INICIO DE IA ============
 
-function procesarEmpresas(html) {
-  // Implementación específica para extraer datos de empresas del HTML
-  return [];
-}
+function iniciarIA() {
+  const respuesta = document.getElementById('respuesta-ia');
+  const contenedor = document.getElementById('ia');
+  if (!respuesta || !contenedor) return;
 
-// CREAR TARJETA
-function crearTarjeta(info) {
-  const tarjeta = document.createElement("div");
-  tarjeta.className = "tarjeta";
-  tarjeta.innerHTML = `
-    <h3><i class="fas fa-chart-line"></i> ${info.nombre}</h3>
-    <div class="valor">${info.valor}</div>
-    <div class="variacion">${info.variacion ?? ""}</div>
-    <div class="descripcion">${info.descripcion ?? "Sin descripción disponible"}</div>
-  `;
-  tarjeta.addEventListener("click", () => mostrarGrafico(info));
-  return tarjeta;
-}
+  respuesta.innerHTML = 'Hola, soy tu IA financiera. ¿Sobre qué deseas aprender?';
 
-// MOSTRAR GRÁFICO
-function mostrarGrafico(info) {
-  const panel = document.createElement("div");
-  panel.className = "panel-grafico";
-  panel.innerHTML = `
-    <button class="cerrar-panel">Cerrar</button>
-    <h3>Historial de ${info.nombre}</h3>
-    <div>${info.historial?.length ? "<canvas></canvas>" : "No se encontró historial disponible."}</div>
-  `;
-  panel.querySelector(".cerrar-panel").onclick = () => panel.remove();
-  document.body.appendChild(panel);
+  const preguntas = [
+    '¿Qué es una criptomoneda?',
+    '¿Por qué varía el valor del dólar?',
+    '¿Cómo interpretar un gráfico financiero?',
+    '¿Qué factores afectan a las empresas?',
+    '¿Qué significa inflación?',
+  ];
+
+  const selector = document.createElement('select');
+  selector.id = 'pregunta-ia';
+  selector.innerHTML = `<option value="">-- Selecciona una pregunta --</option>` +
+    preguntas.map(p => `<option value="${p}">${p}</option>`).join('');
+
+  contenedor.appendChild(selector);
+
+  selector.addEventListener('change', async () => {
+    const pregunta = selector.value;
+    if (!pregunta) return;
+    const resultado = await obtenerRespuestaIA(pregunta);
+    respuesta.textContent = resultado;
+  });
 }
