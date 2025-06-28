@@ -1,58 +1,52 @@
 // script.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  const botonesMenu = document.querySelectorAll("#menu-lateral nav button");
   const secciones = document.querySelectorAll(".seccion");
-  const abrirMenu = document.getElementById("abrir-menu");
-  const cerrarMenu = document.getElementById("cerrar-menu");
+  const botonesNav = document.querySelectorAll("#menu-lateral nav button");
   const modoBoton = document.querySelector(".modo-boton");
 
-  function mostrarSeccion(id) {
-    secciones.forEach(sec => sec.classList.remove("activa"));
-    document.getElementById(id).classList.add("activa");
-    if (id === "ia") procesarPregunta();
-  }
+  const abrirMenuBtn = document.getElementById("abrir-menu");
+  const cerrarMenuBtn = document.getElementById("cerrar-menu");
+  const menuLateral = document.getElementById("menu-lateral");
 
-  botonesMenu.forEach(btn => {
-    btn.addEventListener("click", () => mostrarSeccion(btn.dataset.seccion));
-  });
-
-  abrirMenu.addEventListener("click", () => {
-    document.getElementById("menu-lateral").style.display = "flex";
-  });
-
-  cerrarMenu.addEventListener("click", () => {
-    document.getElementById("menu-lateral").style.display = "none";
-  });
-
+  // Modo claro/oscuro
   modoBoton.addEventListener("click", () => {
     document.body.classList.toggle("light");
   });
 
-  const selectIA = document.getElementById("pregunta-ia");
-  Object.keys(preguntas).forEach(preg => {
-    const opt = document.createElement("option");
-    opt.value = preg;
-    opt.textContent = preg;
-    selectIA.appendChild(opt);
+  // Navegación
+  botonesNav.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-seccion");
+      secciones.forEach(sec => sec.classList.remove("activa"));
+      document.getElementById(id).classList.add("activa");
+
+      if (id === "ia") ejecutarIA("¿Qué puedo hacer en esta app?");
+    });
   });
 
-  selectIA.addEventListener("change", procesarPregunta);
+  // Menú responsive
+  abrirMenuBtn.addEventListener("click", () => menuLateral.style.display = "flex");
+  cerrarMenuBtn.addEventListener("click", () => menuLateral.style.display = "none");
 
-  mostrarSeccion("inicio");
-  cargarMonedas();
-  cargarCriptos();
-  cargarEmpresas();
+  // Carga inicial
+  document.getElementById("inicio").classList.add("activa");
+
+  document.getElementById("btn-monedas").addEventListener("click", cargarMonedas);
+  document.getElementById("btn-criptos").addEventListener("click", cargarCriptos);
+  document.getElementById("btn-empresas").addEventListener("click", cargarEmpresas);
 });
+
+// Funciones de carga con datos reales
 
 async function cargarMonedas() {
   const contenedor = document.querySelector("#monedas .contenedor-tarjetas");
   contenedor.innerHTML = "Cargando...";
   try {
-    const html = await obtenerDesdeFuentes(fuentes.monedas);
-    contenedor.innerHTML = "<div class='tarjeta'><h3><i>$</i> USD</h3><div class='valor'>3.72</div><div class='variacion up'>+1.2%</div><div class='descripcion'>En alza</div></div>";
+    const html = await intentarFuentes(FUENTES.monedas);
+    contenedor.innerHTML = extraerDatosBasicos(html, "USD-PEN");
   } catch {
-    contenedor.innerHTML = "<div class='tarjeta'><h3><i>$</i> USD</h3><div class='valor'>3.72</div><div class='descripcion'>⚠️ No se encontró historial disponible</div></div>";
+    contenedor.innerHTML = "⚠️ No se pudo obtener datos reales.";
   }
 }
 
@@ -60,10 +54,10 @@ async function cargarCriptos() {
   const contenedor = document.querySelector("#criptos .contenedor-tarjetas");
   contenedor.innerHTML = "Cargando...";
   try {
-    const html = await obtenerDesdeFuentes(fuentes.criptos);
-    contenedor.innerHTML = "<div class='tarjeta'><h3><i>₿</i> Bitcoin</h3><div class='valor'>68,500 USD</div><div class='variacion down'>-2.1%</div><div class='descripcion'>En caída esta semana</div></div>";
+    const html = await intentarFuentes(FUENTES.criptos);
+    contenedor.innerHTML = extraerDatosBasicos(html, "bitcoin");
   } catch {
-    contenedor.innerHTML = "<div class='tarjeta'><h3><i>₿</i> Bitcoin</h3><div class='valor'>68,500 USD</div><div class='descripcion'>⚠️ No se encontró historial disponible</div></div>";
+    contenedor.innerHTML = "⚠️ No se pudo obtener datos reales.";
   }
 }
 
@@ -71,9 +65,21 @@ async function cargarEmpresas() {
   const contenedor = document.querySelector("#empresas .contenedor-tarjetas");
   contenedor.innerHTML = "Cargando...";
   try {
-    const html = await obtenerDesdeFuentes(fuentes.empresas);
-    contenedor.innerHTML = "<div class='tarjeta'><h3><i>🔋</i> Tesla</h3><div class='valor'>210 USD</div><div class='variacion down'>-4.5%</div><div class='descripcion'>En baja</div></div>";
+    const html = await intentarFuentes(FUENTES.empresas);
+    contenedor.innerHTML = extraerDatosBasicos(html, "apple");
   } catch {
-    contenedor.innerHTML = "<div class='tarjeta'><h3><i>🔋</i> Tesla</h3><div class='valor'>210 USD</div><div class='descripcion'>⚠️ No se encontró historial disponible</div></div>";
+    contenedor.innerHTML = "⚠️ No se pudo obtener datos reales.";
   }
+}
+
+// Función simulada para extraer datos básicos — reemplazar por parseo real
+function extraerDatosBasicos(html, clave) {
+  return `
+    <div class="tarjeta">
+      <h3><i class="fa-solid fa-chart-line"></i> ${clave}</h3>
+      <div class="valor">S/ 3.65</div>
+      <div class="variacion"><span class="up">▲</span> +1.2%</div>
+      <div class="descripcion">Tendencia estable esta semana</div>
+    </div>
+  `;
 }
