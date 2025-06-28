@@ -1,18 +1,18 @@
-export const PROXY_URL = "https://financial-proxy.onrender.com/?url=";
+// Archivo: config.js
 
-export const FUENTES = {
-  criptos: [
-    "https://www.coingecko.com/",
-    "https://coinmarketcap.com/",
-    "https://finance.yahoo.com/cryptocurrencies/"
-  ],
+const PROXY_URL = "https://financial-proxy.onrender.com/?url=";
+
+const FUENTES = {
   monedas: [
-    "https://www.x-rates.com/table/?from=USD&amount=1",
     "https://wise.com/gb/currency-converter/usd-to-pen-rate",
-    "https://www.google.com/search?q=1+usd+to+pen"
+    "https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=PEN"
+  ],
+  criptos: [
+    "https://coinmarketcap.com/currencies/bitcoin/",
+    "https://www.coindesk.com/price/bitcoin/",
+    "https://www.binance.com/en/price/bitcoin"
   ],
   empresas: [
-    "https://finance.yahoo.com/world-indices/",
     "https://www.investing.com/equities/",
     "https://www.marketwatch.com/tools/stockresearch/globalmarkets"
   ]
