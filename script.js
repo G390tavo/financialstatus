@@ -1,6 +1,4 @@
 // script.js
-import { preguntas, procesarPregunta } from './ai.js';
-import { fuentes, obtenerDesdeFuentes } from './utils.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const botonesMenu = document.querySelectorAll("#menu-lateral nav button");
@@ -16,9 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   botonesMenu.forEach(btn => {
-    btn.addEventListener("click", () => {
-      mostrarSeccion(btn.dataset.seccion);
-    });
+    btn.addEventListener("click", () => mostrarSeccion(btn.dataset.seccion));
   });
 
   abrirMenu.addEventListener("click", () => {
@@ -43,10 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   selectIA.addEventListener("change", procesarPregunta);
 
-  // Cargar por defecto
   mostrarSeccion("inicio");
-
-  // Cargar datos reales en cada sección
   cargarMonedas();
   cargarCriptos();
   cargarEmpresas();
