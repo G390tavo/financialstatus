@@ -2,73 +2,79 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Scripts -->
+  <script src="config.js" defer></script>
+  <script src="utils.js" defer></script>
+  <script src="ai.js" defer></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <!-- BOTONES GLOBALES -->
-  <button id="abrir-menu">☰</button>
-  <button class="modo-boton" onclick="document.body.classList.toggle('light')">Modo Claro/Oscuro</button>
 
-  <!-- MENÚ LATERAL -->
+  <!-- Botón modo oscuro/claro -->
+  <button class="modo-boton">Modo Claro/Oscuro</button>
+
+  <!-- Botón abrir menú (mobile) -->
+  <button id="abrir-menu">☰ Menú</button>
+
+  <!-- Menú lateral -->
   <aside id="menu-lateral">
     <h2>FinancialStatus</h2>
     <button id="cerrar-menu">X</button>
     <nav>
-      <button onclick="mostrarSeccion('inicio')">Inicio</button>
-      <button onclick="mostrarSeccion('monedas')">Monedas</button>
-      <button onclick="mostrarSeccion('criptos')">Criptos</button>
-      <button onclick="mostrarSeccion('empresas')">Empresas</button>
-      <button onclick="mostrarSeccion('ia')">IA</button>
+      <button data-seccion="inicio">Inicio</button>
+      <button data-seccion="monedas">Monedas</button>
+      <button data-seccion="criptos">Criptos</button>
+      <button data-seccion="empresas">Empresas</button>
+      <button data-seccion="ia">IA</button>
     </nav>
   </aside>
 
-  <!-- CONTENIDO PRINCIPAL -->
+  <!-- Contenido principal -->
   <main>
     <!-- INICIO -->
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Explora monedas, criptomonedas, empresas y usa nuestra IA integrada.</p>
+      <p>Consulta información actualizada de monedas, criptomonedas, empresas y utiliza la IA para aprender más.</p>
     </section>
 
     <!-- MONEDAS -->
     <section id="monedas" class="seccion">
       <h2>Monedas Internacionales</h2>
-      <div id="monedas-lista" class="contenedor-tarjetas"></div>
+      <div id="contenedor-monedas" class="contenedor-tarjetas"></div>
     </section>
 
-    <!-- CRIPTOS -->
+    <!-- CRIPTOMONEDAS -->
     <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <div id="criptos-lista" class="contenedor-tarjetas"></div>
+      <div id="contenedor-criptos" class="contenedor-tarjetas"></div>
     </section>
 
     <!-- EMPRESAS -->
     <section id="empresas" class="seccion">
       <h2>Empresas</h2>
-      <div id="empresas-lista" class="contenedor-tarjetas"></div>
+      <div id="contenedor-empresas" class="contenedor-tarjetas"></div>
     </section>
 
-    <!-- INTELIGENCIA ARTIFICIAL -->
+    <!-- IA -->
     <section id="ia" class="seccion">
-      <h2>Pregúntale a la IA</h2>
-      <p>Selecciona una pregunta y la IA buscará información real en internet:</p>
+      <h2>Asistente Financiero</h2>
+      <p>Selecciona una pregunta para que la IA te ayude a entender conceptos económicos y financieros.</p>
       <select id="pregunta-ia">
-        <option value="">Selecciona una pregunta...</option>
-        <option value="¿Cuál es el valor actual del dólar en Perú?">¿Cuál es el valor actual del dólar en Perú?</option>
-        <option value="¿Qué es una criptomoneda?">¿Qué es una criptomoneda?</option>
-        <option value="¿Qué empresas lideran el mercado hoy?">¿Qué empresas lideran el mercado hoy?</option>
-        <option value="¿Qué significa inflación?">¿Qué significa inflación?</option>
+        <option value="">Selecciona una pregunta</option>
       </select>
-      <div id="ia-cargando"></div>
+      <div id="ia-cargando" style="display: none;">Buscando información...</div>
       <div id="respuesta-ia"></div>
     </section>
   </main>
 
-  <!-- SCRIPTS -->
-  <script src="utils.js"></script>
-  <script src="ai.js"></script>
-  <script src="script.js"></script>
 </body>
 </html>
