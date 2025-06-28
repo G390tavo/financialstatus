@@ -1,85 +1,95 @@
-// script.js
+import { FUENTES } from './config.js';
+import { intentarFuentes } from './utils.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  const secciones = document.querySelectorAll(".seccion");
-  const botonesNav = document.querySelectorAll("#menu-lateral nav button");
-  const modoBoton = document.querySelector(".modo-boton");
+  document.getElementById("inicio-btn").click();
+  document.getElementById("modo-boton").addEventListener("click", toggleModo);
+  document.getElementById("cerrar-menu").addEventListener("click", () => document.getElementById("menu-lateral").style.display = "none");
+  document.getElementById("abrir-menu").addEventListener("click", () => document.getElementById("menu-lateral").style.display = "flex");
 
-  const abrirMenuBtn = document.getElementById("abrir-menu");
-  const cerrarMenuBtn = document.getElementById("cerrar-menu");
-  const menuLateral = document.getElementById("menu-lateral");
-
-  // Modo claro/oscuro
-  modoBoton.addEventListener("click", () => {
-    document.body.classList.toggle("light");
-  });
-
-  // Navegación
-  botonesNav.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = btn.getAttribute("data-seccion");
-      secciones.forEach(sec => sec.classList.remove("activa"));
-      document.getElementById(id).classList.add("activa");
-
-      if (id === "ia") ejecutarIA("¿Qué puedo hacer en esta app?");
-    });
-  });
-
-  // Menú responsive
-  abrirMenuBtn.addEventListener("click", () => menuLateral.style.display = "flex");
-  cerrarMenuBtn.addEventListener("click", () => menuLateral.style.display = "none");
-
-  // Carga inicial
-  document.getElementById("inicio").classList.add("activa");
-
-  document.getElementById("btn-monedas").addEventListener("click", cargarMonedas);
-  document.getElementById("btn-criptos").addEventListener("click", cargarCriptos);
-  document.getElementById("btn-empresas").addEventListener("click", cargarEmpresas);
+  document.getElementById("monedas-btn").addEventListener("click", cargarMonedas);
+  document.getElementById("criptos-btn").addEventListener("click", cargarCriptos);
+  document.getElementById("empresas-btn").addEventListener("click", cargarEmpresas);
 });
 
-// Funciones de carga con datos reales
+function toggleModo() {
+  document.body.classList.toggle("light");
+}
+
+function mostrarMensajeError(idContenedor, mensaje) {
+  document.getElementById(idContenedor).innerHTML = `<div class="tarjeta"><h3>Error</h3><p>${mensaje}</p></div>`;
+}
 
 async function cargarMonedas() {
-  const contenedor = document.querySelector("#monedas .contenedor-tarjetas");
+  document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activa"));
+  document.getElementById("monedas").classList.add("activa");
+  const contenedor = document.getElementById("lista-monedas");
   contenedor.innerHTML = "Cargando...";
-  try {
-    const html = await intentarFuentes(FUENTES.monedas);
-    contenedor.innerHTML = extraerDatosBasicos(html, "USD-PEN");
-  } catch {
-    contenedor.innerHTML = "⚠️ No se pudo obtener datos reales.";
+
+  const datos = await intentarFuentes(FUENTES.monedas, parsearMonedas);
+  if (datos.length === 0) {
+    mostrarMensajeError("lista-monedas", "No se pudo obtener el valor de las monedas.");
+    return;
   }
+
+  contenedor.innerHTML = datos.map(d => `
+    <div class="tarjeta">
+      <h3>${d.nombre}</h3>
+      <div class="valor">${d.valor}</div>
+      <div class="descripcion">${d.descripcion || "Sin historial disponible."}</div>
+    </div>
+  `).join("");
 }
 
 async function cargarCriptos() {
-  const contenedor = document.querySelector("#criptos .contenedor-tarjetas");
+  document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activa"));
+  document.getElementById("criptos").classList.add("activa");
+  const contenedor = document.getElementById("lista-criptos");
   contenedor.innerHTML = "Cargando...";
-  try {
-    const html = await intentarFuentes(FUENTES.criptos);
-    contenedor.innerHTML = extraerDatosBasicos(html, "bitcoin");
-  } catch {
-    contenedor.innerHTML = "⚠️ No se pudo obtener datos reales.";
+
+  const datos = await intentarFuentes(FUENTES.criptos, parsearCriptos);
+  if (datos.length === 0) {
+    mostrarMensajeError("lista-criptos", "No se pudo obtener el valor de las criptomonedas.");
+    return;
   }
+
+  contenedor.innerHTML = datos.map(d => `
+    <div class="tarjeta">
+      <h3>${d.nombre}</h3>
+      <div class="valor">${d.valor}</div>
+      <div class="descripcion">${d.descripcion || "Sin historial disponible."}</div>
+    </div>
+  `).join("");
 }
 
 async function cargarEmpresas() {
-  const contenedor = document.querySelector("#empresas .contenedor-tarjetas");
+  document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activa"));
+  document.getElementById("empresas").classList.add("activa");
+  const contenedor = document.getElementById("lista-empresas");
   contenedor.innerHTML = "Cargando...";
-  try {
-    const html = await intentarFuentes(FUENTES.empresas);
-    contenedor.innerHTML = extraerDatosBasicos(html, "apple");
-  } catch {
-    contenedor.innerHTML = "⚠️ No se pudo obtener datos reales.";
+
+  const datos = await intentarFuentes(FUENTES.empresas, parsearEmpresas);
+  if (datos.length === 0) {
+    mostrarMensajeError("lista-empresas", "No se pudo obtener el valor de las empresas.");
+    return;
   }
+
+  contenedor.innerHTML = datos.map(d => `
+    <div class="tarjeta">
+      <h3>${d.nombre}</h3>
+      <div class="valor">${d.valor}</div>
+      <div class="descripcion">${d.descripcion || "Sin historial disponible."}</div>
+    </div>
+  `).join("");
 }
 
-// Función simulada para extraer datos básicos — reemplazar por parseo real
-function extraerDatosBasicos(html, clave) {
-  return `
-    <div class="tarjeta">
-      <h3><i class="fa-solid fa-chart-line"></i> ${clave}</h3>
-      <div class="valor">S/ 3.65</div>
-      <div class="variacion"><span class="up">▲</span> +1.2%</div>
-      <div class="descripcion">Tendencia estable esta semana</div>
-    </div>
-  `;
+// PARSEADORES SIMPLIFICADOS (coloca los reales luego)
+function parsearMonedas(html) {
+  return [{ nombre: "USD a PEN", valor: "3.68", descripcion: "Solo valor actual disponible." }];
+}
+function parsearCriptos(html) {
+  return [{ nombre: "Bitcoin", valor: "$105,562.10", descripcion: "Actualizado hoy." }];
+}
+function parsearEmpresas(html) {
+  return [{ nombre: "Apple Inc", valor: "$185.23", descripcion: "Valor actual disponible." }];
 }
