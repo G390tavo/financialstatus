@@ -1,41 +1,55 @@
 // ai.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  const select = document.getElementById("pregunta-ia");
-  const respuesta = document.getElementById("respuesta-ia");
+  const seccionIA = document.getElementById("ia");
+  const preguntaSelect = document.getElementById("pregunta-ia");
+  const respuestaDiv = document.getElementById("respuesta-ia");
   const cargando = document.getElementById("ia-cargando");
 
-  select.addEventListener("change", async () => {
-    const pregunta = select.value.trim();
+  // Mostrar preguntas predefinidas
+  PREGUNTAS_IA.forEach(p => {
+    const option = document.createElement("option");
+    option.textContent = p;
+    preguntaSelect.appendChild(option);
+  });
+
+  // Introducción automática al cargar la sección
+  if (seccionIA.classList.contains("activa")) {
+    respuestaDiv.textContent = "Hola, soy tu IA financiera. Selecciona una pregunta para ayudarte con información real del mercado.";
+  }
+
+  // Evento al seleccionar pregunta
+  preguntaSelect.addEventListener("change", async () => {
+    const pregunta = preguntaSelect.value;
     if (!pregunta) return;
 
-    respuesta.innerHTML = "";
-    cargando.textContent = "⏳ Buscando información confiable...";
+    cargando.style.display = "block";
+    respuestaDiv.textContent = "";
 
-    const fuentes = [
-      `https://www.google.com/search?q=${encodeURIComponent(pregunta)}`,
-      `https://www.bing.com/search?q=${encodeURIComponent(pregunta)}`,
-      `https://duckduckgo.com/?q=${encodeURIComponent(pregunta)}`
-    ];
-
-    let encontrada = false;
-
-    for (const url of fuentes) {
-      const html = await obtenerHTML(url);
-      if (html) {
-        const match = html.match(/<p[^>]*>(.*?)<\/p>/i);
-        if (match && match[1] && match[1].length > 30) {
-          respuesta.innerHTML = match[1];
-          encontrada = true;
-          break;
+    for (const fuente of FUENTES_IA) {
+      const html = await obtenerHTML(fuente + encodeURIComponent(pregunta));
+      if (html && html.includes("class")) {
+        const texto = extraerTextoSignificativo(html);
+        if (texto) {
+          cargando.style.display = "none";
+          respuestaDiv.textContent = texto;
+          return;
         }
       }
     }
 
-    cargando.textContent = "";
-
-    if (!encontrada) {
-      respuesta.innerHTML = `<div class="mensaje-error">❌ No se encontró información útil. Por favor, intenta con otra pregunta o verifica tu conexión.</div>`;
-    }
+    cargando.style.display = "none";
+    respuestaDiv.textContent = "Lo siento, no pude obtener una respuesta confiable. Intenta más tarde.";
   });
 });
+
+// Extrae texto útil de HTML crudo
+function extraerTextoSignificativo(html) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const bloques = doc.querySelectorAll("p, span, div");
+  for (const b of bloques) {
+    const txt = b.textContent.trim();
+    if (txt.length > 60 && txt.length < 300) return txt;
+  }
+  return null;
+}
