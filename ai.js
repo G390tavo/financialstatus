@@ -1,47 +1,16 @@
-import { mostrarGrafico } from './script.js';
+// Archivo: ai.js
 
-const preguntasIA = {
-  "¿Cuál es el valor actual del dólar?": async () => {
-    document.querySelector("#respuesta-ia").innerText = "Consultando valor del dólar...";
-    document.querySelector("#ia-cargando").style.display = "block";
-    await document.querySelector("#monedas-btn").click();
-    document.querySelector("#ia-cargando").style.display = "none";
-    document.querySelector("#respuesta-ia").innerText = "El valor se ha cargado en la sección de monedas.";
-  },
-  "¿Cuánto vale el Bitcoin hoy?": async () => {
-    document.querySelector("#respuesta-ia").innerText = "Buscando información de Bitcoin...";
-    document.querySelector("#ia-cargando").style.display = "block";
-    await document.querySelector("#criptos-btn").click();
-    document.querySelector("#ia-cargando").style.display = "none";
-    document.querySelector("#respuesta-ia").innerText = "Consulta cargada en Criptomonedas.";
-  },
-  "¿Cuál es la empresa más valiosa actualmente?": async () => {
-    document.querySelector("#respuesta-ia").innerText = "Verificando datos de empresas...";
-    document.querySelector("#ia-cargando").style.display = "block";
-    await document.querySelector("#empresas-btn").click();
-    document.querySelector("#ia-cargando").style.display = "none";
-    document.querySelector("#respuesta-ia").innerText = "Consulta cargada en Empresas.";
-  },
-  "¿Cómo funciona esta aplicación?": () => {
-    document.querySelector("#respuesta-ia").innerText = 
-      "Esta aplicación obtiene datos reales desde internet sobre criptomonedas, monedas y empresas. Si encuentra datos históricos, los grafica automáticamente. También puedes preguntarle a la IA para ayudarte a navegar y entender los resultados.";
-  },
-  "¿Qué hace la IA en esta app?": () => {
-    document.querySelector("#respuesta-ia").innerText = 
-      "La IA te ayuda a entender cómo usar la aplicación, encontrar datos financieros relevantes y visualizar gráficos cuando estén disponibles. También detecta errores o faltas de conexión.";
-  },
-  "¿Por qué algunos datos no cargan?": () => {
-    document.querySelector("#respuesta-ia").innerText = 
-      "Los datos se obtienen de internet. Si las fuentes fallan o no se puede acceder, se mostrará un mensaje indicando que no hay historial o que el valor no está disponible temporalmente.";
-  },
-};
+function obtenerRespuestaIA(pregunta) {
+  const respuestas = {
+    "¿qué es esta app?": "FinancialStatus te muestra información en tiempo real sobre monedas, criptomonedas y empresas, incluyendo gráficos reales y una IA integrada.",
+    "¿cómo funciona?": "La app usa scraping web con proxy para obtener datos reales, sin depender de APIs externas.",
+    "¿qué pasa si no carga algo?": "Se mostrará un mensaje de error claro y no se usará información falsa. Solo se trabaja con datos reales.",
+    "¿cómo veo criptos o monedas?": "Selecciona la sección correspondiente desde el menú lateral para ver datos y gráficos actualizados.",
+    "¿puedo usar IA?": "Sí. Haz clic en la sección 'IA' y escribe una pregunta o selecciona una sugerencia para comenzar.",
+    "¿por qué aparece solo un valor sin gráfico?": "Cuando no se encuentra historial real, solo se muestra el valor actual con una nota explicativa.",
+    "¿qué fuentes usa?": "Usa fuentes como CoinMarketCap, Investing, Wise, entre otras confiables. Si una falla, intenta otra automáticamente."
+  };
 
-document.getElementById("pregunta-ia").addEventListener("change", (e) => {
-  const pregunta = e.target.value;
-  if (preguntasIA[pregunta]) {
-    preguntasIA[pregunta]();
-  } else {
-    document.querySelector("#respuesta-ia").innerText = 
-      "Lo siento, esa pregunta aún no está disponible.";
-  }
-});
+  const preguntaLimpia = pregunta.toLowerCase().trim();
+  return respuestas[preguntaLimpia] || "Lo siento, aún no tengo una respuesta entrenada para eso. Prueba con otra pregunta relacionada a cómo funciona la app.";
+}
