@@ -1,75 +1,75 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://kit.fontawesome.com/a2d9d5da3c.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
 </head>
 <body>
+  <!-- Botón para abrir menú -->
+  <button id="abrir-menu">☰ Menú</button>
 
-  <!-- Botón modo claro/oscuro -->
-  <button class="modo-boton">Modo Claro/Oscuro</button>
-
-  <!-- Botón abrir menú (móvil) -->
-  <button id="abrir-menu">☰</button>
+  <!-- Botón modo oscuro/claro -->
+  <button class="modo-boton" id="modo-boton">Modo Claro</button>
 
   <!-- Menú lateral -->
   <aside id="menu-lateral">
-    <button id="cerrar-menu">✖</button>
+    <button id="cerrar-menu">X</button>
     <h2>FinancialStatus</h2>
     <nav>
-      <button data-seccion="inicio" id="btn-inicio">Inicio</button>
-      <button data-seccion="monedas" id="btn-monedas">Monedas</button>
-      <button data-seccion="criptos" id="btn-criptos">Criptomonedas</button>
-      <button data-seccion="empresas" id="btn-empresas">Empresas</button>
-      <button data-seccion="ia" id="btn-ia">IA</button>
+      <button data-seccion="inicio">Inicio</button>
+      <button data-seccion="monedas">Monedas</button>
+      <button data-seccion="criptos">Criptomonedas</button>
+      <button data-seccion="empresas">Empresas</button>
+      <button data-seccion="ia">IA</button>
     </nav>
   </aside>
 
-  <!-- Contenido principal -->
   <main>
     <!-- INICIO -->
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Selecciona una sección desde el menú para comenzar.</p>
+      <p>Explora información financiera real en tiempo real sobre monedas, criptomonedas y empresas.</p>
     </section>
 
     <!-- MONEDAS -->
     <section id="monedas" class="seccion">
-      <h1>Monedas Internacionales</h1>
-      <div class="contenedor-tarjetas"></div>
+      <h2>Monedas Internacionales</h2>
+      <div class="contenedor-tarjetas" id="monedas-contenedor"></div>
     </section>
 
-    <!-- CRIPTOS -->
+    <!-- CRIPTOMONEDAS -->
     <section id="criptos" class="seccion">
-      <h1>Criptomonedas</h1>
-      <div class="contenedor-tarjetas"></div>
+      <h2>Criptomonedas</h2>
+      <div class="contenedor-tarjetas" id="criptos-contenedor"></div>
     </section>
 
     <!-- EMPRESAS -->
     <section id="empresas" class="seccion">
-      <h1>Empresas Globales</h1>
-      <div class="contenedor-tarjetas"></div>
+      <h2>Empresas</h2>
+      <div class="contenedor-tarjetas" id="empresas-contenedor"></div>
     </section>
 
-    <!-- IA -->
+    <!-- INTELIGENCIA ARTIFICIAL -->
     <section id="ia" class="seccion">
-      <h1>Asistente Inteligente</h1>
-      <p>Selecciona una consulta predefinida o espera a que la IA inicie automáticamente.</p>
-      <select id="pregunta-ia" onchange="ejecutarIA(this.value)">
-        <option value="">Selecciona una pregunta</option>
-        <option value="¿Qué es Bitcoin?">¿Qué es Bitcoin?</option>
-        <option value="¿Cómo funciona el mercado de valores?">¿Cómo funciona el mercado de valores?</option>
-        <option value="¿Qué es el tipo de cambio?">¿Qué es el tipo de cambio?</option>
+      <h2>Asistente Financiero</h2>
+      <p>Selecciona una pregunta para recibir ayuda automatizada basada en datos reales.</p>
+      <select id="pregunta-ia">
+        <option value="">Selecciona una pregunta...</option>
+        <option value="valor_dolar">¿Cuál es el valor actual del dólar?</option>
+        <option value="mejor_cripto">¿Cuál es la criptomoneda con mejor rendimiento hoy?</option>
+        <option value="empresa_caida">¿Qué empresa tuvo mayor caída esta semana?</option>
+        <option value="funcion_app">¿Cómo funciona esta aplicación?</option>
+        <option value="no_funciona">¿Por qué no se ve alguna información?</option>
       </select>
-      <div id="ia-cargando" style="display:none;">🔄 Cargando respuesta...</div>
+      <div id="ia-cargando" style="display: none;">Cargando información...</div>
       <div id="respuesta-ia"></div>
     </section>
   </main>
 
-  <!-- Scripts -->
+  <!-- Scripts (orden muy importante) -->
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
