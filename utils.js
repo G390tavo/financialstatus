@@ -1,25 +1,26 @@
-// Archivo: utils.js
-
+// Función para obtener HTML desde una URL usando proxy
 async function obtenerHTML(url) {
   try {
-    const response = await fetch(PROXY_URL + encodeURIComponent(url));
-    if (!response.ok) throw new Error("HTTP " + response.status);
-    return await response.text();
+    const respuesta = await fetch(PROXY_URL + encodeURIComponent(url));
+    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+    const texto = await respuesta.text();
+    return texto;
   } catch (error) {
     console.error("Error al obtener HTML:", error);
     throw error;
   }
 }
 
-async function intentarFuentes(fuentes, procesarHTML) {
-  for (const url of fuentes) {
+// Intenta múltiples fuentes hasta encontrar una que funcione
+async function intentarFuentes(fuentes, procesador) {
+  for (const fuente of fuentes) {
     try {
-      const html = await obtenerHTML(url);
-      const resultado = procesarHTML(html);
-      if (resultado) return resultado;
-    } catch (_) {
-      // Intenta la siguiente fuente
+      const html = await obtenerHTML(fuente);
+      const datos = procesador(html);
+      if (datos && datos.length > 0) return datos;
+    } catch (e) {
+      console.warn(`Fuente fallida: ${fuente}`);
     }
   }
-  return null;
+  return [];
 }
