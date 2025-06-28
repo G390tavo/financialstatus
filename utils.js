@@ -1,25 +1,24 @@
-// utils.js
+import { PROXY_URL } from './config.js';
 
-async function obtenerHTML(url) {
+export async function obtenerHTML(url) {
   try {
-    const proxyURL = `https://financial-proxy.onrender.com/?url=${encodeURIComponent(url)}`;
-    const res = await fetch(proxyURL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.text();
-  } catch (err) {
-    console.error("Error al obtener HTML:", err);
-    throw err;
+    const respuesta = await fetch(PROXY_URL + encodeURIComponent(url));
+    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+    return await respuesta.text();
+  } catch (error) {
+    throw new Error("Error al obtener HTML: " + error.message);
   }
 }
 
-async function intentarFuentes(urls) {
-  for (const url of urls) {
+export async function intentarFuentes(fuentes, parsearFn) {
+  for (const fuente of fuentes) {
     try {
-      const html = await obtenerHTML(url);
-      if (html && html.length > 100) return html;
-    } catch (_) {
-      continue;
+      const html = await obtenerHTML(fuente);
+      const datos = parsearFn(html);
+      if (datos && datos.length > 0) return datos;
+    } catch (e) {
+      console.warn("Fuente fallida:", fuente);
     }
   }
-  throw new Error("No se pudo obtener información de ninguna fuente.");
+  return [];
 }
