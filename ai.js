@@ -1,55 +1,54 @@
 // ai.js
+import { fuentes, obtenerDesdeFuentes } from './utils.js';
 
-document.addEventListener("DOMContentLoaded", () => {
-  const seccionIA = document.getElementById("ia");
-  const preguntaSelect = document.getElementById("pregunta-ia");
-  const respuestaDiv = document.getElementById("respuesta-ia");
-  const cargando = document.getElementById("ia-cargando");
+const preguntas = {
+  "¿Cuál es la tendencia del dólar?": "monedas",
+  "¿Qué criptomonedas están subiendo?": "criptos",
+  "¿Qué empresas están en baja esta semana?": "empresas"
+};
 
-  // Mostrar preguntas predefinidas
-  PREGUNTAS_IA.forEach(p => {
-    const option = document.createElement("option");
-    option.textContent = p;
-    preguntaSelect.appendChild(option);
-  });
+const respuestaIA = document.getElementById("respuesta-ia");
+const preguntaSelect = document.getElementById("pregunta-ia");
+const loading = document.getElementById("ia-cargando");
 
-  // Introducción automática al cargar la sección
-  if (seccionIA.classList.contains("activa")) {
-    respuestaDiv.textContent = "Hola, soy tu IA financiera. Selecciona una pregunta para ayudarte con información real del mercado.";
+function interpretar(html, tipo) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  let resultado = "";
+
+  switch (tipo) {
+    case "monedas":
+      const tabla = doc.querySelector("table");
+      if (tabla) resultado = "Dólar y monedas analizados correctamente.";
+      break;
+    case "criptos":
+      const lista = doc.querySelectorAll("table, .coin-item, .cmc-table");
+      if (lista.length > 0) resultado = "Criptomonedas obtenidas correctamente.";
+      break;
+    case "empresas":
+      const filas = doc.querySelectorAll("table tr");
+      if (filas.length > 5) resultado = "Empresas procesadas correctamente.";
+      break;
   }
 
-  // Evento al seleccionar pregunta
-  preguntaSelect.addEventListener("change", async () => {
-    const pregunta = preguntaSelect.value;
-    if (!pregunta) return;
-
-    cargando.style.display = "block";
-    respuestaDiv.textContent = "";
-
-    for (const fuente of FUENTES_IA) {
-      const html = await obtenerHTML(fuente + encodeURIComponent(pregunta));
-      if (html && html.includes("class")) {
-        const texto = extraerTextoSignificativo(html);
-        if (texto) {
-          cargando.style.display = "none";
-          respuestaDiv.textContent = texto;
-          return;
-        }
-      }
-    }
-
-    cargando.style.display = "none";
-    respuestaDiv.textContent = "Lo siento, no pude obtener una respuesta confiable. Intenta más tarde.";
-  });
-});
-
-// Extrae texto útil de HTML crudo
-function extraerTextoSignificativo(html) {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  const bloques = doc.querySelectorAll("p, span, div");
-  for (const b of bloques) {
-    const txt = b.textContent.trim();
-    if (txt.length > 60 && txt.length < 300) return txt;
-  }
-  return null;
+  return resultado || "No se pudo interpretar el contenido correctamente.";
 }
+
+async function procesarPregunta() {
+  const pregunta = preguntaSelect.value;
+  const tipo = preguntas[pregunta];
+  respuestaIA.textContent = "";
+  loading.style.display = "block";
+
+  try {
+    const html = await obtenerDesdeFuentes(fuentes[tipo]);
+    const respuesta = interpretar(html, tipo);
+    respuestaIA.textContent = respuesta;
+  } catch (e) {
+    respuestaIA.textContent = "⚠️ No se pudo obtener respuesta. Intenta más tarde.";
+  }
+
+  loading.style.display = "none";
+}
+
+export { preguntas, procesarPregunta };
