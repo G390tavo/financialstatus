@@ -1,47 +1,33 @@
 // utils.js
 
 const fuentes = {
-  empresas: [
-    'https://finance.yahoo.com/screener/predefined/ms_technology',
-    'https://www.tradingview.com/markets/stocks-usa/',
-    'https://www.investing.com/equities/'
+  monedas: [
+    "https://financial-proxy.onrender.com/?url=https://wise.com/gb/currency-converter/usd-to-pen-rate",
+    "https://financial-proxy.onrender.com/?url=https://www.x-rates.com/calculator/?from=USD&to=PEN&amount=1",
+    "https://financial-proxy.onrender.com/?url=https://www.google.com/finance/quote/USD-PEN"
   ],
   criptos: [
-    'https://coinmarketcap.com/',
-    'https://www.coingecko.com/',
-    'https://www.tradingview.com/markets/cryptocurrencies/'
+    "https://financial-proxy.onrender.com/?url=https://coinmarketcap.com/",
+    "https://financial-proxy.onrender.com/?url=https://www.coingecko.com/",
+    "https://financial-proxy.onrender.com/?url=https://www.google.com/finance/quote/BTC-USD"
   ],
-  monedas: [
-    'https://wise.com/gb/currency-converter/usd-to-pen-rate',
-    'https://www.x-rates.com/table/?from=USD&amount=1',
-    'https://www.exchangerates.org.uk/USD-PEN-exchange-rate-history.html'
+  empresas: [
+    "https://financial-proxy.onrender.com/?url=https://www.investing.com/equities/",
+    "https://financial-proxy.onrender.com/?url=https://www.google.com/finance/markets/most-active",
+    "https://financial-proxy.onrender.com/?url=https://finance.yahoo.com/most-active"
   ]
 };
 
-async function obtenerHTML(url) {
-  try {
-    const proxy = 'https://financial-proxy.onrender.com/?url=';
-    const respuesta = await fetch(proxy + encodeURIComponent(url));
-    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-    const texto = await respuesta.text();
-    if (!texto || texto.length < 300) throw new Error('Contenido insuficiente');
-    return texto;
-  } catch (error) {
-    console.error('Error al obtener HTML:', error);
-    throw error;
-  }
-}
-
-async function obtenerDesdeFuentes(lista) {
-  for (const fuente of lista) {
+async function obtenerDesdeFuentes(fuentesLista) {
+  for (let url of fuentesLista) {
     try {
-      const html = await obtenerHTML(fuente);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const html = await res.text();
       return html;
     } catch (e) {
-      console.warn('Fallo fuente:', fuente);
+      console.warn("Error con fuente:", url, e.message);
     }
   }
-  throw new Error('No se pudo obtener datos de ninguna fuente.');
+  throw new Error("⚠️ No se pudo obtener datos desde ninguna fuente.");
 }
-
-export { fuentes, obtenerDesdeFuentes };
