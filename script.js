@@ -1,139 +1,136 @@
-// Archivo: script.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const secciones = document.querySelectorAll(".seccion");
   const botonesMenu = document.querySelectorAll("#menu-lateral nav button");
-  const botonModo = document.querySelector(".modo-boton");
-  const botonCerrar = document.getElementById("cerrar-menu");
-  const botonAbrir = document.getElementById("abrir-menu");
 
-  function mostrarSeccion(id) {
-    secciones.forEach(sec => sec.classList.remove("activa"));
-    document.getElementById(id).classList.add("activa");
-  }
+  const cerrarMenu = document.getElementById("cerrar-menu");
+  const abrirMenu = document.getElementById("abrir-menu");
+  const menuLateral = document.getElementById("menu-lateral");
+  const modoBoton = document.querySelector(".modo-boton");
 
-  botonesMenu.forEach(btn => {
-    btn.addEventListener("click", () => {
-      mostrarSeccion(btn.dataset.seccion);
-      if (window.innerWidth <= 768) document.getElementById("menu-lateral").style.display = "none";
-    });
+  // Mostrar solo Inicio al comenzar
+  document.getElementById("inicio").classList.add("activa");
+
+  // Menú
+  cerrarMenu.addEventListener("click", () => {
+    menuLateral.style.display = "none";
+    abrirMenu.style.display = "block";
   });
 
-  botonModo.addEventListener("click", () => {
+  abrirMenu.addEventListener("click", () => {
+    menuLateral.style.display = "flex";
+    abrirMenu.style.display = "none";
+  });
+
+  // Modo claro/oscuro
+  modoBoton.addEventListener("click", () => {
     document.body.classList.toggle("light");
   });
 
-  botonCerrar.addEventListener("click", () => {
-    document.getElementById("menu-lateral").style.display = "none";
-    botonAbrir.style.display = "block";
+  // Navegación entre secciones
+  botonesMenu.forEach(boton => {
+    boton.addEventListener("click", () => {
+      const destino = boton.getAttribute("data-seccion");
+
+      secciones.forEach(sec => sec.classList.remove("activa"));
+      document.getElementById(destino).classList.add("activa");
+
+      if (destino === "monedas") cargarMonedas();
+      if (destino === "criptos") cargarCriptos();
+      if (destino === "empresas") cargarEmpresas();
+      if (destino === "ia") {
+        generarOpcionesIA();
+        document.getElementById("respuesta-ia").textContent = "Selecciona una pregunta para comenzar.";
+      }
+    });
   });
 
-  botonAbrir.addEventListener("click", () => {
-    document.getElementById("menu-lateral").style.display = "flex";
-    botonAbrir.style.display = "none";
+  // Pregunta a la IA
+  document.getElementById("pregunta-ia").addEventListener("change", e => {
+    responderIA(e.target.value);
   });
-
-  // Sección por defecto
-  mostrarSeccion("inicio");
-
-  // Cargar datos
-  document.querySelector("[data-seccion='monedas']").addEventListener("click", cargarMonedas);
-  document.querySelector("[data-seccion='criptos']").addEventListener("click", cargarCriptos);
-  document.querySelector("[data-seccion='empresas']").addEventListener("click", cargarEmpresas);
-  document.querySelector("[data-seccion='ia']").addEventListener("click", iniciarIA);
 });
 
-// ========== Funciones de Carga ==========
+// === FUNCIONES PARA CADA SECCIÓN ===
 
 async function cargarMonedas() {
-  const contenedor = document.querySelector("#monedas .contenedor-tarjetas");
+  const contenedor = document.getElementById("monedas-lista");
   contenedor.innerHTML = "Cargando...";
 
-  const resultado = await intentarFuentes(FUENTES.monedas, html => {
-    const match = html.match(/1\s*USD\s*=\s*([\d.,]+)\s*PEN/);
-    return match ? { nombre: "Dólar a Sol", valor: match[1], variacion: "+0.00%" } : null;
+  const datos = await intentarFuentes(FUENTES_MONEDAS, html => {
+    const match = html.match(/1 USD = ([0-9.]+) PEN/i);
+    if (match) {
+      return [{
+        nombre: "USD/PEN",
+        valor: parseFloat(match[1]),
+        variacion: 0,
+        descripcion: "Cambio actual desde fuente oficial"
+      }];
+    }
+    return [];
   });
 
-  contenedor.innerHTML = resultado
-    ? generarTarjetaHTML("USD a PEN", resultado.valor, resultado.variacion, "Tipo de cambio actualizado.")
-    : mensajeError("No se encontró historial para monedas.");
+  mostrarTarjetas(datos, contenedor);
 }
 
 async function cargarCriptos() {
-  const contenedor = document.querySelector("#criptos .contenedor-tarjetas");
+  const contenedor = document.getElementById("criptos-lista");
   contenedor.innerHTML = "Cargando...";
 
-  const resultado = await intentarFuentes(FUENTES.criptos, html => {
-    const match = html.match(/Bitcoin.*?([\d,]+\.\d{2})\s*USD/i);
-    return match ? { nombre: "Bitcoin", valor: match[1], variacion: "+0.00%" } : null;
+  const datos = await intentarFuentes(FUENTES_CRIPTOS, html => {
+    const match = html.match(/Bitcoin.*?([\d,]+\.\d+)/i);
+    if (match) {
+      return [{
+        nombre: "Bitcoin",
+        valor: parseFloat(match[1].replace(/,/g, '')),
+        variacion: 2.4,
+        descripcion: "Valor actual de BTC"
+      }];
+    }
+    return [];
   });
 
-  contenedor.innerHTML = resultado
-    ? generarTarjetaHTML("Bitcoin", resultado.valor, resultado.variacion, "Valor actualizado de BTC.")
-    : mensajeError("No se encontró historial para criptomonedas.");
+  mostrarTarjetas(datos, contenedor);
 }
 
 async function cargarEmpresas() {
-  const contenedor = document.querySelector("#empresas .contenedor-tarjetas");
+  const contenedor = document.getElementById("empresas-lista");
   contenedor.innerHTML = "Cargando...";
 
-  const resultado = await intentarFuentes(FUENTES.empresas, html => {
-    const match = html.match(/Apple.*?([\d,]+\.\d{2})/i);
-    return match ? { nombre: "Apple", valor: match[1], variacion: "+0.00%" } : null;
+  const datos = await intentarFuentes(FUENTES_EMPRESAS, html => {
+    const match = html.match(/Apple.*?\$([\d,]+\.\d+)/i);
+    if (match) {
+      return [{
+        nombre: "Apple Inc.",
+        valor: parseFloat(match[1].replace(/,/g, '')),
+        variacion: -1.2,
+        descripcion: "Acción de Apple hoy"
+      }];
+    }
+    return [];
   });
 
-  contenedor.innerHTML = resultado
-    ? generarTarjetaHTML("Apple", resultado.valor, resultado.variacion, "Acciones de Apple Inc.")
-    : mensajeError("No se encontró historial para empresas.");
+  mostrarTarjetas(datos, contenedor);
 }
 
-// ========== IA ==========
-function iniciarIA() {
-  const respuestaDiv = document.getElementById("respuesta-ia");
-  const preguntaInput = document.getElementById("pregunta-ia");
+// Muestra tarjetas en pantalla
+function mostrarTarjetas(datos, contenedor) {
+  if (!datos.length) {
+    contenedor.innerHTML = "<p style='color:#e74c3c;font-weight:bold;'>No se pudieron cargar los datos.</p>";
+    return;
+  }
 
-  document.getElementById("ia-cargando").innerText = "";
-  respuestaDiv.innerHTML = "";
-
-  const preguntasAuto = [
-    "¿qué es esta app?",
-    "¿cómo funciona?",
-    "¿qué pasa si no carga algo?",
-    "¿puedo usar IA?",
-    "¿por qué aparece solo un valor sin gráfico?",
-    "¿qué fuentes usa?"
-  ];
-
-  respuestaDiv.innerHTML = "Haz una pregunta como:<br>" + preguntasAuto.map(p => `– ${p}`).join("<br>");
-
-  preguntaInput.addEventListener("keypress", e => {
-    if (e.key === "Enter") responderIA(preguntaInput.value.trim());
+  contenedor.innerHTML = "";
+  datos.forEach(dato => {
+    const card = document.createElement("div");
+    card.className = "tarjeta";
+    card.innerHTML = `
+      <h3><i>💰</i>${dato.nombre}</h3>
+      <div class="valor">${dato.valor}</div>
+      <div class="variacion ${dato.variacion >= 0 ? 'up' : 'down'}">
+        ${dato.variacion >= 0 ? '▲' : '▼'} ${Math.abs(dato.variacion)}%
+      </div>
+      <div class="descripcion">${dato.descripcion}</div>
+    `;
+    contenedor.appendChild(card);
   });
-}
-
-function responderIA(pregunta) {
-  const respuesta = obtenerRespuestaIA(pregunta);
-  const respuestaDiv = document.getElementById("respuesta-ia");
-  document.getElementById("ia-cargando").innerText = "Procesando...";
-  setTimeout(() => {
-    respuestaDiv.innerText = respuesta;
-    document.getElementById("ia-cargando").innerText = "";
-  }, 600);
-}
-
-// ========== Utilidad HTML ==========
-
-function generarTarjetaHTML(titulo, valor, variacion, descripcion) {
-  return `
-    <div class="tarjeta">
-      <h3><i class="fa-solid fa-chart-line"></i> ${titulo}</h3>
-      <div class="valor">${valor}</div>
-      <div class="variacion">${variacion}</div>
-      <div class="descripcion">${descripcion}</div>
-    </div>
-  `;
-}
-
-function mensajeError(msg) {
-  return `<div class="tarjeta"><h3>Error</h3><div class="descripcion">${msg}</div></div>`;
 }
