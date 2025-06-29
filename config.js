@@ -1,18 +1,19 @@
-// Configuración general del sistema
-const PROXY_URL = 'https://financial-proxy.onrender.com/?url=';
+// config.js
 
-// Fuentes alternativas por tipo de dato
-const FUENTES_MONEDAS = [
-  'https://wise.com/gb/currency-converter/usd-to-pen-rate',
-  'https://www.x-rates.com/calculator/?from=USD&to=PEN&amount=1'
-];
+// URLs a través del proxy (para sortear CORS)
+const PROXY = 'https://financial-proxy.onrender.com/?url=';
 
-const FUENTES_CRIPTOS = [
-  'https://coinmarketcap.com/',
-  'https://www.coingecko.com/'
-];
-
-const FUENTES_EMPRESAS = [
-  'https://www.investing.com/equities/',
-  'https://www.marketwatch.com/tools/stockresearch/globalmarkets'
-];
+const FUENTES = {
+  monedas: [
+    `${PROXY}https://wise.com/gb/currency-converter/usd-to-pen-rate`,
+    `${PROXY}https://www.x-rates.com/calculator/?from=USD&to=PEN&amount=1`,
+  ],
+  criptos: [
+    `${PROXY}https://coinmarketcap.com/`,
+    `${PROXY}https://www.coingecko.com/`,
+  ],
+  empresas: [
+    `${PROXY}https://www.investing.com/equities/`,
+    `${PROXY}https://www.marketwatch.com/tools/stockresearch/globalmarkets`,
+  ]
+};
