@@ -1,52 +1,47 @@
-const PROXIES = [
-  "https://financial-proxy.onrender.com?url=",
-  "https://api.allorigins.win/raw?url=",
-  "https://corsproxy.io/?",
-  "https://thingproxy.freeboard.io/fetch/"
-];
-
-// Detecta cuál proxy está activo
-async function obtenerProxyDisponible() {
-  for (let proxy of PROXIES) {
-    try {
-      const res = await fetch(proxy + encodeURIComponent("https://example.com"));
-      if (res.ok) return proxy;
-    } catch (e) {}
-  }
-  throw new Error("Todos los proxys están caídos.");
+async function fetchConTimeout(url, ms = 7000) {
+  return Promise.race([
+    fetch(url),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("⌛ Tiempo de espera excedido")), ms)
+    )
+  ]);
 }
 
-// Intenta con múltiples URLs (fuentes) y múltiples proxys
-async function intentarFuentes(fuentes, fallbackLocal = null) {
-  for (const url of fuentes) {
-    for (const proxy of PROXIES) {
-      try {
-        const fullURL = proxy + encodeURIComponent(url);
-        const res = await fetch(fullURL);
-        if (res.ok) {
-          const html = await res.text();
-          if (html.length > 500) return html;
-        }
-      } catch {}
+async function cargarHTMLSeguro(url, fallback = null) {
+  try {
+    const res = await fetchConTimeout(url);
+    return await res.text();
+  } catch (err) {
+    console.warn("⚠️ Falló al cargar:", url);
+    if (fallback) {
+      const resLocal = await fetch(fallback);
+      return await resLocal.text();
+    }
+    return "<div class='error'>❌ Error al cargar datos.</div>";
+  }
+}
+
+async function intentarFuentes(fuentes, fallback = null) {
+  for (const fuente of fuentes) {
+    try {
+      const html = await cargarHTMLSeguro(fuente, fallback);
+      if (html && html.length > 500) return html;
+    } catch (_) {
+      console.warn("⚠️ Fuente fallida:", fuente);
     }
   }
-  if (fallbackLocal) {
-    const res = await fetch(fallbackLocal);
-    return await res.text();
-  }
-  throw new Error("No se pudo obtener datos de ninguna fuente.");
+  throw new Error("❌ Todas las fuentes fallaron.");
 }
 
-// Genera tarjetas automáticamente con datos del HTML
 function generarTarjetas(html, tipo) {
   const contenedor = document.getElementById(tipo);
-  contenedor.innerHTML = "<div class='loader'>Cargando datos reales...</div>";
+  contenedor.innerHTML = `<div class='loader'>Cargando ${tipo}...</div>`;
 
   setTimeout(() => {
     const doc = new DOMParser().parseFromString(html, "text/html");
     let valor = "¿?";
     let variacion = "¿?";
-    let descripcion = "Dato no disponible";
+    let descripcion = "Origen desconocido";
 
     try {
       if (tipo === "criptos") {
@@ -62,16 +57,16 @@ function generarTarjetas(html, tipo) {
         descripcion = "Desde Investing.com";
       }
     } catch (e) {
-      console.error("⚠️ Error al procesar HTML:", e);
+      console.error("🧨 Error al analizar HTML:", e);
     }
 
     contenedor.innerHTML = `
-      <div class="tarjeta" tabindex="0" onclick="mostrarGrafico(this)">
-        <h3><i>📊</i> ${tipo.toUpperCase()}</h3>
-        <div class="valor">${valor}</div>
-        <div class="variacion">${variacion}</div>
-        <div class="descripcion">${descripcion}</div>
+      <div class="tarjeta" tabindex="0">
+        <h3>📊 ${tipo.toUpperCase()}</h3>
+        <p><strong>Valor:</strong> ${valor}</p>
+        <p><strong>Variación:</strong> ${variacion}</p>
+        <p class="fuente">${descripcion}</p>
       </div>
     `;
-  }, 700);
+  }, 600);
 }
