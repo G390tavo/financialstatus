@@ -1,19 +1,30 @@
-// config.js
+// 🔐 Lista de proxys (intenta el primero que funcione)
+const PROXIES = [
+  "https://financial-proxy.onrender.com?url=",
+  "https://api.allorigins.win/raw?url=",
+  "https://corsproxy.io/?",
+  "https://thingproxy.freeboard.io/fetch/"
+];
 
-// URLs a través del proxy (para sortear CORS)
-const PROXY = 'https://financial-proxy.onrender.com/?url=';
-
-const FUENTES = {
+// 🌍 Fuentes de datos organizadas por tipo, sin el proxy directamente aplicado
+const FUENTES_ORIGINALES = {
   monedas: [
-    `${PROXY}https://wise.com/gb/currency-converter/usd-to-pen-rate`,
-    `${PROXY}https://www.x-rates.com/calculator/?from=USD&to=PEN&amount=1`,
+    "https://wise.com/es/currency-converter/usd-to-pen-rate",
+    "https://wise.com/es/currency-converter/eur-to-pen-rate"
   ],
   criptos: [
-    `${PROXY}https://coinmarketcap.com/`,
-    `${PROXY}https://www.coingecko.com/`,
+    "https://coinmarketcap.com/currencies/bitcoin/",
+    "https://coinmarketcap.com/currencies/ethereum/"
   ],
   empresas: [
-    `${PROXY}https://www.investing.com/equities/`,
-    `${PROXY}https://www.marketwatch.com/tools/stockresearch/globalmarkets`,
+    "https://www.investing.com/equities/apple-computer-inc",
+    "https://www.investing.com/equities/microsoft-corp"
   ]
 };
+
+// 💡 Función para aplicar proxy a cada URL en tiempo real
+function obtenerFuentesConProxy(tipo) {
+  return PROXIES.flatMap(proxy =>
+    FUENTES_ORIGINALES[tipo].map(url => `${proxy}${encodeURIComponent(url)}`)
+  );
+}
