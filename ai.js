@@ -1,19 +1,66 @@
 const preguntasPredefinidas = [
-  "¿Cómo usar la aplicación?",
-  "¿Qué significan las variaciones?",
-  "¿De dónde provienen los datos?",
-  "¿Por qué no se carga algún gráfico?",
-  "¿Qué es una criptomoneda?",
-  "¿Cuál es la diferencia entre una acción y una moneda?",
-  "¿Cómo interpretar un gráfico de línea?"
+  "¿Qué es Bitcoin?",
+  "¿Qué significa la variación?",
+  "¿Cuál es la fuente de los datos?",
+  "¿Cuál es el precio actual del dólar?",
+  "¿Cómo leer los gráficos de esta app?",
+  "Explícame Ethereum"
 ];
+
+async function responderPreguntaIA(pregunta) {
+  const texto = pregunta.toLowerCase();
+
+  if (texto.includes("bitcoin")) {
+    try {
+      const html = await intentarFuentes(obtenerFuentesConProxy("criptos"));
+      const valor = extraerValorDesdeHTML(html, ".priceValue");
+      const variacion = extraerValorDesdeHTML(html, ".sc-15yy2pl-0.feeyND");
+      return `El precio actual de Bitcoin es ${valor} con una variación de ${variacion}. Bitcoin es una criptomoneda usada como activo digital descentralizado.`;
+    } catch {
+      return "No se pudo obtener el valor actual de Bitcoin.";
+    }
+  }
+
+  if (texto.includes("ethereum")) {
+    return "Ethereum es una plataforma descentralizada que permite la creación de contratos inteligentes. Su criptomoneda, Ether, se usa tanto para transacciones como para operar dentro de su red.";
+  }
+
+  if (texto.includes("variación")) {
+    return "La variación muestra cuánto ha cambiado el valor respecto a un periodo anterior. Si es positiva, subió; si es negativa, bajó.";
+  }
+
+  if (texto.includes("dólar") || texto.includes("usd")) {
+    try {
+      const html = await intentarFuentes(obtenerFuentesConProxy("monedas"));
+      const valor = extraerValorDesdeHTML(html, ".text-success, .text-error");
+      return `El dólar estadounidense (USD a PEN) tiene un valor aproximado de ${valor}, según Wise.`;
+    } catch {
+      return "No se pudo obtener el valor actual del dólar.";
+    }
+  }
+
+  if (texto.includes("fuente")) {
+    return "Los datos provienen de sitios como CoinMarketCap, Wise y Investing. Se obtienen mediante scraping utilizando múltiples proxys.";
+  }
+
+  if (texto.includes("gráfico")) {
+    return "Los gráficos muestran la evolución de precios. El eje horizontal representa el tiempo y el vertical, el valor. Si la línea sube, el precio aumentó; si baja, disminuyó.";
+  }
+
+  // IA real solo si se ejecuta local con backend
+  if (typeof location !== "undefined" && location.hostname === "localhost") {
+    return await preguntarAOpenRouter(pregunta);
+  } else {
+    return "La IA avanzada está disponible solo si activas el backend local con OpenRouter.";
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const selectIA = document.getElementById("pregunta-ia");
+  const inputIA = document.getElementById("pregunta-manual");
+  const botonIA = document.getElementById("preguntar-manual");
   const respuestaIA = document.getElementById("respuesta-ia");
   const cargandoIA = document.getElementById("ia-cargando");
-
-  if (!selectIA || !respuestaIA) return;
 
   preguntasPredefinidas.forEach(p => {
     const opt = document.createElement("option");
@@ -22,33 +69,32 @@ document.addEventListener("DOMContentLoaded", () => {
     selectIA.appendChild(opt);
   });
 
-  selectIA.addEventListener("change", async () => {
-    const pregunta = selectIA.value;
+  async function procesarPregunta(pregunta) {
     if (!pregunta) return;
     cargandoIA.style.display = "block";
     respuestaIA.textContent = "";
     const respuesta = await responderPreguntaIA(pregunta);
     respuestaIA.textContent = respuesta;
     cargandoIA.style.display = "none";
+  }
+
+  selectIA.addEventListener("change", () => {
+    const pregunta = selectIA.value;
+    procesarPregunta(pregunta);
+  });
+
+  botonIA.addEventListener("click", () => {
+    const pregunta = inputIA.value.trim();
+    if (pregunta) {
+      procesarPregunta(pregunta);
+      inputIA.value = "";
+    }
+  });
+
+  inputIA.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      botonIA.click();
+    }
   });
 });
-
-async function responderPreguntaIA(pregunta) {
-  if (pregunta.includes("usar")) {
-    return "Usa el menú lateral para navegar entre secciones como monedas, criptos, empresas e IA.";
-  } else if (pregunta.includes("variaciones")) {
-    return "Las variaciones muestran el cambio reciente del valor. Verde es subida, rojo es bajada.";
-  } else if (pregunta.includes("provienen")) {
-    return "Los datos provienen de CoinMarketCap, Wise y Investing, mediante scraping con proxy.";
-  } else if (pregunta.includes("no se carga")) {
-    return "Puede deberse a fallos de red, fuente caída o bloqueo de contenido. Intenta recargar.";
-  } else if (pregunta.includes("criptomoneda")) {
-    return "Una criptomoneda es una moneda digital descentralizada, como Bitcoin o Ethereum.";
-  } else if (pregunta.includes("acción") || pregunta.includes("moneda")) {
-    return "Una acción representa parte de una empresa. Una moneda es un medio de intercambio.";
-  } else if (pregunta.includes("gráfico de línea")) {
-    return "Un gráfico de línea muestra la evolución del valor a lo largo del tiempo.";
-  } else {
-    return "No tengo una respuesta específica para esa pregunta aún.";
-  }
-}
