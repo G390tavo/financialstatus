@@ -1,4 +1,3 @@
-// 🔐 Lista de proxys (intenta el primero que funcione)
 const PROXIES = [
   "https://financial-proxy.onrender.com?url=",
   "https://api.allorigins.win/raw?url=",
@@ -6,7 +5,6 @@ const PROXIES = [
   "https://thingproxy.freeboard.io/fetch/"
 ];
 
-// 🌍 Fuentes de datos organizadas por tipo, sin el proxy directamente aplicado
 const FUENTES_ORIGINALES = {
   monedas: [
     "https://wise.com/es/currency-converter/usd-to-pen-rate",
@@ -22,7 +20,6 @@ const FUENTES_ORIGINALES = {
   ]
 };
 
-// 💡 Función para aplicar proxy a cada URL en tiempo real
 function obtenerFuentesConProxy(tipo) {
   return PROXIES.flatMap(proxy =>
     FUENTES_ORIGINALES[tipo].map(url => `${proxy}${encodeURIComponent(url)}`)
