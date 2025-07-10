@@ -1,72 +1,51 @@
-async function fetchConTimeout(url, ms = 7000) {
-  return Promise.race([
-    fetch(url),
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("⌛ Tiempo de espera excedido")), ms)
-    )
-  ]);
+const MODELOS = [
+  "mistralai/mistral-7b-instruct",
+  "anthropic/claude-instant-v1",
+  "meta-llama/llama-3-70b-instruct"
+];
+
+async function preguntarAOpenRouter(pregunta) {
+  for (const modelo of MODELOS) {
+    try {
+      const res = await fetch("/api/preguntar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ modelo, pregunta })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.respuesta || "No se obtuvo respuesta clara de la IA.";
+      }
+    } catch (_) {}
+  }
+  return "Todas las IAs están fuera de línea o no disponibles.";
 }
 
-async function cargarHTMLSeguro(url, fallback = null) {
+async function obtenerHTML(url) {
   try {
-    const res = await fetchConTimeout(url);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
     return await res.text();
-  } catch (err) {
-    console.warn("⚠️ Falló al cargar:", url);
-    if (fallback) {
-      const resLocal = await fetch(fallback);
-      return await resLocal.text();
-    }
-    return "<div class='error'>❌ Error al cargar datos.</div>";
+  } catch (e) {
+    console.error("Error al obtener HTML:", e);
+    throw e;
   }
 }
 
-async function intentarFuentes(fuentes, fallback = null) {
+async function intentarFuentes(fuentes) {
   for (const fuente of fuentes) {
     try {
-      const html = await cargarHTMLSeguro(fuente, fallback);
+      const html = await obtenerHTML(fuente);
       if (html && html.length > 500) return html;
-    } catch (_) {
-      console.warn("⚠️ Fuente fallida:", fuente);
+    } catch (e) {
+      console.warn("Fuente fallida:", fuente);
     }
   }
-  throw new Error("❌ Todas las fuentes fallaron.");
+  throw new Error("No se pudo obtener datos de ninguna fuente.");
 }
 
-function generarTarjetas(html, tipo) {
-  const contenedor = document.getElementById(tipo);
-  contenedor.innerHTML = `<div class='loader'>Cargando ${tipo}...</div>`;
-
-  setTimeout(() => {
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    let valor = "¿?";
-    let variacion = "¿?";
-    let descripcion = "Origen desconocido";
-
-    try {
-      if (tipo === "criptos") {
-        valor = doc.querySelector(".priceValue")?.textContent || valor;
-        variacion = doc.querySelector(".sc-15yy2pl-0.feeyND")?.textContent || variacion;
-        descripcion = "Desde CoinMarketCap";
-      } else if (tipo === "monedas") {
-        valor = doc.querySelector(".text-success, .text-error")?.textContent || valor;
-        descripcion = "Desde Wise.com";
-      } else if (tipo === "empresas") {
-        valor = doc.querySelector(".instrument-price_instrument-price__3uw25 .text-2xl")?.textContent || valor;
-        variacion = doc.querySelector(".instrument-price_change-value__jkuml")?.textContent || variacion;
-        descripcion = "Desde Investing.com";
-      }
-    } catch (e) {
-      console.error("🧨 Error al analizar HTML:", e);
-    }
-
-    contenedor.innerHTML = `
-      <div class="tarjeta" tabindex="0">
-        <h3>📊 ${tipo.toUpperCase()}</h3>
-        <p><strong>Valor:</strong> ${valor}</p>
-        <p><strong>Variación:</strong> ${variacion}</p>
-        <p class="fuente">${descripcion}</p>
-      </div>
-    `;
-  }, 600);
+function extraerValorDesdeHTML(html, selector) {
+  if (!html) return "¿?";
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.querySelector(selector)?.textContent?.trim() || "¿?";
 }
