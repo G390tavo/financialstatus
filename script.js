@@ -18,15 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const id = btn.dataset.seccion;
       mostrarSeccion(id);
 
-      if (["monedas", "criptos", "empresas"].includes(id)) {
-        const fuentes = obtenerFuentesConProxy(id);
-        const fallback = `${id}.html`;
-        try {
-          const html = await intentarFuentes(fuentes, fallback);
-          generarTarjetas(html, id);
-        } catch (err) {
-          document.getElementById(id).innerHTML = `<div class="error">❌ No se pudo cargar ${id}</div>`;
-        }
+      const fuentes = obtenerFuentesConProxy(id);
+      try {
+        const html = await intentarFuentes(fuentes);
+        generarTarjetas(html, id);
+      } catch (e) {
+        console.error(`No se pudo generar tarjetas para ${id}`);
       }
 
       if (window.innerWidth < 768) {
