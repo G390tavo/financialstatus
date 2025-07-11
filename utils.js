@@ -1,3 +1,28 @@
+async function obtenerHTML(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Error HTTP " + res.status);
+    return await res.text();
+  } catch (e) {
+    console.warn("Error al obtener HTML:", e);
+    return null;
+  }
+}
+
+async function intentarFuentes(fuentes) {
+  for (const url of fuentes) {
+    const html = await obtenerHTML(url);
+    if (html) return html;
+  }
+  return null;
+}
+
+function extraerValorDesdeHTML(html, selector) {
+  if (!html) return "¿?";
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.querySelector(selector)?.textContent?.trim() || "¿?";
+}
+
 const MODELOS = [
   "mistralai/mistral-7b-instruct",
   "anthropic/claude-instant-v1",
@@ -14,38 +39,11 @@ async function preguntarAOpenRouter(pregunta) {
       });
       if (res.ok) {
         const data = await res.json();
-        return data.respuesta || "No se obtuvo respuesta clara de la IA.";
+        return data.respuesta || "Sin respuesta clara.";
       }
-    } catch (_) {}
-  }
-  return "Todas las IAs están fuera de línea o no disponibles.";
-}
-
-async function obtenerHTML(url) {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
-    return await res.text();
-  } catch (e) {
-    console.error("Error al obtener HTML:", e);
-    throw e;
-  }
-}
-
-async function intentarFuentes(fuentes) {
-  for (const fuente of fuentes) {
-    try {
-      const html = await obtenerHTML(fuente);
-      if (html && html.length > 500) return html;
     } catch (e) {
-      console.warn("Fuente fallida:", fuente);
+      console.warn("Error con modelo", modelo, e);
     }
   }
-  throw new Error("No se pudo obtener datos de ninguna fuente.");
-}
-
-function extraerValorDesdeHTML(html, selector) {
-  if (!html) return "¿?";
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.querySelector(selector)?.textContent?.trim() || "¿?";
+  return "No se pudo contactar con la IA.";
 }
