@@ -1,52 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const botonesSecciones = document.querySelectorAll("#menu-lateral nav button");
-  const secciones = document.querySelectorAll(".seccion");
-  const abrirMenu = document.getElementById("abrir-menu");
-  const cerrarMenu = document.getElementById("cerrar-menu");
-  const menuLateral = document.getElementById("menu-lateral");
-  const body = document.body;
-  const modoBtn = document.getElementById("modo-boton");
+  const botones = document.querySelectorAll("[data-seccion]");
+  botones.forEach(boton => {
+    boton.addEventListener("click", async () => {
+      const id = boton.dataset.seccion;
+      document.querySelectorAll(".seccion").forEach(seccion => {
+        seccion.style.display = "none";
+        seccion.classList.remove("activa");
+      });
+      const activa = document.getElementById(id);
+      activa.style.display = "block";
+      activa.classList.add("activa");
 
-  function mostrarSeccion(id) {
-    secciones.forEach(sec => sec.classList.remove("activa"));
-    const seccion = document.getElementById(id);
-    if (seccion) seccion.classList.add("activa");
-  }
-
-  botonesSecciones.forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.seccion;
-      mostrarSeccion(id);
-
-      const fuentes = obtenerFuentesConProxy(id);
-      try {
-        const html = await intentarFuentes(fuentes);
-        generarTarjetas(html, id);
-      } catch (e) {
-        console.error(`No se pudo generar tarjetas para ${id}`);
-      }
-
-      if (window.innerWidth < 768) {
-        menuLateral.style.display = "none";
-        abrirMenu.style.display = "block";
+      if (["monedas", "criptos", "empresas"].includes(id)) {
+        const fuentes = obtenerFuentesConProxy(id);
+        const html = await intentarFuentes(fuentes).catch(async () => {
+          return await obtenerHTML(`${id}.html`);
+        });
+        if (html) generarTarjetas(html, id);
       }
     });
   });
-
-  abrirMenu.addEventListener("click", () => {
-    menuLateral.style.display = "flex";
-    abrirMenu.style.display = "none";
-  });
-
-  cerrarMenu.addEventListener("click", () => {
-    menuLateral.style.display = "none";
-    abrirMenu.style.display = "block";
-  });
-
-  modoBtn.addEventListener("click", () => {
-    const esClaro = body.classList.toggle("light");
-    modoBtn.textContent = esClaro ? "Modo Oscuro" : "Modo Claro";
-  });
-
-  mostrarSeccion("inicio");
 });
+
+function generarTarjetas(html, tipo) {
+  const contenedor = document.getElementById(tipo);
+  contenedor.innerHTML = `<pre>${html}</pre>`; // Simulación visual
+}
