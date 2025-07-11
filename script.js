@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const botones = document.querySelectorAll("nav button[data-seccion]");
+  const botones = document.querySelectorAll("button[data-seccion]");
   const secciones = document.querySelectorAll(".seccion");
   const contenedorIA = document.getElementById("respuesta-ia");
   const selectIA = document.getElementById("pregunta-ia");
@@ -9,31 +9,34 @@ document.addEventListener("DOMContentLoaded", () => {
   // Menú lateral
   const abrirMenu = document.getElementById("abrir-menu");
   const cerrarMenu = document.getElementById("cerrar-menu");
-  const menu = document.getElementById("menu-lateral");
+  const menu = document.getElementById("menu");
 
-  abrirMenu?.addEventListener("click", () => menu.style.display = "flex");
-  cerrarMenu?.addEventListener("click", () => menu.style.display = "none");
+  abrirMenu?.addEventListener("click", () => {
+    menu.style.display = "flex";
+  });
 
-  // Activar solo una sección
+  cerrarMenu?.addEventListener("click", () => {
+    menu.style.display = "none";
+  });
+
+  // Activar solo una sección visible
   botones.forEach(boton => {
     boton.addEventListener("click", async () => {
       const seccion = boton.getAttribute("data-seccion");
-
       secciones.forEach(sec => sec.classList.remove("activa"));
       document.getElementById(seccion)?.classList.add("activa");
 
       if (["monedas", "criptos", "empresas"].includes(seccion)) {
         const contenedor = document.getElementById(seccion);
         const fuentes = obtenerFuentesConProxy(seccion);
-        const html = await intentarFuentes(fuentes).catch(async () => {
-          return await obtenerHTML(`${seccion}.html`);
-        });
-        generarTarjetas(html, seccion);
+        const html = await intentarFuentes(fuentes).catch(() => obtenerHTML(`${seccion}.html`));
+        if (html) generarTarjetas(html, seccion);
+        else contenedor.innerHTML = `<div class="error">No se pudo obtener los datos.</div>`;
       }
     });
   });
 
-  // Preguntas predefinidas
+  // Preguntas predefinidas IA
   preguntasPredefinidas.forEach(p => {
     const option = document.createElement("option");
     option.value = p;
@@ -56,7 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// === Mostrar tarjeta visual con datos de cada tipo ===
 function generarTarjetas(html, tipo) {
+  if (!html || typeof html !== "string") return;
+
   const doc = new DOMParser().parseFromString(html, "text/html");
   let valor = "¿?";
   let variacion = "";
@@ -68,6 +74,11 @@ function generarTarjetas(html, tipo) {
     valor = doc.querySelector(".text-success, .text-error")?.textContent?.trim() || "¿?";
   } else if (tipo === "empresas") {
     valor = doc.querySelector(".text-2xl")?.textContent?.trim() || "¿?";
+  }
+
+  if (valor.length > 30 || valor.includes("Wise") || valor.includes("html")) {
+    document.getElementById(tipo).innerHTML = `<div class="error">No se pudo extraer valor correctamente.</div>`;
+    return;
   }
 
   document.getElementById(tipo).innerHTML = `
