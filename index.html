@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="claro">
 
+  <!-- Botón para abrir menú (modo responsive) -->
+  <button id="abrir-menu">☰ Menú</button>
+
+  <!-- Menú lateral izquierdo -->
   <aside id="menu">
-    <button data-seccion="inicio">Inicio</button>
-    <button data-seccion="monedas">Monedas</button>
-    <button data-seccion="criptos">Criptos</button>
-    <button data-seccion="empresas">Empresas</button>
-    <button data-seccion="ia">IA</button>
+    <h2>FinancialStatus</h2>
+    <button id="cerrar-menu">Cerrar</button>
+    <nav>
+      <button data-seccion="inicio">Inicio</button>
+      <button data-seccion="monedas">Monedas</button>
+      <button data-seccion="criptos">Criptos</button>
+      <button data-seccion="empresas">Empresas</button>
+      <button data-seccion="ia">IA</button>
+    </nav>
   </aside>
 
+  <!-- Botón de modo claro/oscuro -->
+  <button id="modo-boton" class="modo-boton">Modo claro/oscuro</button>
+
+  <!-- Contenido principal -->
   <main>
     <section id="inicio" class="seccion activa">
-      <h1>Bienvenido a FinancialStatus</h1>
-      <p>Selecciona una sección para comenzar.</p>
+      <h1>Pantalla de inicio</h1>
+      <p>Bienvenido a FinancialStatus.</p>
     </section>
 
     <section id="monedas" class="seccion"></section>
@@ -29,17 +40,17 @@
 
     <section id="ia" class="seccion">
       <h1>Pregúntale a la IA</h1>
-      <p>Selecciona una pregunta o escribe una nueva:</p>
       <select id="pregunta-ia">
         <option value="">Selecciona una pregunta</option>
       </select>
-      <input id="pregunta-manual" placeholder="Escribe tu pregunta aquí">
+      <input id="pregunta-manual" placeholder="Escribe tu pregunta aquí" />
       <button id="preguntar-manual">Preguntar</button>
-      <div id="ia-cargando" style="display:none;">Cargando respuesta...</div>
+      <div id="ia-cargando" style="display: none;">Cargando respuesta...</div>
       <div id="respuesta-ia">Selecciona una pregunta para comenzar.</div>
     </section>
   </main>
 
+  <!-- Scripts al final para mejor rendimiento -->
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
