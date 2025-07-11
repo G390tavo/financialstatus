@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
-<body class="light">
-  <button id="modo-boton" class="modo-boton">Modo Oscuro</button>
-  <button id="abrir-menu">☰ Menú</button>
+<body>
 
-  <aside id="menu-lateral">
-    <button id="cerrar-menu">X</button>
-    <h2>FinancialStatus</h2>
-    <nav>
-      <button data-seccion="inicio">Inicio</button>
-      <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="criptos">Criptomonedas</button>
-      <button data-seccion="empresas">Empresas</button>
-      <button data-seccion="ia">IA</button>
-    </nav>
+  <aside id="menu">
+    <button data-seccion="inicio">Inicio</button>
+    <button data-seccion="monedas">Monedas</button>
+    <button data-seccion="criptos">Criptos</button>
+    <button data-seccion="empresas">Empresas</button>
+    <button data-seccion="ia">IA</button>
   </aside>
 
   <main>
     <section id="inicio" class="seccion activa">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Explora información en tiempo real sobre monedas, criptomonedas y empresas. Utiliza nuestra IA para obtener análisis y gráficos automáticamente.</p>
+      <p>Selecciona una sección para comenzar.</p>
     </section>
 
     <section id="monedas" class="seccion"></section>
@@ -35,9 +29,13 @@
 
     <section id="ia" class="seccion">
       <h1>Pregúntale a la IA</h1>
-      <p>Selecciona una pregunta para obtener una respuesta automática con análisis.</p>
-      <select id="pregunta-ia"><option value="">Selecciona una pregunta</option></select>
-      <div id="ia-cargando" style="display: none;">Cargando respuesta de la IA...</div>
+      <p>Selecciona una pregunta o escribe una nueva:</p>
+      <select id="pregunta-ia">
+        <option value="">Selecciona una pregunta</option>
+      </select>
+      <input id="pregunta-manual" placeholder="Escribe tu pregunta aquí">
+      <button id="preguntar-manual">Preguntar</button>
+      <div id="ia-cargando" style="display:none;">Cargando respuesta...</div>
       <div id="respuesta-ia">Selecciona una pregunta para comenzar.</div>
     </section>
   </main>
