@@ -1,26 +1,25 @@
 const PROXIES = [
-  "https://financial-proxy.onrender.com?url=",
   "https://api.allorigins.win/raw?url=",
   "https://corsproxy.io/?",
-  "https://thingproxy.freeboard.io/fetch/"
+  "https://thingproxy.freeboard.io/fetch/",
+  "https://financial-proxy.onrender.com?url="
 ];
 
 const FUENTES_ORIGINALES = {
   monedas: [
-    "https://wise.com/es/currency-converter/usd-to-pen-rate",
-    "https://wise.com/es/currency-converter/eur-to-pen-rate"
+    "https://wise.com/es/currency-converter/usd-to-pen-rate"
   ],
   criptos: [
     "https://coinmarketcap.com/currencies/bitcoin/",
-    "https://coinmarketcap.com/currencies/ethereum/"
+    "https://www.coingecko.com/en/coins/bitcoin"
   ],
   empresas: [
-    "https://www.investing.com/equities/apple-computer-inc",
-    "https://www.investing.com/equities/microsoft-corp"
+    "https://www.macrotrends.net/stocks/charts/AAPL/apple/stock-price-history"
   ]
 };
 
 function obtenerFuentesConProxy(tipo) {
+  if (!FUENTES_ORIGINALES[tipo]) return [];
   return PROXIES.flatMap(proxy =>
     FUENTES_ORIGINALES[tipo].map(url => `${proxy}${encodeURIComponent(url)}`)
   );
