@@ -2,53 +2,64 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="oscuro">
+
   <aside id="menu-lateral" class="abierto">
-    <button id="cerrar-menu">✖</button>
+    <button id="cerrar-menu">Cerrar</button>
     <nav>
-      <button data-seccion="inicio" class="activo">Inicio</button>
+      <button data-seccion="inicio">Inicio</button>
       <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="criptos">Criptomonedas</button>
+      <button data-seccion="criptos">Criptos</button>
       <button data-seccion="empresas">Empresas</button>
       <button data-seccion="ia">IA</button>
-      <button id="modo-oscuro-toggle">🌓</button>
     </nav>
   </aside>
 
-  <main>
-    <button id="abrir-menu">☰</button>
+  <button id="abrir-menu" class="flotante">☰ Menú</button>
+  <button id="modo-boton">Cambiar modo</button>
 
+  <main>
     <section id="inicio" class="seccion visible">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Explora monedas, criptos, empresas y consulta a la IA.</p>
+      <p>Simulación de valores económicos recientes y futuros.</p>
     </section>
 
-    <section id="monedas" class="seccion"></section>
-    <section id="criptos" class="seccion"></section>
-    <section id="empresas" class="seccion"></section>
+    <section id="monedas" class="seccion">
+      <h2>Monedas</h2>
+      <div id="conversion">
+        <select id="monedaOrigen"></select>
+        <input type="number" id="cantidadOrigen" placeholder="Cantidad"/>
+        <select id="monedaDestino"></select>
+        <button id="convertir">Convertir</button>
+        <p id="resultadoConversion"></p>
+      </div>
+      <div id="tarjetas-monedas"></div>
+      <button class="predecir" data-tipo="monedas">Predecir tendencia</button>
+    </section>
+
+    <section id="criptos" class="seccion">
+      <h2>Criptomonedas</h2>
+      <div id="tarjetas-criptos"></div>
+      <button class="predecir" data-tipo="cryptos">Predecir tendencia</button>
+    </section>
+
+    <section id="empresas" class="seccion">
+      <h2>Empresas</h2>
+      <div id="tarjetas-empresas"></div>
+      <button class="predecir" data-tipo="empresas">Predecir tendencia</button>
+    </section>
 
     <section id="ia" class="seccion">
-      <h2>Pregúntale a la IA</h2>
-      <select id="preguntas-predefinidas">
-        <option value="">Selecciona una pregunta</option>
-        <option value="¿Qué es la inflación?">¿Qué es la inflación?</option>
-        <option value="¿Cómo funciona el mercado de valores?">¿Cómo funciona el mercado de valores?</option>
-        <option value="¿Qué es el PIB?">¿Qué es el PIB?</option>
-      </select>
-      <input type="text" id="pregunta-personalizada" placeholder="Escribe tu pregunta aquí" />
-      <button id="preguntar-ia">Preguntar</button>
-      <div id="ia-cargando" style="display: none;">⏳ Cargando respuesta...</div>
-      <div id="respuesta-ia"></div>
+      <h2>IA Asistente</h2>
+      <p>La IA responderá próximamente con análisis económicos y recomendaciones.</p>
     </section>
   </main>
 
-  <script src="config.js"></script>
   <script src="utils.js"></script>
-  <script src="ai.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
