@@ -2,74 +2,69 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="oscuro">
+  <button id="abrir-menu" class="oculto">☰</button>
+
   <aside id="menu-lateral" class="menu-visible">
-    <header>
+    <div>
       <h2>FinancialStatus</h2>
-      <button id="cerrar-menu">Cerrar</button>
-    </header>
-    <nav>
-      <button data-seccion="inicio" class="activo">Inicio</button>
-      <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="criptos">Criptos</button>
-      <button data-seccion="empresas">Empresas</button>
-      <button data-seccion="ia">IA</button>
-    </nav>
-    <footer>
-      <button id="modo-boton">Modo Claro/Oscuro</button>
-    </footer>
+      <nav>
+        <button data-seccion="inicio">Inicio</button>
+        <button data-seccion="monedas">Monedas</button>
+        <button data-seccion="criptos">Criptomonedas</button>
+        <button data-seccion="empresas">Empresas</button>
+        <button data-seccion="ia">IA</button>
+      </nav>
+    </div>
+    <div>
+      <button id="modo-boton">Modo Oscuro/Claro</button>
+      <button id="cerrar-menu">✖</button>
+    </div>
   </aside>
 
   <main>
-    <button id="abrir-menu" class="oculto">Abrir menú</button>
-
     <section id="inicio" class="seccion visible">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Explora información financiera simulada con estilo oscuro neón.</p>
+      <p>Consulta el estado financiero simulado de monedas, criptos y empresas.</p>
     </section>
 
     <section id="monedas" class="seccion">
-      <h2>Monedas Internacionales</h2>
-      <div id="contenedor-monedas" class="tarjetas"></div>
-      <h3>Conversor</h3>
-      <select id="convertir-de"></select>
-      <select id="convertir-a"></select>
-      <input type="number" id="cantidad" placeholder="Cantidad" />
-      <button id="btn-convertir">Convertir</button>
-      <p id="resultado-conversion"></p>
-      <button class="ver-prediccion" data-tipo="monedas">Ver predicción</button>
-      <canvas id="grafico-monedas"></canvas>
+      <h1>Monedas</h1>
+      <div class="tarjetas">
+        <!-- Aquí se insertan las tarjetas de monedas -->
+      </div>
+      <button>Simular cambio</button>
+      <button>Predecir tendencia</button>
     </section>
 
     <section id="criptos" class="seccion">
-      <h2>Criptomonedas</h2>
-      <div id="contenedor-criptos" class="tarjetas"></div>
-      <button class="ver-prediccion" data-tipo="criptos">Ver predicción</button>
-      <canvas id="grafico-criptos"></canvas>
+      <h1>Criptomonedas</h1>
+      <div class="tarjetas">
+        <!-- Aquí se insertan las tarjetas de criptos -->
+      </div>
+      <button>Predecir tendencia</button>
     </section>
 
     <section id="empresas" class="seccion">
-      <h2>Empresas</h2>
-      <div id="contenedor-empresas" class="tarjetas"></div>
-      <button class="ver-prediccion" data-tipo="empresas">Ver predicción</button>
-      <canvas id="grafico-empresas"></canvas>
+      <h1>Empresas</h1>
+      <div class="tarjetas">
+        <!-- Aquí se insertan las tarjetas de empresas -->
+      </div>
+      <button>Predecir tendencia</button>
     </section>
 
     <section id="ia" class="seccion">
-      <h2>Pregúntale a la IA</h2>
-      <p>Sistema integrado para simular respuestas financieras.</p>
-      <input type="text" id="input-ia" placeholder="¿Qué quieres saber?" />
-      <button id="btn-ia">Preguntar</button>
-      <div id="respuesta-ia"></div>
+      <h1>IA Asistente</h1>
+      <p>Pregunta lo que necesites sobre finanzas.</p>
+      <textarea rows="5" cols="50" placeholder="Pregúntale a la IA..."></textarea>
+      <button>Preguntar</button>
     </section>
   </main>
 
-  <script src="config.js"></script>
-  <script src="utils.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
