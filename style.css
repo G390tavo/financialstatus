@@ -1,100 +1,98 @@
-/* Fondo oscuro y tipografía */
 body {
   margin: 0;
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
   background-color: #000;
   color: #39FF14;
-  transition: background-color 0.5s, color 0.5s;
+  transition: background-color 0.6s ease, color 0.6s ease;
 }
 
-body.claro {
-  background-color: #f0f0f0;
+body.oscuro {
+  background-color: #000;
+  color: #39FF14;
+}
+
+body:not(.oscuro) {
+  background-color: #fff;
   color: #000;
 }
 
-button {
-  padding: 10px;
-  margin: 5px;
-  border: none;
-  background-color: #39FF14;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #2fda10;
-}
-
-/* Menú lateral */
 #menu-lateral {
   position: fixed;
-  left: 0;
   top: 0;
-  background-color: #000;
-  border-right: 2px solid #39FF14;
-  width: 200px;
-  height: 100vh;
+  left: 0;
+  width: 220px;
+  height: 100%;
+  background-color: #111;
   padding: 10px;
-  display: block;
-  z-index: 10;
+  box-shadow: 2px 0 10px #39FF14;
   transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+#menu-lateral.oculto {
+  transform: translateX(-100%);
 }
 
 #menu-lateral nav button {
   display: block;
   width: 100%;
-  margin: 10px 0;
+  margin: 5px 0;
+  padding: 8px;
+  background: transparent;
+  color: #39FF14;
+  border: 1px solid #39FF14;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 #menu-lateral nav button.activo {
   background-color: #39FF14;
   color: #000;
-  font-weight: bold;
 }
 
 #cerrar-menu {
   background: none;
   color: #39FF14;
-  font-size: 20px;
-  margin-bottom: 20px;
+  font-size: 24px;
+  border: none;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 
-/* Botón abrir menú */
 #abrir-menu {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 20;
+  margin: 10px;
+  background-color: #000;
+  color: #39FF14;
+  border: 1px solid #39FF14;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-/* Secciones */
+#modo-boton {
+  float: right;
+  margin: 10px;
+  background-color: #000;
+  color: #39FF14;
+  border: 1px solid #39FF14;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .seccion {
-  padding: 20px;
   display: none;
+  padding: 20px;
 }
 
-.seccion:not(.oculto) {
+.seccion.visible {
   display: block;
 }
 
-/* Canvas de gráficos */
 canvas {
   max-width: 100%;
   background-color: #000;
   border: 1px solid #39FF14;
   border-radius: 10px;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  #menu-lateral {
-    width: 180px;
-  }
-
-  button {
-    width: 90%;
-    font-size: 14px;
-  }
 }
