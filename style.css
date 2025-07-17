@@ -1,107 +1,160 @@
-/* Fondo oscuro por defecto con transición */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #000;
-  color: #39FF14;
-  transition: background-color 1s, color 1s;
-}
-
-body.oscuro {
-  background-color: #000;
-  color: #39FF14;
+  color: #00ff80;
+  transition: background-color 0.5s ease;
 }
 
 body.claro {
-  background-color: #fff;
-  color: #000;
+  background-color: #ffffff;
+  color: #003300;
 }
 
-/* Secciones */
+h1, h2, h3, p, label, textarea {
+  color: #00ff80;
+}
+
+textarea {
+  background-color: #111;
+  border: 1px solid #00ff80;
+  color: #00ff80;
+  padding: 8px;
+  width: 90%;
+  max-width: 500px;
+  resize: vertical;
+}
+
 .seccion {
   display: none;
-  padding: 1em;
+  padding: 20px;
 }
 
 .seccion.visible {
   display: block;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Menú lateral */
-#menu-lateral {
-  position: fixed;
-  top: 0;
-  left: 0;
+.tarjetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tarjetas .tarjeta {
+  border: 2px solid #00ff80;
+  padding: 12px;
+  border-radius: 8px;
   background-color: #111;
-  width: 220px;
-  height: 100%;
-  padding: 1em;
-  box-shadow: 2px 0 8px rgba(0, 255, 0, 0.3);
-  transition: transform 0.3s ease;
-  z-index: 999;
+  color: #00ff80;
+  flex: 1 1 200px;
 }
 
-#menu-lateral.oculto {
-  transform: translateX(-100%);
-}
-
-#menu-lateral nav button {
-  display: block;
-  margin-bottom: 10px;
-  background-color: transparent;
-  border: 1px solid #39FF14;
-  color: #39FF14;
-  padding: 0.5em;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-}
-
-#menu-lateral nav button.activo {
-  background-color: #39FF14;
-  color: #000;
-  font-weight: bold;
-}
-
-/* Botones */
 button {
-  background-color: transparent;
-  border: 1px solid #39FF14;
-  color: #39FF14;
-  padding: 0.5em 1em;
-  margin: 0.5em 0;
-  border-radius: 5px;
+  background-color: #00ff80;
+  border: none;
+  padding: 10px 14px;
+  margin: 8px 0;
+  color: black;
   cursor: pointer;
-  transition: background-color 0.3s;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background 0.3s ease;
 }
 
 button:hover {
-  background-color: #39FF14;
-  color: #000;
+  background-color: #00cc66;
 }
 
-/* Tarjetas */
-.tarjeta {
-  background-color: #111;
-  border: 1px solid #39FF14;
-  border-radius: 10px;
-  padding: 1em;
-  margin-bottom: 1em;
+#modo-boton {
+  background-color: transparent;
+  color: #00ff80;
+  border: 1px solid #00ff80;
 }
 
-/* Gráficos */
-canvas {
-  max-width: 100%;
-  background-color: #000;
-  border: 1px solid #39FF14;
-  border-radius: 10px;
-  margin-top: 1em;
+aside {
+  width: 220px;
+  background: #111;
+  color: #00ff80;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1000;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  #menu-lateral {
-    width: 180px;
+aside h2 {
+  margin: 0 0 20px 0;
+}
+
+aside nav button {
+  display: block;
+  margin: 8px 0;
+  background: none;
+  color: #00ff80;
+  border: 1px solid #00ff80;
+  width: 100%;
+  text-align: left;
+  padding: 8px;
+}
+
+aside nav button.activo {
+  background-color: #00ff80;
+  color: black;
+}
+
+main {
+  margin-left: 230px;
+  padding: 20px;
+}
+
+#abrir-menu {
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  background: #00ff80;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+}
+
+#cerrar-menu {
+  background: #00ff80;
+  color: black;
+  border: none;
+  padding: 6px 12px;
+  margin-top: 20px;
+  border-radius: 4px;
+}
+
+.oculto {
+  display: none !important;
+}
+
+.menu-visible {
+  display: flex !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media screen and (max-width: 768px) {
+  aside {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: auto;
+    width: 100%;
+  }
+
+  main {
+    margin-left: 0;
   }
 }
