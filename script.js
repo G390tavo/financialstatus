@@ -1,46 +1,56 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const secciones = document.querySelectorAll(".seccion");
-  const botones = document.querySelectorAll("#menu-lateral nav button");
+  const botones = document.querySelectorAll('#menu-lateral nav button');
+  const secciones = document.querySelectorAll('.seccion');
 
-  // Mostrar sección inicial
-  mostrarSeccion("inicio");
-
+  // Navegación
   botones.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const seccion = btn.dataset.seccion;
-      mostrarSeccion(seccion);
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.seccion;
 
-      botones.forEach(b => b.classList.remove("activo"));
-      btn.classList.add("activo");
+      secciones.forEach(sec => {
+        sec.classList.remove('visible');
+        sec.style.display = 'none';
+      });
+
+      const activa = document.getElementById(id);
+      if (activa) {
+        activa.classList.add('visible');
+        activa.style.display = 'block';
+      }
+
+      botones.forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
     });
   });
 
-  function mostrarSeccion(id) {
-    secciones.forEach(sec => {
-      if (sec.id === id) {
-        sec.classList.add("visible");
-      } else {
-        sec.classList.remove("visible");
-      }
-    });
+  // Mostrar solo inicio al comenzar
+  secciones.forEach(sec => sec.style.display = 'none');
+  const inicio = document.getElementById('inicio');
+  if (inicio) {
+    inicio.style.display = 'block';
+    inicio.classList.add('visible');
   }
 
-  // Modo oscuro/claro
-  const modoBoton = document.getElementById("modo-boton");
-  modoBoton.addEventListener("click", () => {
-    document.body.classList.toggle("oscuro");
+  // Modo claro / oscuro
+  const modoBtn = document.getElementById('modo-toggle');
+  modoBtn.addEventListener('click', () => {
+    document.body.classList.toggle('claro');
+    document.body.classList.toggle('oscuro');
   });
 
-  // Abrir/cerrar menú
-  const menu = document.getElementById("menu-lateral");
-  const abrir = document.getElementById("abrir-menu");
-  const cerrar = document.getElementById("cerrar-menu");
+  // Abrir y cerrar menú
+  const abrir = document.getElementById('abrir-menu');
+  const cerrar = document.getElementById('cerrar-menu');
+  const menu = document.getElementById('menu-lateral');
 
-  abrir.addEventListener("click", () => {
-    menu.classList.remove("oculto");
+  abrir.addEventListener('click', () => {
+    menu.style.transform = 'translateX(0)';
   });
 
-  cerrar.addEventListener("click", () => {
-    menu.classList.add("oculto");
+  cerrar.addEventListener('click', () => {
+    menu.style.transform = 'translateX(-100%)';
   });
+
+  // Ocultar menú al inicio si se desea (opcional)
+  menu.style.transform = 'translateX(0)';
 });
