@@ -1,73 +1,54 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  background-color: #f2f2f2;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+body.oscuro {
+  background-color: #121212;
+  color: white;
+}
+
+body.claro {
+  background-color: #f5f5f5;
   color: #000;
-  display: flex;
 }
 
-main {
-  flex: 1;
-  padding: 1rem;
-  margin-left: 200px;
-  transition: margin-left 0.3s ease;
-}
-
-#abrir-menu {
-  display: none;
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 999;
-}
-
-#menu-lateral {
+aside#menu-lateral {
   width: 200px;
-  background-color: #111;
-  color: #fff;
+  background: #222;
+  color: white;
   position: fixed;
-  height: 100vh;
   left: 0;
   top: 0;
-  overflow-y: auto;
+  bottom: 0;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   transition: transform 0.3s ease;
-  z-index: 1000;
+  z-index: 10;
 }
 
-#menu-lateral.abierto {
-  transform: translateX(0);
-}
-
-#menu-lateral.oculto {
+aside#menu-lateral.oculto {
   transform: translateX(-100%);
 }
 
-#cerrar-menu {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.5rem;
-  padding: 1rem;
-  width: 100%;
-  text-align: right;
+button {
+  padding: 0.5em 1em;
+  margin: 0.25em;
 }
 
-#menu-lateral nav button {
-  display: block;
-  width: 100%;
-  padding: 1rem;
-  background: none;
-  border: none;
-  color: #fff;
-  text-align: left;
-  font-size: 1rem;
-  cursor: pointer;
+button.flotante {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  z-index: 20;
 }
 
-#menu-lateral nav button.activo {
-  background-color: #39FF14;
-  color: #000;
-  font-weight: bold;
+main {
+  margin-left: 220px;
+  padding: 1em;
 }
 
 .seccion {
@@ -78,53 +59,17 @@ main {
   display: block;
 }
 
-button, input, select {
-  padding: 0.5rem;
-  margin: 0.5rem 0;
-  font-size: 1rem;
+#conversion {
+  margin-bottom: 1em;
 }
 
-#respuesta-ia {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid #39FF14;
-  background: #000;
-  color: #39FF14;
-  border-radius: 10px;
-}
-
-canvas {
-  max-width: 100%;
-  background-color: #000;
-  border: 1px solid #39FF14;
-  border-radius: 10px;
-}
-
-.ver-grafico {
-  margin-top: 10px;
-  display: inline-block;
-  background-color: #39FF14;
-  border: none;
-  padding: 0.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  #menu-lateral {
-    width: 180px;
-  }
-
+@media (max-width: 600px) {
   main {
     margin-left: 0;
   }
-
-  #abrir-menu {
-    display: block;
-  }
-
-  #menu-lateral.oculto + main {
-    margin-left: 0;
+  #menu-lateral {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
   }
 }
