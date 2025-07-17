@@ -7,12 +7,8 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="oscuro">
-  <!-- Botón para abrir menú -->
-  <button id="abrir-menu">☰ Menú</button>
-
-  <!-- Menú lateral -->
-  <aside id="menu-lateral">
-    <button id="cerrar-menu">✖</button>
+  <aside id="menu-lateral" class="abierto">
+    <button id="cerrar-menu">×</button>
     <nav>
       <button data-seccion="inicio" class="activo">Inicio</button>
       <button data-seccion="monedas">Monedas</button>
@@ -22,17 +18,35 @@
     </nav>
   </aside>
 
-  <!-- Contenedor principal -->
   <main>
-    <section id="inicio" class="seccion">Bienvenido a FinancialStatus</section>
-    <section id="monedas" class="seccion oculto">Contenido de monedas</section>
-    <section id="criptos" class="seccion oculto">Contenido de criptomonedas</section>
-    <section id="empresas" class="seccion oculto">Contenido de empresas</section>
-    <section id="ia" class="seccion oculto">Pregúntale a la IA</section>
-  </main>
+    <button id="abrir-menu">☰ Menú</button>
+    <button id="modo-boton">Modo Claro/Oscuro</button>
 
-  <!-- Botón de modo oscuro/claro -->
-  <button id="modo">Modo Claro</button>
+    <section id="inicio" class="seccion visible">
+      <h1>Bienvenido a FinancialStatus</h1>
+      <p>Consulta y simula datos económicos en tiempo real.</p>
+    </section>
+
+    <section id="monedas" class="seccion">
+      <h2>Monedas Internacionales</h2>
+      <div id="contenedor-monedas"></div>
+    </section>
+
+    <section id="criptos" class="seccion">
+      <h2>Criptomonedas</h2>
+      <div id="contenedor-criptos"></div>
+    </section>
+
+    <section id="empresas" class="seccion">
+      <h2>Empresas</h2>
+      <div id="contenedor-empresas"></div>
+    </section>
+
+    <section id="ia" class="seccion">
+      <h2>Asistente IA</h2>
+      <div id="contenedor-ia">IA funcionando...</div>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
