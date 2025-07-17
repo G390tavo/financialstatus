@@ -8,31 +8,53 @@
 </head>
 <body class="oscuro">
 
-  <!-- Botón abrir menú -->
-  <button id="abrir-menu">☰</button>
+  <!-- Botón para abrir menú lateral (solo visible si está cerrado) -->
+  <button id="btn-abrir-menu">☰ Menú</button>
 
   <!-- Menú lateral -->
-  <aside id="menu-lateral" class="menu">
-    <button id="cerrar-menu">✖</button>
+  <aside id="menu-lateral">
+    <button id="btn-cerrar-menu">X</button>
     <nav>
-      <button data-seccion="inicio" class="activo">Inicio</button>
-      <button data-seccion="monedas">Monedas</button>
+      <button data-seccion="inicio">Inicio</button>
       <button data-seccion="criptos">Criptos</button>
+      <button data-seccion="monedas">Monedas</button>
       <button data-seccion="empresas">Empresas</button>
       <button data-seccion="ia">IA</button>
     </nav>
-    <button id="modo-toggle">Modo Oscuro/Claro</button>
+    <button id="btn-modo">Modo Claro</button>
   </aside>
 
-  <!-- Secciones -->
+  <!-- Contenido principal -->
   <main>
-    <section id="inicio" class="seccion visible">Bienvenido a FinancialStatus.</section>
-    <section id="monedas" class="seccion">Monedas aquí.</section>
-    <section id="criptos" class="seccion">Criptomonedas aquí.</section>
-    <section id="empresas" class="seccion">Empresas aquí.</section>
-    <section id="ia" class="seccion">IA activa.</section>
+    <section id="inicio">
+      <h1>Bienvenido a FinancialStatus</h1>
+      <p>Aquí podrás consultar criptomonedas, monedas internacionales, empresas y preguntarle a la IA.</p>
+    </section>
+
+    <section id="criptos" style="display:none;">
+      <h2>Criptomonedas</h2>
+      <p>Aquí aparecerán las principales criptomonedas con sus gráficos y valores.</p>
+    </section>
+
+    <section id="monedas" style="display:none;">
+      <h2>Monedas Internacionales</h2>
+      <p>Aquí se mostrarán monedas del mundo, tasas de cambio y gráficas.</p>
+    </section>
+
+    <section id="empresas" style="display:none;">
+      <h2>Empresas</h2>
+      <p>Empresas con sus valores y evolución histórica.</p>
+    </section>
+
+    <section id="ia" style="display:none;">
+      <h2>Pregúntale a la IA</h2>
+      <div id="bloque-ia">
+        <p>La IA responderá preguntas económicas, te mostrará gráficos y te ayudará con tutoriales.</p>
+      </div>
+    </section>
   </main>
 
+  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
