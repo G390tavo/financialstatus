@@ -1,75 +1,107 @@
+/* Fondo oscuro por defecto con transición */
 body {
   margin: 0;
-  font-family: sans-serif;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  font-family: Arial, sans-serif;
+  background-color: #000;
+  color: #39FF14;
+  transition: background-color 1s, color 1s;
 }
 
 body.oscuro {
-  background-color: #121212;
-  color: white;
+  background-color: #000;
+  color: #39FF14;
 }
 
 body.claro {
-  background-color: #f5f5f5;
+  background-color: #fff;
   color: #000;
 }
 
-aside#menu-lateral {
-  width: 200px;
-  background: #222;
-  color: white;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  padding: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  transition: transform 0.3s ease;
-  z-index: 10;
-}
-
-aside#menu-lateral.oculto {
-  transform: translateX(-100%);
-}
-
-button {
-  padding: 0.5em 1em;
-  margin: 0.25em;
-}
-
-button.flotante {
-  position: fixed;
-  top: 1em;
-  left: 1em;
-  z-index: 20;
-}
-
-main {
-  margin-left: 220px;
-  padding: 1em;
-}
-
+/* Secciones */
 .seccion {
   display: none;
+  padding: 1em;
 }
 
 .seccion.visible {
   display: block;
 }
 
-#conversion {
+/* Menú lateral */
+#menu-lateral {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  width: 220px;
+  height: 100%;
+  padding: 1em;
+  box-shadow: 2px 0 8px rgba(0, 255, 0, 0.3);
+  transition: transform 0.3s ease;
+  z-index: 999;
+}
+
+#menu-lateral.oculto {
+  transform: translateX(-100%);
+}
+
+#menu-lateral nav button {
+  display: block;
+  margin-bottom: 10px;
+  background-color: transparent;
+  border: 1px solid #39FF14;
+  color: #39FF14;
+  padding: 0.5em;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+#menu-lateral nav button.activo {
+  background-color: #39FF14;
+  color: #000;
+  font-weight: bold;
+}
+
+/* Botones */
+button {
+  background-color: transparent;
+  border: 1px solid #39FF14;
+  color: #39FF14;
+  padding: 0.5em 1em;
+  margin: 0.5em 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #39FF14;
+  color: #000;
+}
+
+/* Tarjetas */
+.tarjeta {
+  background-color: #111;
+  border: 1px solid #39FF14;
+  border-radius: 10px;
+  padding: 1em;
   margin-bottom: 1em;
 }
 
-@media (max-width: 600px) {
-  main {
-    margin-left: 0;
-  }
+/* Gráficos */
+canvas {
+  max-width: 100%;
+  background-color: #000;
+  border: 1px solid #39FF14;
+  border-radius: 10px;
+  margin-top: 1em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   #menu-lateral {
-    width: 100%;
-    height: auto;
-    flex-direction: column;
+    width: 180px;
   }
 }
