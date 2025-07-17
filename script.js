@@ -1,56 +1,23 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const botones = document.querySelectorAll('#menu-lateral nav button');
+function mostrarSeccion(id) {
   const secciones = document.querySelectorAll('.seccion');
-
-  // Navegación
-  botones.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.seccion;
-
-      secciones.forEach(sec => {
-        sec.classList.remove('visible');
-        sec.style.display = 'none';
-      });
-
-      const activa = document.getElementById(id);
-      if (activa) {
-        activa.classList.add('visible');
-        activa.style.display = 'block';
-      }
-
-      botones.forEach(b => b.classList.remove('activo'));
-      btn.classList.add('activo');
-    });
-  });
-
-  // Mostrar solo inicio al comenzar
   secciones.forEach(sec => sec.style.display = 'none');
-  const inicio = document.getElementById('inicio');
-  if (inicio) {
-    inicio.style.display = 'block';
-    inicio.classList.add('visible');
-  }
+  document.getElementById(id).style.display = 'block';
+}
 
-  // Modo claro / oscuro
-  const modoBtn = document.getElementById('modo-toggle');
-  modoBtn.addEventListener('click', () => {
-    document.body.classList.toggle('claro');
-    document.body.classList.toggle('oscuro');
-  });
+function alternarModo() {
+  document.body.classList.toggle('claro');
+  document.body.classList.toggle('oscuro');
+}
 
-  // Abrir y cerrar menú
-  const abrir = document.getElementById('abrir-menu');
-  const cerrar = document.getElementById('cerrar-menu');
-  const menu = document.getElementById('menu-lateral');
+const menu = document.getElementById('menu-lateral');
+const secciones = document.querySelectorAll('.seccion');
 
-  abrir.addEventListener('click', () => {
-    menu.style.transform = 'translateX(0)';
-  });
+document.getElementById('cerrar-menu').addEventListener('click', () => {
+  menu.classList.add('oculto');
+  secciones.forEach(sec => sec.style.marginLeft = '0');
+});
 
-  cerrar.addEventListener('click', () => {
-    menu.style.transform = 'translateX(-100%)';
-  });
-
-  // Ocultar menú al inicio si se desea (opcional)
-  menu.style.transform = 'translateX(0)';
+document.getElementById('abrir-menu').addEventListener('click', () => {
+  menu.classList.remove('oculto');
+  secciones.forEach(sec => sec.style.marginLeft = '250px');
 });
