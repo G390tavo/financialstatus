@@ -4,48 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body class="oscuro">
-  <aside id="menu-lateral" class="abierto">
-    <button id="cerrar-menu">×</button>
+
+  <!-- Botón abrir menú -->
+  <button id="abrir-menu">☰</button>
+
+  <!-- Menú lateral -->
+  <aside id="menu-lateral" class="menu">
+    <button id="cerrar-menu">✖</button>
     <nav>
       <button data-seccion="inicio" class="activo">Inicio</button>
       <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="criptos">Criptomonedas</button>
+      <button data-seccion="criptos">Criptos</button>
       <button data-seccion="empresas">Empresas</button>
       <button data-seccion="ia">IA</button>
     </nav>
+    <button id="modo-toggle">Modo Oscuro/Claro</button>
   </aside>
 
+  <!-- Secciones -->
   <main>
-    <button id="abrir-menu">☰ Menú</button>
-    <button id="modo-boton">Modo Claro/Oscuro</button>
-
-    <section id="inicio" class="seccion visible">
-      <h1>Bienvenido a FinancialStatus</h1>
-      <p>Consulta y simula datos económicos en tiempo real.</p>
-    </section>
-
-    <section id="monedas" class="seccion">
-      <h2>Monedas Internacionales</h2>
-      <div id="contenedor-monedas"></div>
-    </section>
-
-    <section id="criptos" class="seccion">
-      <h2>Criptomonedas</h2>
-      <div id="contenedor-criptos"></div>
-    </section>
-
-    <section id="empresas" class="seccion">
-      <h2>Empresas</h2>
-      <div id="contenedor-empresas"></div>
-    </section>
-
-    <section id="ia" class="seccion">
-      <h2>Asistente IA</h2>
-      <div id="contenedor-ia">IA funcionando...</div>
-    </section>
+    <section id="inicio" class="seccion visible">Bienvenido a FinancialStatus.</section>
+    <section id="monedas" class="seccion">Monedas aquí.</section>
+    <section id="criptos" class="seccion">Criptomonedas aquí.</section>
+    <section id="empresas" class="seccion">Empresas aquí.</section>
+    <section id="ia" class="seccion">IA activa.</section>
   </main>
 
   <script src="script.js"></script>
