@@ -2,63 +2,73 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="oscuro">
-
-  <aside id="menu-lateral" class="abierto">
-    <button id="cerrar-menu">Cerrar</button>
+  <aside id="menu-lateral" class="menu-visible">
+    <header>
+      <h2>FinancialStatus</h2>
+      <button id="cerrar-menu">Cerrar</button>
+    </header>
     <nav>
-      <button data-seccion="inicio">Inicio</button>
+      <button data-seccion="inicio" class="activo">Inicio</button>
       <button data-seccion="monedas">Monedas</button>
       <button data-seccion="criptos">Criptos</button>
       <button data-seccion="empresas">Empresas</button>
       <button data-seccion="ia">IA</button>
     </nav>
+    <footer>
+      <button id="modo-boton">Modo Claro/Oscuro</button>
+    </footer>
   </aside>
 
-  <button id="abrir-menu" class="flotante">☰ Menú</button>
-  <button id="modo-boton">Cambiar modo</button>
-
   <main>
+    <button id="abrir-menu" class="oculto">Abrir menú</button>
+
     <section id="inicio" class="seccion visible">
       <h1>Bienvenido a FinancialStatus</h1>
-      <p>Simulación de valores económicos recientes y futuros.</p>
+      <p>Explora información financiera simulada con estilo oscuro neón.</p>
     </section>
 
     <section id="monedas" class="seccion">
-      <h2>Monedas</h2>
-      <div id="conversion">
-        <select id="monedaOrigen"></select>
-        <input type="number" id="cantidadOrigen" placeholder="Cantidad"/>
-        <select id="monedaDestino"></select>
-        <button id="convertir">Convertir</button>
-        <p id="resultadoConversion"></p>
-      </div>
-      <div id="tarjetas-monedas"></div>
-      <button class="predecir" data-tipo="monedas">Predecir tendencia</button>
+      <h2>Monedas Internacionales</h2>
+      <div id="contenedor-monedas" class="tarjetas"></div>
+      <h3>Conversor</h3>
+      <select id="convertir-de"></select>
+      <select id="convertir-a"></select>
+      <input type="number" id="cantidad" placeholder="Cantidad" />
+      <button id="btn-convertir">Convertir</button>
+      <p id="resultado-conversion"></p>
+      <button class="ver-prediccion" data-tipo="monedas">Ver predicción</button>
+      <canvas id="grafico-monedas"></canvas>
     </section>
 
     <section id="criptos" class="seccion">
       <h2>Criptomonedas</h2>
-      <div id="tarjetas-criptos"></div>
-      <button class="predecir" data-tipo="cryptos">Predecir tendencia</button>
+      <div id="contenedor-criptos" class="tarjetas"></div>
+      <button class="ver-prediccion" data-tipo="criptos">Ver predicción</button>
+      <canvas id="grafico-criptos"></canvas>
     </section>
 
     <section id="empresas" class="seccion">
       <h2>Empresas</h2>
-      <div id="tarjetas-empresas"></div>
-      <button class="predecir" data-tipo="empresas">Predecir tendencia</button>
+      <div id="contenedor-empresas" class="tarjetas"></div>
+      <button class="ver-prediccion" data-tipo="empresas">Ver predicción</button>
+      <canvas id="grafico-empresas"></canvas>
     </section>
 
     <section id="ia" class="seccion">
-      <h2>IA Asistente</h2>
-      <p>La IA responderá próximamente con análisis económicos y recomendaciones.</p>
+      <h2>Pregúntale a la IA</h2>
+      <p>Sistema integrado para simular respuestas financieras.</p>
+      <input type="text" id="input-ia" placeholder="¿Qué quieres saber?" />
+      <button id="btn-ia">Preguntar</button>
+      <div id="respuesta-ia"></div>
     </section>
   </main>
 
+  <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="script.js"></script>
 </body>
