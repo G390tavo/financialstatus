@@ -1,49 +1,27 @@
-async function obtenerHTML(url) {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Error HTTP " + res.status);
-    return await res.text();
-  } catch (e) {
-    console.warn("Error al obtener HTML:", e);
-    return null;
+async function cargarDatos() {
+  const res = await fetch('datos_simulados.json');
+  return await res.json();
+}
+
+function crearTarjetas(datos, tipo) {
+  const contenedor = document.getElementById(`tarjetas-${tipo}`);
+  contenedor.innerHTML = '';
+  for (const [nombre, info] of Object.entries(datos)) {
+    const ultima = info.historial[info.historial.length - 1];
+    const div = document.createElement('div');
+    div.innerHTML = `<h3>${nombre}</h3><p>Último valor: ${ultima[1].toFixed(2)}</p>`;
+    contenedor.appendChild(div);
   }
 }
 
-async function intentarFuentes(fuentes) {
-  for (const url of fuentes) {
-    const html = await obtenerHTML(url);
-    if (html) return html;
+function predecirTendencia(datos, tipo) {
+  const contenedor = document.getElementById(`tarjetas-${tipo}`);
+  contenedor.innerHTML = '';
+  for (const [nombre, info] of Object.entries(datos)) {
+    const ultimos = info.historial.slice(-3).map(e => e[1]);
+    const pred = (ultimos[2] + Math.random() * 5 - 2.5).toFixed(2);
+    const div = document.createElement('div');
+    div.innerHTML = `<h3>${nombre}</h3><p>Predicción: ${pred}</p>`;
+    contenedor.appendChild(div);
   }
-  return null;
-}
-
-function extraerValorDesdeHTML(html, selector) {
-  if (!html) return "¿?";
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.querySelector(selector)?.textContent?.trim() || "¿?";
-}
-
-const MODELOS = [
-  "mistralai/mistral-7b-instruct",
-  "anthropic/claude-instant-v1",
-  "meta-llama/llama-3-70b-instruct"
-];
-
-async function preguntarAOpenRouter(pregunta) {
-  for (const modelo of MODELOS) {
-    try {
-      const res = await fetch("/api/preguntar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ modelo, pregunta })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return data.respuesta || "Sin respuesta clara.";
-      }
-    } catch (e) {
-      console.warn("Error con modelo", modelo, e);
-    }
-  }
-  return "No se pudo contactar con la IA.";
 }
