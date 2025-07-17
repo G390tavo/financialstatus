@@ -6,32 +6,25 @@
   <title>FinancialStatus</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="claro">
-
-  <!-- Botón para abrir menú (modo responsive) -->
-  <button id="abrir-menu">☰ Menú</button>
-
-  <!-- Menú lateral izquierdo -->
-  <aside id="menu">
-    <h2>FinancialStatus</h2>
-    <button id="cerrar-menu">Cerrar</button>
+<body>
+  <aside id="menu-lateral" class="abierto">
+    <button id="cerrar-menu">✖</button>
     <nav>
-      <button data-seccion="inicio">Inicio</button>
+      <button data-seccion="inicio" class="activo">Inicio</button>
       <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="criptos">Criptos</button>
+      <button data-seccion="criptos">Criptomonedas</button>
       <button data-seccion="empresas">Empresas</button>
       <button data-seccion="ia">IA</button>
+      <button id="modo-oscuro-toggle">🌓</button>
     </nav>
   </aside>
 
-  <!-- Botón de modo claro/oscuro -->
-  <button id="modo-boton" class="modo-boton">Modo claro/oscuro</button>
-
-  <!-- Contenido principal -->
   <main>
-    <section id="inicio" class="seccion activa">
-      <h1>Pantalla de inicio</h1>
-      <p>Bienvenido a FinancialStatus.</p>
+    <button id="abrir-menu">☰</button>
+
+    <section id="inicio" class="seccion visible">
+      <h1>Bienvenido a FinancialStatus</h1>
+      <p>Explora monedas, criptos, empresas y consulta a la IA.</p>
     </section>
 
     <section id="monedas" class="seccion"></section>
@@ -39,18 +32,20 @@
     <section id="empresas" class="seccion"></section>
 
     <section id="ia" class="seccion">
-      <h1>Pregúntale a la IA</h1>
-      <select id="pregunta-ia">
+      <h2>Pregúntale a la IA</h2>
+      <select id="preguntas-predefinidas">
         <option value="">Selecciona una pregunta</option>
+        <option value="¿Qué es la inflación?">¿Qué es la inflación?</option>
+        <option value="¿Cómo funciona el mercado de valores?">¿Cómo funciona el mercado de valores?</option>
+        <option value="¿Qué es el PIB?">¿Qué es el PIB?</option>
       </select>
-      <input id="pregunta-manual" placeholder="Escribe tu pregunta aquí" />
-      <button id="preguntar-manual">Preguntar</button>
-      <div id="ia-cargando" style="display: none;">Cargando respuesta...</div>
-      <div id="respuesta-ia">Selecciona una pregunta para comenzar.</div>
+      <input type="text" id="pregunta-personalizada" placeholder="Escribe tu pregunta aquí" />
+      <button id="preguntar-ia">Preguntar</button>
+      <div id="ia-cargando" style="display: none;">⏳ Cargando respuesta...</div>
+      <div id="respuesta-ia"></div>
     </section>
   </main>
 
-  <!-- Scripts al final para mejor rendimiento -->
   <script src="config.js"></script>
   <script src="utils.js"></script>
   <script src="ai.js"></script>
