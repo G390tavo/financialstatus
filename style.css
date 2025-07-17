@@ -1,160 +1,100 @@
+/* Fondo oscuro y tipografía */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: sans-serif;
   background-color: #000;
-  color: #00ff80;
-  transition: background-color 0.5s ease;
+  color: #39FF14;
+  transition: background-color 0.5s, color 0.5s;
 }
 
 body.claro {
-  background-color: #ffffff;
-  color: #003300;
-}
-
-h1, h2, h3, p, label, textarea {
-  color: #00ff80;
-}
-
-textarea {
-  background-color: #111;
-  border: 1px solid #00ff80;
-  color: #00ff80;
-  padding: 8px;
-  width: 90%;
-  max-width: 500px;
-  resize: vertical;
-}
-
-.seccion {
-  display: none;
-  padding: 20px;
-}
-
-.seccion.visible {
-  display: block;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.tarjetas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.tarjetas .tarjeta {
-  border: 2px solid #00ff80;
-  padding: 12px;
-  border-radius: 8px;
-  background-color: #111;
-  color: #00ff80;
-  flex: 1 1 200px;
+  background-color: #f0f0f0;
+  color: #000;
 }
 
 button {
-  background-color: #00ff80;
+  padding: 10px;
+  margin: 5px;
   border: none;
-  padding: 10px 14px;
-  margin: 8px 0;
-  color: black;
-  cursor: pointer;
-  border-radius: 6px;
+  background-color: #39FF14;
+  color: #000;
   font-weight: bold;
-  transition: background 0.3s ease;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #00cc66;
+  background-color: #2fda10;
 }
 
-#modo-boton {
-  background-color: transparent;
-  color: #00ff80;
-  border: 1px solid #00ff80;
-}
-
-aside {
-  width: 220px;
-  background: #111;
-  color: #00ff80;
-  height: 100vh;
+/* Menú lateral */
+#menu-lateral {
   position: fixed;
   left: 0;
   top: 0;
+  background-color: #000;
+  border-right: 2px solid #39FF14;
+  width: 200px;
+  height: 100vh;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  z-index: 1000;
-}
-
-aside h2 {
-  margin: 0 0 20px 0;
-}
-
-aside nav button {
   display: block;
-  margin: 8px 0;
-  background: none;
-  color: #00ff80;
-  border: 1px solid #00ff80;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+#menu-lateral nav button {
+  display: block;
   width: 100%;
-  text-align: left;
-  padding: 8px;
+  margin: 10px 0;
 }
 
-aside nav button.activo {
-  background-color: #00ff80;
-  color: black;
-}
-
-main {
-  margin-left: 230px;
-  padding: 20px;
-}
-
-#abrir-menu {
-  position: fixed;
-  left: 10px;
-  top: 10px;
-  background: #00ff80;
-  color: black;
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: none;
+#menu-lateral nav button.activo {
+  background-color: #39FF14;
+  color: #000;
+  font-weight: bold;
 }
 
 #cerrar-menu {
-  background: #00ff80;
-  color: black;
-  border: none;
-  padding: 6px 12px;
-  margin-top: 20px;
-  border-radius: 4px;
+  background: none;
+  color: #39FF14;
+  font-size: 20px;
+  margin-bottom: 20px;
 }
 
-.oculto {
-  display: none !important;
+/* Botón abrir menú */
+#abrir-menu {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 20;
 }
 
-.menu-visible {
-  display: flex !important;
+/* Secciones */
+.seccion {
+  padding: 20px;
+  display: none;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.seccion:not(.oculto) {
+  display: block;
 }
 
-@media screen and (max-width: 768px) {
-  aside {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: auto;
-    width: 100%;
+/* Canvas de gráficos */
+canvas {
+  max-width: 100%;
+  background-color: #000;
+  border: 1px solid #39FF14;
+  border-radius: 10px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  #menu-lateral {
+    width: 180px;
   }
 
-  main {
-    margin-left: 0;
+  button {
+    width: 90%;
+    font-size: 14px;
   }
 }
