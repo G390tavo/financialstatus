@@ -4,57 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FinancialStatus</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body class="oscuro">
-
-  <!-- Botón para abrir menú lateral (solo visible si está cerrado) -->
-  <button id="btn-abrir-menu">☰ Menú</button>
-
-  <!-- Menú lateral -->
+<body>
   <aside id="menu-lateral">
-    <button id="btn-cerrar-menu">X</button>
     <nav>
-      <button data-seccion="inicio">Inicio</button>
-      <button data-seccion="criptos">Criptos</button>
-      <button data-seccion="monedas">Monedas</button>
-      <button data-seccion="empresas">Empresas</button>
-      <button data-seccion="ia">IA</button>
+      <button onclick="mostrarSeccion('inicio')" class="activo">Inicio</button>
+      <button onclick="mostrarSeccion('monedas')">Monedas</button>
+      <button onclick="mostrarSeccion('criptos')">Criptomonedas</button>
+      <button onclick="mostrarSeccion('empresas')">Empresas</button>
+      <button onclick="mostrarSeccion('ia')">IA</button>
     </nav>
-    <button id="btn-modo">Modo Claro</button>
+    <button id="cerrar-menu">Cerrar</button>
   </aside>
 
-  <!-- Contenido principal -->
+  <header>
+    <h1>FinancialStatus</h1>
+    <button id="modo-oscuro">Modo oscuro</button>
+    <button id="abrir-menu">Menú</button>
+  </header>
+
   <main>
-    <section id="inicio">
-      <h1>Bienvenido a FinancialStatus</h1>
-      <p>Aquí podrás consultar criptomonedas, monedas internacionales, empresas y preguntarle a la IA.</p>
+    <section id="inicio" class="seccion visible">
+      <h2>Bienvenido a FinancialStatus</h2>
+      <p>Consulta datos financieros, analiza tendencias y haz preguntas a la IA.</p>
     </section>
 
-    <section id="criptos" style="display:none;">
-      <h2>Criptomonedas</h2>
-      <p>Aquí aparecerán las principales criptomonedas con sus gráficos y valores.</p>
-    </section>
+    <section id="monedas" class="seccion"></section>
+    <section id="criptos" class="seccion"></section>
+    <section id="empresas" class="seccion"></section>
 
-    <section id="monedas" style="display:none;">
-      <h2>Monedas Internacionales</h2>
-      <p>Aquí se mostrarán monedas del mundo, tasas de cambio y gráficas.</p>
-    </section>
-
-    <section id="empresas" style="display:none;">
-      <h2>Empresas</h2>
-      <p>Empresas con sus valores y evolución histórica.</p>
-    </section>
-
-    <section id="ia" style="display:none;">
+    <section id="ia" class="seccion">
       <h2>Pregúntale a la IA</h2>
-      <div id="bloque-ia">
-        <p>La IA responderá preguntas económicas, te mostrará gráficos y te ayudará con tutoriales.</p>
-      </div>
+      <div id="ia-respuestas"></div>
+      <input type="text" id="pregunta" placeholder="Escribe tu pregunta aquí..." />
+      <button onclick="responderPregunta()">Preguntar</button>
     </section>
   </main>
 
-  <!-- Scripts -->
-  <script src="script.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
