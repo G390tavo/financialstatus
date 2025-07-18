@@ -1,94 +1,59 @@
-// script.js
-
-// Mostrar solo una sección a la vez
-function mostrarSeccion(id) {
-  const secciones = document.querySelectorAll("main section");
-  secciones.forEach((sec) => {
-    sec.style.display = "none";
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("modo-oscuro").addEventListener("click", () => {
+    document.body.classList.toggle("oscuro");
   });
 
-  const seleccionada = document.getElementById(id);
-  if (seleccionada) {
-    seleccionada.style.display = "block";
-  }
-
-  // Actualiza botón activo del menú
-  const botones = document.querySelectorAll("#menu-lateral nav button");
-  botones.forEach((btn) => btn.classList.remove("activo"));
-  const botonActivo = document.querySelector(`#menu-lateral nav button[data-seccion='${id}']`);
-  if (botonActivo) {
-    botonActivo.classList.add("activo");
-  }
-}
-
-// Alternar entre modo oscuro y claro
-function alternarModo() {
-  const body = document.body;
-  const modoActual = body.classList.contains("oscuro");
-  if (modoActual) {
-    body.classList.remove("oscuro");
-    body.classList.add("claro");
-  } else {
-    body.classList.remove("claro");
-    body.classList.add("oscuro");
-  }
-}
-
-// Cerrar menú lateral
-function cerrarMenu() {
-  const menu = document.getElementById("menu-lateral");
-  if (menu) {
-    menu.style.transform = "translateX(-100%)";
-  }
-}
-
-// Abrir menú lateral
-function abrirMenu() {
-  const menu = document.getElementById("menu-lateral");
-  if (menu) {
-    menu.style.transform = "translateX(0)";
-  }
-}
-
-// Detectar clic en los botones de sección
-function asignarEventosSecciones() {
-  const botones = document.querySelectorAll("#menu-lateral nav button[data-seccion]");
-  botones.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const seccionId = btn.getAttribute("data-seccion");
-      mostrarSeccion(seccionId);
-    });
+  document.getElementById("cerrar-menu").addEventListener("click", () => {
+    document.getElementById("menu-lateral").style.display = "none";
   });
-}
 
-// Animación al iniciar con modo oscuro
-window.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("oscuro");
-  setTimeout(() => {
-    document.body.style.transition = "background-color 1s ease, color 1s ease";
-  }, 100);
+  document.getElementById("abrir-menu").addEventListener("click", () => {
+    document.getElementById("menu-lateral").style.display = "block";
+  });
 
-  // Mostrar sección de inicio
-  mostrarSeccion("inicio");
-
-  // Asignar eventos
-  asignarEventosSecciones();
-
-  // Botón modo oscuro/claro
-  const btnModo = document.getElementById("btn-modo");
-  if (btnModo) {
-    btnModo.addEventListener("click", alternarModo);
-  }
-
-  // Botón cerrar menú
-  const btnCerrar = document.getElementById("btn-cerrar-menu");
-  if (btnCerrar) {
-    btnCerrar.addEventListener("click", cerrarMenu);
-  }
-
-  // Botón abrir menú
-  const btnAbrir = document.getElementById("btn-abrir-menu");
-  if (btnAbrir) {
-    btnAbrir.addEventListener("click", abrirMenu);
-  }
+  mostrarDatos("monedas", monedas);
+  mostrarDatos("criptos", criptos);
+  mostrarEmpresas();
 });
+
+function mostrarSeccion(id) {
+  document.querySelectorAll(".seccion").forEach(seccion => {
+    seccion.classList.remove("visible");
+  });
+  document.getElementById(id).classList.add("visible");
+
+  document.querySelectorAll("#menu-lateral nav button").forEach(btn => {
+    btn.classList.remove("activo");
+  });
+  const botonActivo = Array.from(document.querySelectorAll("#menu-lateral nav button"))
+    .find(b => b.textContent.toLowerCase().includes(id));
+  if (botonActivo) botonActivo.classList.add("activo");
+}
+
+function mostrarDatos(id, datos) {
+  const contenedor = document.getElementById(id);
+  datos.forEach((item, i) => {
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "tarjeta";
+    tarjeta.innerHTML = `<h3>${item.nombre}</h3><canvas id="${id}-grafico-${i}" width="400" height="200"></canvas>`;
+    contenedor.appendChild(tarjeta);
+    generarGrafico(`${id}-grafico-${i}`, item.historia);
+  });
+}
+
+function mostrarEmpresas() {
+  const contenedor = document.getElementById("empresas");
+  empresas.forEach((empresa, i) => {
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "tarjeta";
+    const info = document.createElement("p");
+    info.innerText = empresa.resumen;
+    info.onclick = () => {
+      info.innerText = empresa.analisis;
+    };
+    tarjeta.innerHTML = `<h3>${empresa.nombre}</h3><canvas id="empresa-grafico-${i}" width="400" height="200"></canvas>`;
+    tarjeta.appendChild(info);
+    contenedor.appendChild(tarjeta);
+    generarGrafico(`empresa-grafico-${i}`, empresa.historia);
+  });
+}
